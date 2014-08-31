@@ -1,0 +1,172 @@
+JFDML JFormDesigner: "5.2.0.0.109" Java: "1.7.0_51" encoding: "UTF-8"
+
+new FormModel {
+	"i18n.autoExternalize": true
+	"i18n.bundleName": "gui"
+	"i18n.keyPrefix": "Monitor"
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JDialog", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+			"$columnSpecs": "default:grow"
+			"$rowSpecs": "default, fill:default:grow"
+		} ) {
+			name: "this"
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "78dlu, labelcompgap, default, labelcompgap, default"
+				"$rowSpecs": "default"
+			} ) {
+				name: "panelQuery"
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "textFieldQuery"
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonQurey"
+					"text": new FormMessage( null, "Monitor.buttonQurey.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 3
+					"gridY": 1
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "buttonAdd"
+					"text": new FormMessage( null, "Monitor.buttonAdd.text" )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 5
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 1
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+				"$columnSpecs": "177dlu, labelcompgap, default:grow"
+				"$rowSpecs": "fill:default:grow"
+			} ) {
+				name: "panelView"
+				add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+					"$columnSpecs": "default:grow"
+					"$rowSpecs": "default, linegap, fill:default:grow"
+				} ) {
+					name: "panelStocks"
+					add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class com.jgoodies.forms.layout.FormLayout ) {
+						"$columnSpecs": "default, default, default, default, default:grow"
+						"$rowSpecs": "default"
+					} ) {
+						name: "panelConfig"
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "buttonSet"
+							"icon": new com.jformdesigner.model.SwingIcon( 0, "icons/set.gif" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 1
+							"gridY": 1
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "buttonMessages"
+							"text": new FormMessage( null, "Monitor.buttonMessages.text" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 2
+							"gridY": 1
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "buttonNews"
+							"text": new FormMessage( null, "Monitor.buttonNews.text" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 3
+							"gridY": 1
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "buttonTags"
+							"text": new FormMessage( null, "Monitor.buttonTags.text" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 4
+							"gridY": 1
+						} )
+						add( new FormComponent( "javax.swing.JButton" ) {
+							name: "buttonRank"
+							"text": new FormMessage( null, "Monitor.buttonRank.text" )
+						}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+							"gridX": 5
+							"gridY": 1
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 1
+					} )
+					add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+						name: "scrollPaneTable"
+						add( new FormComponent( "javax.swing.JTable" ) {
+							name: "tableStock"
+							"model": new com.jformdesigner.model.SwingTableModel( new java.util.Vector {
+								add( new java.util.Vector {
+									add( "stock id" )
+									add( "price" )
+									add( "change" )
+								} )
+								add( new java.util.Vector {
+									add( null )
+									add( null )
+									add( null )
+								} )
+							}, new java.util.Vector {
+								add( "stock id" )
+								add( "price" )
+								add( "change" )
+							}, new java.util.Vector {
+								add( null )
+								add( null )
+								add( null )
+							}, new java.util.Vector {
+								add( null )
+								add( null )
+								add( null )
+							}, new java.util.Vector {
+								add( null )
+								add( null )
+								add( null )
+							} )
+						} )
+					}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+						"gridX": 1
+						"gridY": 3
+					} )
+				}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+					"gridX": 1
+					"gridY": 1
+				} )
+			}, new FormLayoutConstraints( class com.jgoodies.forms.layout.CellConstraints ) {
+				"gridX": 1
+				"gridY": 2
+			} )
+			menuBar: new FormContainer( "javax.swing.JMenuBar", new FormLayoutManager( class javax.swing.JMenuBar ) ) {
+				name: "menuBar1"
+				add( new FormContainer( "javax.swing.JMenu", new FormLayoutManager( class javax.swing.JMenu ) ) {
+					name: "menu1"
+					"text": new FormMessage( null, "Monitor.menu1.text" )
+					add( new FormComponent( "javax.swing.JMenuItem" ) {
+						name: "menuItem1"
+						"text": new FormMessage( null, "Monitor.menuItem1.text" )
+					} )
+				} )
+			}
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 650, 450 )
+		} )
+		add( new FormNonVisual( "chookin.stock.model.StockQuery" ) {
+			name: "stockQuery1"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 460 )
+		} )
+		add( new FormNonVisual( "chookin.stock.model.StockChoosed" ) {
+			name: "stockChoosed1"
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 95, 460 )
+		} )
+		addBindingGroup( new FormBindingGroup( class org.jdesktop.beansbinding.BindingGroup ) {
+			"name": "bindingGroup"
+			addBinding( new FormBinding( "stockQuery1", "stock", "textFieldQuery", "text" ) )
+		} )
+	}
+}
