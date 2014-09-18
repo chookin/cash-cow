@@ -17,6 +17,7 @@ import java.util.Iterator;
 
 /**
  * Created by chookin on 7/6/14.
+ * http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/600030.phtml
  */
 public class SCompanyInfoExtr extends CompanyInfoExtr {
     private final static Logger LOG = Logger.getLogger(SCompanyInfoExtr.class);

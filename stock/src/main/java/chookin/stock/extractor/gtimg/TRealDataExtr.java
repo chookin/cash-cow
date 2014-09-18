@@ -26,7 +26,7 @@ public class TRealDataExtr extends RealDataExtr{
 
     @Override
     public RealDataEntity extract() throws IOException {
-        Document doc = new Extractor(this.url).getDocument(0L);
+        Document doc = new Extractor(this.url).getDocument();
         String strData = doc.text();
         int index = strData.indexOf("=");
         strData = strData.substring(index+1);

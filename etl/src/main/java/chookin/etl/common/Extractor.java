@@ -1,7 +1,6 @@
 package chookin.etl.common;
 
 import chookin.etl.web.jsoup.LinkHelper;
-import chookin.stock.Configuration;
 import chookin.utils.io.FileHelper;
 import chookin.utils.web.UrlHelper;
 import org.apache.commons.lang.NullArgumentException;
@@ -55,7 +54,6 @@ public class Extractor {
      * get the html document identified by this.url.
      * When get the html document, saving it to local disk.
      * @param existedValidPeriod the valid period of the downloaded file for this url. If local file expired, will download again. Unit is millisecond.
-     * @return
      * @throws java.io.IOException
      */
     public Document getDocument(long existedValidPeriod) throws IOException {
@@ -70,8 +68,10 @@ public class Extractor {
                 }
             }
         }
-        Document doc = LinkHelper.getDocument(this.getUrl());
-        return doc;
+        return LinkHelper.getDocument(this.getUrl());
+    }
+    public Document getDocument() throws IOException{
+        return this.getDocument(0L);
     }
 
     public void save(Document doc) throws IOException {

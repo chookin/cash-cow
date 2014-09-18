@@ -24,8 +24,9 @@ public class Main {
                     new ClassPathXmlApplicationContext("applicationContext.xml");
 
             Main service = (Main) context.getBean("main");
+            service.saveCompanyInfo();
 //            service.setProxy();
-            service.saveHistoryData();
+//            service.saveHistoryData();
         } catch (Throwable t) {
             LOG.error(null, t);
         }

@@ -6,6 +6,7 @@ import chookin.stock.extractor.RealDataExtr;
 import chookin.stock.extractor.StockListExtr;
 import chookin.stock.extractor.eastmoney.EmStockListExtr;
 import chookin.stock.extractor.gtimg.TRealDataExtr;
+import chookin.stock.extractor.qq.QCompanyInfoExtr;
 import chookin.stock.extractor.sina.SCompanyInfoExtr;
 import chookin.stock.extractor.sina.SHistoryDataExtr;
 import chookin.stock.orm.domain.CompanyInfoEntity;
@@ -75,6 +76,28 @@ public class ZStock {
     @Autowired
     private HistoryDataRepository historyDataRepository;
 
+    public void saveHistoryData(int startYear, int startQuarter, int endYear, int endQuater) throws IOException {
+        if(startYear > endYear){
+            return;
+        }
+        if(startYear == endYear){
+            for(int quarter = startQuarter; quarter < endQuater; ++quarter){
+                this.saveHistoryData(startYear, quarter);
+            }
+            return;
+        }
+        for(int quarter = startQuarter; quarter <= 4; ++quarter){
+            this.saveHistoryData(startYear, quarter);
+        }
+        for(int year = startYear + 1; year < endYear; ++year){
+            for(int quarter = 1; quarter <= 4; ++quarter){
+                this.saveHistoryData(year, quarter);
+            }
+        }
+        for(int quarter = 1; quarter <= endQuater;++quarter ){
+            this.saveHistoryData(endYear, quarter);
+        }
+    }
     @Transactional
     public void saveHistoryData(int year, int quarter) throws IOException {
         Collection<HistoryDataEntity> histDatas = extractHistoryData(this.getStocksMap(), year, quarter);

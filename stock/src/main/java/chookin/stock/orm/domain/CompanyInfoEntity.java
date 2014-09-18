@@ -256,6 +256,75 @@ public class CompanyInfoEntity {
     public String getTags(){return tags;}
     public void setTags(String tags){this.tags = tags;}
 
+    private Double stockNum;
+    @Basic
+    @Column(name = "stock_num")
+    public Double getStockNum(){return stockNum;}
+    public void setStockNum(double stockNum){this.stockNum = stockNum;}
+
+    private Double tradable;
+    @Basic
+    @Column(name = "tradable")
+    public Double getTradable(){return tradable;}
+    public void setTradable(double tradable){this.tradable = tradable;}
+
+    private Double eps;
+    @Basic
+    @Column(name = "eps")
+    public Double getEps(){return eps;}
+    public void setEps(double eps){this.eps = eps;}
+
+    private Double netAsset;
+    @Basic
+    @Column
+    public Double getNetAsset(){return netAsset;}
+    public void setNetAsset(double netAsset){this.netAsset = netAsset;}
+
+    private Double cashFlow;
+    @Basic
+    @Column(name = "cash_flow")
+    public Double getCashFlow(){return cashFlow;}
+    public void setCashFlow(double cashFlow){this.cashFlow = cashFlow;}
+
+    private Double fund;
+    @Basic
+    @Column(name = "fund")
+    public Double getFund(){return fund;}
+    public void setFund(double fund){this.fund = fund;}
+
+    private Double profit;
+    @Basic
+    @Column(name = "profit")
+    public Double getProfit(){return profit;}
+    public void setProfit(double profit){this.profit = profit;}
+
+    private Double equity;
+    @Basic
+    @Column(name = "equity")
+    public Double getEquity(){return equity;}
+    public void setEquity(double equity){this.equity = equity;}
+
+    private Double growth;
+    @Basic
+    @Column
+    public Double getGrowth(){return growth;}
+    public void setGrowth(double growth){this.growth = growth;}
+
+    private Double gross;
+    @Basic
+    @Column
+    public Double getGross(){return gross;}
+    public void setGross(double gross){this.gross = gross;}
+
+    /**
+     * 投资亮点
+     */
+    private String investSpot;
+    @Basic
+    @Column(name = "invest_spot")
+    public String getInvestSpot(){return investSpot;}
+    public void setInvestSpot(String investSpot){this.investSpot = investSpot;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
