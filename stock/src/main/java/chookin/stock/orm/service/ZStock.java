@@ -133,7 +133,7 @@ public class ZStock {
         Map<String, StockEntity> stocks = this.getStocksMap();
         for(Map.Entry<String, StockEntity> entry : stocks.entrySet()){
             StockEntity stock = entry.getValue();
-            CompanyInfoExtr extractor = new SCompanyInfoExtr(stock);
+            CompanyInfoExtr extractor = new QCompanyInfoExtr(stock);
             try {
                 CompanyInfoEntity entity = extractor.extract();
                 if (entity == null){

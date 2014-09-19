@@ -31,14 +31,18 @@ public class Extractor {
             throw new NullArgumentException("url");
         }
         this.url = url;
-        this.localPath = localPath;
+        if(localPath == null || localPath.isEmpty()){
+            this.localPath = ".";
+        }else{
+            this.localPath = localPath;
+        }
     }
     public String getUrl(){return this.url;}
 
     public String getLocalPath() {return this.localPath;}
 
     public String getFileName(){
-        if(this.localPath != null && this.localFileName != null){
+        if(this.localFileName == null ){
             String url = UrlHelper.eraseProtocolAndStart3W(this.url);
             String filename = String.format("%s/%s", this.getLocalPath(), url);
             filename = FileHelper.formatFileName(filename);
