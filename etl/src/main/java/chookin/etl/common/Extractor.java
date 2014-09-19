@@ -56,7 +56,7 @@ public class Extractor {
 
     /**
      * get the html document identified by this.url.
-     * When get the html document, saving it to local disk.
+     * When the html document got and existedValidPeriod is bigger than 0L, saving it to local disk.
      * @param existedValidPeriod the valid period of the downloaded file for this url. If local file expired, will download again. Unit is millisecond.
      * @throws java.io.IOException
      */
@@ -72,16 +72,14 @@ public class Extractor {
                 }
             }
         }
-        return LinkHelper.getDocument(this.getUrl());
-    }
-    public Document getDocument() throws IOException{
-        return this.getDocument(0L);
+        Document doc = LinkHelper.getDocument(this.getUrl());
+        if(existedValidPeriod > 0L){
+            FileHelper.save(doc.toString(), this.getFileName());
+        }
+        return doc;
     }
 
-    public void save(Document doc) throws IOException {
-        if(this.localPath == null){
-            throw new NullArgumentException("localPath");
-        }
-        FileHelper.save(doc.toString(), this.getFileName());
+    public Document getDocument() throws IOException{
+        return this.getDocument(0L);
     }
 }

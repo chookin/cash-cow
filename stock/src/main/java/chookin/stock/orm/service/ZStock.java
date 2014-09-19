@@ -135,12 +135,12 @@ public class ZStock {
             StockEntity stock = entry.getValue();
             CompanyInfoExtr extractor = new QCompanyInfoExtr(stock);
             try {
-                CompanyInfoEntity entity = extractor.extract();
-                if (entity == null){
-                    this.removeStock(stock);
-                }else{
-                    rst.put(stock.getStockCode(), entity);
+                CompanyInfoEntity company = this.companyInfoRepository.findOne(stock.getStockCode());
+                if(company == null){
+                    company = new CompanyInfoEntity();
+                    company.setStockCode(stock.getStockCode());
                 }
+                extractor.extract(company);
             } catch (Throwable t) {
                 LOG.error(null, t);
             }

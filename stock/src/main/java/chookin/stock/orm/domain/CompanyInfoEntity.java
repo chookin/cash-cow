@@ -260,61 +260,61 @@ public class CompanyInfoEntity {
     @Basic
     @Column(name = "stock_num")
     public Double getStockNum(){return stockNum;}
-    public void setStockNum(double stockNum){this.stockNum = stockNum;}
+    public void setStockNum(Double stockNum){this.stockNum = stockNum;}
 
     private Double tradable;
     @Basic
     @Column(name = "tradable")
     public Double getTradable(){return tradable;}
-    public void setTradable(double tradable){this.tradable = tradable;}
+    public void setTradable(Double tradable){this.tradable = tradable;}
 
     private Double eps;
     @Basic
     @Column(name = "eps")
     public Double getEps(){return eps;}
-    public void setEps(double eps){this.eps = eps;}
+    public void setEps(Double eps){this.eps = eps;}
 
     private Double netAsset;
     @Basic
     @Column
     public Double getNetAsset(){return netAsset;}
-    public void setNetAsset(double netAsset){this.netAsset = netAsset;}
+    public void setNetAsset(Double netAsset){this.netAsset = netAsset;}
 
     private Double cashFlow;
     @Basic
     @Column(name = "cash_flow")
     public Double getCashFlow(){return cashFlow;}
-    public void setCashFlow(double cashFlow){this.cashFlow = cashFlow;}
+    public void setCashFlow(Double cashFlow){this.cashFlow = cashFlow;}
 
     private Double fund;
     @Basic
     @Column(name = "fund")
     public Double getFund(){return fund;}
-    public void setFund(double fund){this.fund = fund;}
+    public void setFund(Double fund){this.fund = fund;}
 
     private Double profit;
     @Basic
     @Column(name = "profit")
     public Double getProfit(){return profit;}
-    public void setProfit(double profit){this.profit = profit;}
+    public void setProfit(Double profit){this.profit = profit;}
 
     private Double equity;
     @Basic
     @Column(name = "equity")
     public Double getEquity(){return equity;}
-    public void setEquity(double equity){this.equity = equity;}
+    public void setEquity(Double equity){this.equity = equity;}
 
     private Double growth;
     @Basic
     @Column
     public Double getGrowth(){return growth;}
-    public void setGrowth(double growth){this.growth = growth;}
+    public void setGrowth(Double growth){this.growth = growth;}
 
     private Double gross;
     @Basic
     @Column
     public Double getGross(){return gross;}
-    public void setGross(double gross){this.gross = gross;}
+    public void setGross(Double gross){this.gross = gross;}
 
     /**
      * 投资亮点

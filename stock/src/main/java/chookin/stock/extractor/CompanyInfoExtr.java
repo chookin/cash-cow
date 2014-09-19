@@ -14,5 +14,11 @@ public abstract class CompanyInfoExtr {
     public CompanyInfoExtr(StockEntity stock){
         this.stock = stock;
     }
-    public abstract CompanyInfoEntity extract() throws IOException;
+
+    /**
+     * extract company info and update entity
+     * @param entity the stock company info entity that needed update.
+     * @throws IOException
+     */
+    public abstract void extract(CompanyInfoEntity entity) throws IOException;
 }
