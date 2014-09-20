@@ -2,6 +2,8 @@
 -- DROP USER `chookin`;
 
 -- 告诉mysql解释器，该段命令是否已经结束了，mysql是否可以执行了，默认情况下，delimiter是分号
+-- mysql data base's location: /var/lib/mysql
+
 delimiter ;
 
 create database if not exists `stock` default character set utf8;
@@ -80,7 +82,7 @@ create index i_history_deal_detail_stock_id on history_data_detail (stock_id);
 create unique index i_history_deal_detail_stock_id_time on history_data_detail (stock_id, time);
 
 --  http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/600030.phtml
-create table if not exists company_info(
+create table if not exists 	(
   stock_code varchar(6) not null comment '股票代码',
   company_name varchar(256) comment '公司名称',
   company_en_name varchar(256) comment '公司英文名称',
@@ -102,6 +104,22 @@ create table if not exists company_info(
   company_profile varchar(4096) comment '公司简介',
   business_scope varchar(2048) comment '经营范围',
   tags varchar(128) comment '标签',
+
+  stock_num double comment '总股本(亿)',
+  tradable double comment 'tradable share, 流通股(亿)',
+  eps double comment 'earnings per share, 每股收益(元)',
+  net_asset double comment 'Net asset value per share, 每股净资产(元)',
+  cash_flow double comment 'Cash flow per share, 每股现金流(元)',
+  fund double comment 'Accumulation fund per share, 每股公积金(元)',
+  profit double comment 'profit per share, 每股未分配利润',
+  equity double comment 'return on equity, 净资产收益率(%)',
+  growth double comment 'net profit growth rate, 净利润增长率(%)',
+  gross 'growth rate of gross operating income, 主营收入增长率(%)',
+
+  invest_spot varchar(20480) comment '投资亮点',
+
+  core_theme varchar(20480) comment '核心题材',
+
   primary key (stock_code),
   foreign key (stock_code) references stock(stock_code)
 ) comment '公司简介';

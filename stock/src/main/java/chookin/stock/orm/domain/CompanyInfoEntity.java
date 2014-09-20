@@ -325,6 +325,15 @@ public class CompanyInfoEntity {
     public String getInvestSpot(){return investSpot;}
     public void setInvestSpot(String investSpot){this.investSpot = investSpot;}
 
+    /**
+    * 核心题材
+    */
+    private String coreTheme;
+    @Basic
+    @Column(name = "core_theme")
+    public String getCoreTheme(){return coreTheme;}
+    public void setCoreTheme(String coreTheme){this.coreTheme = coreTheme;}
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

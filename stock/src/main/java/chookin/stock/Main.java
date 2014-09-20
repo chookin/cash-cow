@@ -24,6 +24,7 @@ public class Main {
                     new ClassPathXmlApplicationContext("applicationContext.xml");
 
             Main service = (Main) context.getBean("main");
+//            service.extractStocks();
             service.saveCompanyInfo();
 //            service.setProxy();
 //            service.saveHistoryData();
@@ -31,6 +32,13 @@ public class Main {
             LOG.error(null, t);
         }
         LOG.info("ZStock stopped.");
+    }
+    public void extractStocks(){
+        try{
+            this.zStock.saveStocks();
+        } catch (Throwable e) {
+            LOG.error(null, e);
+        }
     }
     public void saveCompanyInfo(){
         try {

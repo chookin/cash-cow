@@ -23,15 +23,13 @@ import java.util.Iterator;
 public class QCompanyInfoExtr extends CompanyInfoExtr {
     private final static Logger LOG = Logger.getLogger(QCompanyInfoExtr.class);
     private final static String INVALID_NUM ="--";
-    @Autowired
-    private CompanyInfoRepository companyInfoRepository;
     public QCompanyInfoExtr(StockEntity stock){
         super(stock);
         this.url = String.format("http://stockhtm.finance.qq.com/sstock/ggcx/%s.shtml",this.stock.getStockCode());
     }
     @Override
     public void extract(CompanyInfoEntity entity) throws IOException {
-        Extractor extractor = new Extractor(this.url, Configuration.getLocalResource().getLocalArchivePath());
+        Extractor extractor = new Extractor(this.url);
         Document doc = extractor.getDocument(DateUtils.YEAR_MILLISECONDS);
         extractProfits(doc, entity);
         extractSpot(doc, entity);
@@ -45,7 +43,7 @@ public class QCompanyInfoExtr extends CompanyInfoExtr {
             Element element = iter.next();
             String textNum = element.text();
             String value = iter.next().text();
-            strb.append(textNum).append(value).append("\n");
+            strb.append(textNum).append(value).append("\n\n");
         }
         company.setInvestSpot(strb.toString());
     }

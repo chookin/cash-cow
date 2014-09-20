@@ -1,9 +1,9 @@
 package chookin.stock.orm.service;
 
-import chookin.stock.extractor.CompanyInfoExtr;
 import chookin.stock.extractor.HistoryDataExtr;
 import chookin.stock.extractor.RealDataExtr;
 import chookin.stock.extractor.StockListExtr;
+import chookin.stock.extractor.eastmoney.ECompanyInfoExtr;
 import chookin.stock.extractor.eastmoney.EmStockListExtr;
 import chookin.stock.extractor.gtimg.TRealDataExtr;
 import chookin.stock.extractor.qq.QCompanyInfoExtr;
@@ -36,6 +36,7 @@ public class ZStock {
 
     public Map<String, StockEntity> getStocksMap(){
         if(this.stocksMap.isEmpty()){
+            LOG.info("get stocks map");
             Iterable<StockEntity> stocks = this.stockRepository.findAll();
             Map<String, StockEntity> map = new TreeMap<String, StockEntity>();
             for(StockEntity item : stocks){
@@ -44,6 +45,7 @@ public class ZStock {
                 }
             }
             this.stocksMap.putAll(map);
+            LOG.info(String.format("get %d stocks", this.stocksMap.size()));
         }
         return this.stocksMap;
     }
@@ -107,7 +109,7 @@ public class ZStock {
     }
     public Map<String, StockEntity> extractStockList() throws IOException{
         StockListExtr extractor = new EmStockListExtr();
-        return extractor.getStocks();
+        return extractor.getNewStocks(this.getStocksMap());
     }
     private Map<String, RealDataEntity> extractRealData() throws IOException {
         Map<String, RealDataEntity> rst = new TreeMap<String, RealDataEntity>();
@@ -127,20 +129,20 @@ public class ZStock {
         this.stockRepository.save(item);
         this.stocksMap.remove(item.getStockCode());
     }
-
     private Map<String, CompanyInfoEntity> extractCompanyInfos() throws IOException {
         Map<String, CompanyInfoEntity> rst = new TreeMap<String, CompanyInfoEntity>();
         Map<String, StockEntity> stocks = this.getStocksMap();
         for(Map.Entry<String, StockEntity> entry : stocks.entrySet()){
             StockEntity stock = entry.getValue();
-            CompanyInfoExtr extractor = new QCompanyInfoExtr(stock);
             try {
                 CompanyInfoEntity company = this.companyInfoRepository.findOne(stock.getStockCode());
                 if(company == null){
                     company = new CompanyInfoEntity();
                     company.setStockCode(stock.getStockCode());
                 }
-                extractor.extract(company);
+                new QCompanyInfoExtr(stock).extract(company);
+                new SCompanyInfoExtr(stock).extract(company);
+                new ECompanyInfoExtr(stock).extract(company);
             } catch (Throwable t) {
                 LOG.error(null, t);
             }

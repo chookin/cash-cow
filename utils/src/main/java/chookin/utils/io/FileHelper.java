@@ -63,18 +63,22 @@ public class FileHelper {
             if (path.isEmpty()) {
                 continue;
             }
-            basePath = basePath + "/" + path;
-            java.io.File file = new java.io.File(basePath);
-            if (file.isDirectory()) {
-                continue;
+            if(basePath.isEmpty()){
+                basePath = path;
+            }else{
+                basePath = basePath + "/" + path;
             }
+            java.io.File file = new java.io.File(basePath);
             if (file.isFile()) {
                 throw new IOException(String.format("already exist file %s",
                         file.getPath()));
             }
+            if(file.exists()){
+                continue;
+            }
             boolean isCreated = file.mkdir();
             if(isCreated){
-                LOG.info(String.format("dir %s created", file.getName()));
+                LOG.info(String.format("dir %s created", file.getAbsolutePath()));
             }
         }
     }

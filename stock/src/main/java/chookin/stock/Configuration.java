@@ -5,15 +5,6 @@ package chookin.stock;
  */
 public class Configuration{
     public static class LocalResourceConfiguration {
-        private String localArchivePath = "/home/chookin/stock";
-
-        public String getLocalArchivePath() {
-            return localArchivePath;
-        }
-
-        public void setLocalArchivePath(String localArchivePath) {
-            this.localArchivePath = localArchivePath;
-        }
 
     }
 

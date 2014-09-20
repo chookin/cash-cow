@@ -13,5 +13,5 @@ public abstract class StockListExtr {
     public StockListExtr setUrl(String url) {this.url = url; return this;}
     public String getUrl() {return this.url;}
 
-    public abstract Map<String, StockEntity> getStocks() throws IOException;
+    public abstract Map<String, StockEntity> getNewStocks(Map<String, StockEntity> existedStocks) throws IOException;
 }

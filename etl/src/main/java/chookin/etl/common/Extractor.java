@@ -24,19 +24,14 @@ public class Extractor {
     private String localPath;
 
     public Extractor(String url){
-        this(url, null);
-    }
-    public Extractor(String url, String localPath){
         if(url == null){
             throw new NullArgumentException("url");
         }
         this.url = url;
-        if(localPath == null || localPath.isEmpty()){
-            this.localPath = ".";
-        }else{
-            this.localPath = localPath;
-        }
+        String username = System.getProperty("user.name");
+        this.localPath = String.format("/home/%s/stock", username);
     }
+
     public String getUrl(){return this.url;}
 
     public String getLocalPath() {return this.localPath;}

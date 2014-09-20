@@ -27,7 +27,7 @@ public class SCompanyInfoExtr extends CompanyInfoExtr {
     }
     @Override
     public void extract(CompanyInfoEntity entity) throws IOException {
-        Extractor extractor = new Extractor(this.url, Configuration.getLocalResource().getLocalArchivePath());
+        Extractor extractor = new Extractor(this.url);
         Document doc = extractor.getDocument(DateUtils.YEAR_MILLISECONDS);
         Elements elements = doc.select("table#comInfo1");
         elements = elements.select("td");
@@ -57,7 +57,7 @@ public class SCompanyInfoExtr extends CompanyInfoExtr {
             }else if(text.contains("成立日期")){
                 String strDate = iter.next().text();
                 Date date = DateUtils.parseDate(strDate);
-                entity.setListingDate(date);
+                entity.setRegistrationDate(date);
             }else if(text.contains("注册资本")){
                 String strCapital = iter.next().text();
                 double capital = 0;
@@ -80,7 +80,7 @@ public class SCompanyInfoExtr extends CompanyInfoExtr {
                 String addr = iter.next().text();
                 if(addr.isEmpty() || addr.equals("http://")){
                 }else{
-                    entity.setWebsite(iter.next().text());
+                    entity.setWebsite(addr);
                 }
             }else if(text.contains("邮政编码")){
                 entity.setZipcode(iter.next().text());
