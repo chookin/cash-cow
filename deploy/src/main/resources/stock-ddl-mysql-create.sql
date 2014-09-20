@@ -82,7 +82,7 @@ create index i_history_deal_detail_stock_id on history_data_detail (stock_id);
 create unique index i_history_deal_detail_stock_id_time on history_data_detail (stock_id, time);
 
 --  http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/600030.phtml
-create table if not exists 	(
+create table if not exists company_info	(
   stock_code varchar(6) not null comment '股票代码',
   company_name varchar(256) comment '公司名称',
   company_en_name varchar(256) comment '公司英文名称',
@@ -114,7 +114,7 @@ create table if not exists 	(
   profit double comment 'profit per share, 每股未分配利润',
   equity double comment 'return on equity, 净资产收益率(%)',
   growth double comment 'net profit growth rate, 净利润增长率(%)',
-  gross 'growth rate of gross operating income, 主营收入增长率(%)',
+  gross double comment 'growth rate of gross operating income, 主营收入增长率(%)',
 
   invest_spot varchar(20480) comment '投资亮点',
 

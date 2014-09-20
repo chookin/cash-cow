@@ -83,7 +83,7 @@ public class ZStock {
             return;
         }
         if(startYear == endYear){
-            for(int quarter = startQuarter; quarter < endQuater; ++quarter){
+            for(int quarter = startQuarter; quarter <= endQuater; ++quarter){
                 this.saveHistoryData(startYear, quarter);
             }
             return;
@@ -107,10 +107,18 @@ public class ZStock {
         this.historyDataRepository.save(histDatas);
         LOG.info(String.format("%d history data of %d-%d were saved", histDatas.size(), year, quarter));
     }
+
+    public void SaveCurrentQuarterHistoryData() throws IOException{
+        Calendar calendar =Calendar.getInstance();
+        int quarter = calendar.get(Calendar.MONTH + 2) / 3;
+        int year = calendar.get(Calendar.YEAR);
+        this.saveHistoryData(year, quarter);
+    }
     public Map<String, StockEntity> extractStockList() throws IOException{
         StockListExtr extractor = new EmStockListExtr();
         return extractor.getNewStocks(this.getStocksMap());
     }
+
     private Map<String, RealDataEntity> extractRealData() throws IOException {
         Map<String, RealDataEntity> rst = new TreeMap<String, RealDataEntity>();
         Map<String, StockEntity> stocks = this.getStocksMap();
@@ -134,17 +142,29 @@ public class ZStock {
         Map<String, StockEntity> stocks = this.getStocksMap();
         for(Map.Entry<String, StockEntity> entry : stocks.entrySet()){
             StockEntity stock = entry.getValue();
+
+            CompanyInfoEntity company = this.companyInfoRepository.findOne(stock.getStockCode());
+            if(company == null){
+                company = new CompanyInfoEntity();
+                company.setStockCode(stock.getStockCode());
+            }
+            rst.put(company.getStockCode(), company);
+
+            String msg = String.format("extract company info of %s", company.getStockCode());
             try {
-                CompanyInfoEntity company = this.companyInfoRepository.findOne(stock.getStockCode());
-                if(company == null){
-                    company = new CompanyInfoEntity();
-                    company.setStockCode(stock.getStockCode());
-                }
-                new QCompanyInfoExtr(stock).extract(company);
                 new SCompanyInfoExtr(stock).extract(company);
-                new ECompanyInfoExtr(stock).extract(company);
             } catch (Throwable t) {
-                LOG.error(null, t);
+                LOG.error(msg, t);
+            }
+            try{
+                new QCompanyInfoExtr(stock).extract(company);
+            }catch (Throwable t){
+                LOG.error(msg, t);
+            }
+            try{
+                new ECompanyInfoExtr(stock).extract(company);
+            }catch (Throwable t){
+                LOG.error(msg, t);
             }
         }
         return  rst;

@@ -25,9 +25,9 @@ public class Main {
 
             Main service = (Main) context.getBean("main");
 //            service.extractStocks();
-            service.saveCompanyInfo();
+//            service.saveCompanyInfo();
 //            service.setProxy();
-//            service.saveHistoryData();
+            service.saveHistoryData();
         } catch (Throwable t) {
             LOG.error(null, t);
         }
@@ -60,11 +60,7 @@ public class Main {
     }
     public void saveHistoryData(){
         try {
-            for(int year = 2009;year <= 2013;++year){
-                for(int quarter = 1;quarter<5;++quarter){
-                    this.zStock.saveHistoryData(year, quarter);
-                }
-            }
+            this.zStock.SaveCurrentQuarterHistoryData();
         } catch (Throwable e) {
             LOG.error(null, e);
         }
