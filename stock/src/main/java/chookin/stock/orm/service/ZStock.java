@@ -1,5 +1,6 @@
 package chookin.stock.orm.service;
 
+import chookin.stock.extractor.HistoryDataDetailExtr;
 import chookin.stock.extractor.HistoryDataExtr;
 import chookin.stock.extractor.RealDataExtr;
 import chookin.stock.extractor.StockListExtr;
@@ -8,6 +9,7 @@ import chookin.stock.extractor.eastmoney.EmStockListExtr;
 import chookin.stock.extractor.gtimg.TRealDataExtr;
 import chookin.stock.extractor.qq.QCompanyInfoExtr;
 import chookin.stock.extractor.sina.SCompanyInfoExtr;
+import chookin.stock.extractor.sina.SHistoryDataDetailExtr;
 import chookin.stock.extractor.sina.SHistoryDataExtr;
 import chookin.stock.orm.domain.CompanyInfoEntity;
 import chookin.stock.orm.domain.HistoryDataEntity;
@@ -36,7 +38,7 @@ public class ZStock {
 
     public Map<String, StockEntity> getStocksMap(){
         if(this.stocksMap.isEmpty()){
-            LOG.info("get stocks map");
+            LOG.info("start to get stocks map");
             Iterable<StockEntity> stocks = this.stockRepository.findAll();
             Map<String, StockEntity> map = new TreeMap<String, StockEntity>();
             for(StockEntity item : stocks){
@@ -113,6 +115,32 @@ public class ZStock {
         int quarter = calendar.get(Calendar.MONTH + 2) / 3;
         int year = calendar.get(Calendar.YEAR);
         this.saveHistoryData(year, quarter);
+    }
+
+    public void saveHistoryDetail() throws IOException{
+        Map<String, StockEntity> stocksMap = this.getStocksMap();
+        for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
+            Calendar startDay  = Calendar.getInstance();
+            startDay.add(Calendar.DAY_OF_YEAR, -1);
+            Calendar endDay = Calendar.getInstance();
+            endDay.add(Calendar.DAY_OF_YEAR, -1);
+
+            for ( Calendar curDay = startDay; curDay.compareTo(endDay) <= 0; curDay.add(Calendar.DAY_OF_YEAR, 1) ){
+                int weekDay = curDay.get(Calendar.DAY_OF_WEEK);
+                if(weekDay == 1 || weekDay == 7){//SUNDAY, SATURDAY
+                    continue;
+                }
+                StockEntity entity = entry.getValue();
+                HistoryDataDetailExtr extr = new SHistoryDataDetailExtr(entity);
+                extr.extract(curDay.getTime());
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
     public Map<String, StockEntity> extractStockList() throws IOException{
         StockListExtr extractor = new EmStockListExtr();

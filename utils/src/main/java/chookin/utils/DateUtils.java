@@ -30,4 +30,9 @@ public class DateUtils {
         }
         return date;
     }
+
+    public static String convertToDateString(java.util.Date date){
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(date);
+    }
 }

@@ -2,6 +2,7 @@ package chookin.utils.io;
 
 import org.apache.log4j.Logger;
 
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -43,6 +44,20 @@ public class FileHelper {
         writer.write(str);
         writer.close();
     }
+
+    public static void save(byte[] bytes, String fileName)
+            throws IOException {
+        LOG.info(String.format("save file %s", fileName));
+        int index = fileName.lastIndexOf('/');
+        if(index != -1){
+            String directory = fileName.substring(0, index);
+            mkdirs(directory);
+        }
+
+        FileOutputStream output = new FileOutputStream(fileName);
+        output.write(bytes);
+        output.close();
+    }
     /**
      * note: can't create a file and a folder with the same name and in the same folder. The OS would not allow you to do that since the name is the id for that file/folder object. So we have delete the older file
      * @param dirpath
@@ -54,11 +69,13 @@ public class FileHelper {
             return;
         }
         dirpath = dirpath.replace('\\', '/').replace("//", "/");
-        int indexDiskPathEnd = dirpath.indexOf(':') + 1;
-        String disk = dirpath.substring(0, indexDiskPathEnd);
 
-        String[] paths = dirpath.substring(indexDiskPathEnd).split("/");
-        String basePath = disk;
+        String basePath = "";
+        if(dirpath.startsWith("/")){
+            basePath = "/";
+        }
+
+        String[] paths = dirpath.split("/");
         for (String path : paths) {
             if (path.isEmpty()) {
                 continue;
