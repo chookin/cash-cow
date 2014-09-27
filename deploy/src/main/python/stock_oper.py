@@ -2,27 +2,34 @@
 #coding:utf-8
 
 import datetime
+import os
 
 """
 解决UnicodeEncodeError: 'ascii' codec can't encode characters in position问题
 """
 import sys
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
+
 class Exchange():
+    """
+
+    """
     def __init__(self):
-        self.time = None #成交时间
-        self.price = None #成交价
-        self.trade_hand = None #成交量(手)
-        self.trade_value = None #成交额(元)
-        self.sell = None #性质，是否卖盘
+        self.time = None  #成交时间
+        self.price = None  #成交价
+        self.trade_hand = None  #成交量(手)
+        self.trade_value = None  #成交额(元)
+        self.sell = None  #性质，是否卖盘
 
     def __repr__(self):
         """
         implement __repr__, or else can not clearly print list of exchange
         """
-        return "{time:%s, price:%s, trade_hand:%s, trade_value:%s, sell:%s}" % (self.time, self.price, self.trade_hand, self.trade_value, self.sell)
+        return "{time:%s, price:%s, trade_hand:%s, trade_value:%s, sell:%s}" % (
+            self.time, self.price, self.trade_hand, self.trade_value, self.sell)
 
 
 class HistDetail():
@@ -39,6 +46,7 @@ class HistDetail():
     def extract_from_dir(dirname):
         stocks = []
         import file_utils
+
         files = file_utils.FileUtils.getfilenames(dirname)
         for file in files:
             stock = HistDetail.extract(file)
@@ -47,6 +55,8 @@ class HistDetail():
 
     @staticmethod
     def extract(filename):
+        # print 'extract hist detail from file', filename
+        filename = os.path.abspath(filename)
         stock = HistDetail()
         indexLastSlash = filename.rfind("/")
         indexNextLastSlash = filename.rfind("/", None, indexLastSlash)
@@ -54,13 +64,13 @@ class HistDetail():
         if indexLastSlash == -1 or indexLastSlash == -1 or indexNextLastSlash == -1:
             raise IOError("invalid hist detail file: %s" % filename)
 
-        stock.stock_code = filename[indexLastSlash+3: indexLastDot] # remove the sz or sh
-        strdate =filename[indexNextLastSlash+1: indexLastSlash]
+        stock.stock_code = filename[indexLastSlash + 3: indexLastDot]  # remove the sz or sh
+        strdate = filename[indexNextLastSlash + 1: indexLastSlash]
         stock.date = datetime.datetime.strptime(strdate, '%Y-%m-%d').date()
         f = open(filename)
         count = -1
         while True:
-            line = f.readline().decode("gbk")# 数据文件采用gbk编码
+            line = f.readline().decode("gbk")  # 数据文件采用gbk编码
             if not line:
                 break
             count += 1

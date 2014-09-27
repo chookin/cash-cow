@@ -26,7 +26,7 @@ public class Main {
             Main service = (Main) context.getBean("main");
 //            service.extractStocks();
 //            service.saveCompanyInfo();
-            service.setProxy();
+//            service.setProxy();
 //            service.saveHistoryData();
             service.saveHistoryDetail();
         } catch (Throwable t) {

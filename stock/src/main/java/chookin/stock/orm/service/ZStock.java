@@ -121,9 +121,9 @@ public class ZStock {
         Map<String, StockEntity> stocksMap = this.getStocksMap();
         for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
             Calendar startDay  = Calendar.getInstance();
-            startDay.add(Calendar.DAY_OF_YEAR, -1);
+            startDay.add(Calendar.DAY_OF_YEAR, -3);
             Calendar endDay = Calendar.getInstance();
-            endDay.add(Calendar.DAY_OF_YEAR, -1);
+            endDay.add(Calendar.DAY_OF_YEAR, -3);
 
             for ( Calendar curDay = startDay; curDay.compareTo(endDay) <= 0; curDay.add(Calendar.DAY_OF_YEAR, 1) ){
                 int weekDay = curDay.get(Calendar.DAY_OF_WEEK);
