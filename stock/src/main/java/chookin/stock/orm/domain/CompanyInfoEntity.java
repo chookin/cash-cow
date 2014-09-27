@@ -276,7 +276,7 @@ public class CompanyInfoEntity {
 
     private Double netAsset;
     @Basic
-    @Column
+    @Column(name = "net_asset")
     public Double getNetAsset(){return netAsset;}
     public void setNetAsset(Double netAsset){this.netAsset = netAsset;}
 

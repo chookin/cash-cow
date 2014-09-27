@@ -26,6 +26,31 @@ def getfilenames(dirname):
         return rst
     return rst
 
+
+def save_to_unicode(filename, data, append=False, encoding='utf-8'):
+    import codecs  # Python核心库的open函数是按照ascii设计的,读取unicode文件可采用codecs
+    if append:
+        mode = 'w+'
+    else:
+        mode = 'w'
+    print 'save file ', filename
+    output = codecs.open(filename, mode, encoding)
+    output.write(data)
+    output.close()
+
+
+def save_json_to_csv(filename, obj, mode='w+'):
+    import csv
+    f = csv.writer(open(filename, mode))
+    # ...
+    f.close()
+
+
+
+
+
+
+
 if __name__ == '__main__':
     filenames = getfilenames("/home/chookin")
     print filenames
