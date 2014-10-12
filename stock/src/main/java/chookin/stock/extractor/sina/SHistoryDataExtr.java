@@ -1,7 +1,6 @@
 package chookin.stock.extractor.sina;
 
 import chookin.etl.common.Extractor;
-import chookin.stock.Configuration;
 import chookin.stock.extractor.HistoryDataExtr;
 import chookin.stock.orm.domain.HistoryDataEntity;
 import chookin.stock.orm.domain.StockEntity;
