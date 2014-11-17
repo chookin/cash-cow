@@ -59,11 +59,7 @@ public class TestStock {
     @Test
     public void saveHistoryData(){
         try {
-            for(int year = 2000;year <= 2003;++year){
-                for(int quarter = 1;quarter<=4;++quarter){
-                    this.zStock.saveHistoryData(year, quarter);
-                }
-            }
+            this.zStock.saveHistoryData(2003,1, 2003, 2);
         } catch (Throwable e) {
             e.printStackTrace();
         }

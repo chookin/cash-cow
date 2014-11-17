@@ -32,7 +32,7 @@ public class SHistoryDataExtr extends HistoryDataExtr {
         LOG.info("extract "+url);
         List<HistoryDataEntity> rst = new ArrayList<HistoryDataEntity>();
         Extractor extractor = new Extractor(url);
-        Document doc = extractor.getDocument();
+        Document doc = extractor.getDocument(DateUtils.DAY_MILLISECONDS);
         Elements elements = doc.select("table#FundHoldSharesTable");
         elements = elements.select("tr");
         for(Element element : elements){

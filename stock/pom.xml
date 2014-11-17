@@ -19,15 +19,76 @@
 
         <spring.version>4.0.6.RELEASE</spring.version>
         <hibernate.version>4.2.2.Final</hibernate.version>
-        <spring.data.version>1.6.1.RELEASE</spring.data.version>
+        <spring.data.version>1.6.4.RELEASE</spring.data.version>
     </properties>
     <build>
+        <sourceDirectory>src/main/java</sourceDirectory>
+        <!--http://maven.apache.org/plugins/maven-resources-plugin/examples/resource-directory.html-->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
-                    <useDefaultManifestFile>true</useDefaultManifestFile>
+                    <archive>
+                        <manifest>
+                            <!--http://maven.apache.org/shared/maven-archiver/examples/classpath.html-->
+                            <addClasspath>true</addClasspath>
+                            <mainClass>chookin.stock.Main</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
+            </plugin>
+            <!--<plugin>-->
+                <!--&lt;!&ndash;run it with: mvn compile assembly:single -DskipTests &ndash;&gt;-->
+                <!--<artifactId>maven-assembly-plugin</artifactId>-->
+                <!--&lt;!&ndash;<executions>&ndash;&gt;-->
+                    <!--&lt;!&ndash;<execution>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<phase>package</phase>&ndash;&gt;-->
+                        <!--&lt;!&ndash;<goals>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<goal>single</goal>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</goals>&ndash;&gt;-->
+                    <!--&lt;!&ndash;</execution>&ndash;&gt;-->
+                <!--&lt;!&ndash;</executions>&ndash;&gt;-->
+                <!--<configuration>-->
+                    <!--<archive>-->
+                        <!--<manifest>-->
+                            <!--<mainClass>chookin.stock.Main</mainClass>-->
+                        <!--</manifest>-->
+                    <!--</archive>-->
+                    <!--<descriptorRefs>-->
+                        <!--<descriptorRef>jar-with-dependencies</descriptorRef>-->
+                    <!--</descriptorRefs>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+            <plugin>
+                <!--To fix error: Configuration problem: Unable to locate Spring NamespaceHandler for XML schema namespace [http://www.springframework.org/schema/tx] Offending resource: class path resource [applicationContext.xml]-->
+                <!--http://robert-reiz.com/2011/11/14/832/#comment-506-->
+
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
@@ -38,25 +99,19 @@
     </build>
     <dependencies>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-            <version>1.1.4.RELEASE</version>
-        </dependency>
-
-        <dependency>
             <groupId>chookin.cashcow</groupId>
             <artifactId>utils</artifactId>
             <version>1.0</version>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.boot</groupId>-->
+            <!--<artifactId>spring-boot-autoconfigure</artifactId>-->
+            <!--<version>1.1.4.RELEASE</version>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>chookin.cashcow</groupId>
             <artifactId>etl</artifactId>
             <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.data</groupId>
-            <artifactId>spring-data-jpa</artifactId>
-            <version>1.6.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

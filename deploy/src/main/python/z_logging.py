@@ -1,1 +1,0 @@
-/home/chookin/project/bch/ambari/ambari-1.5.0/ambari-tools/src/main/python/z_logging.py

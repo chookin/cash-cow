@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 
 import os
 
@@ -11,6 +11,8 @@ os.walk(top,topdown=True,onerror=None)
 3>参数onerror的默认值是"None",表示忽略文件遍历时产生的错误.如果不为空，则提供一个自定义函数提示错误信息后继续遍历或抛出异常中止遍历
 4>该函数返回一个元组，该元组有3个元素，这3个元素分别表示每次遍历的路径名，目录列表和文件列表
 """
+
+
 def getsubdirs(dirname):
     for parent, subdirnames, filenames in os.walk(dirname):
         return subdirnames
@@ -29,6 +31,7 @@ def getfilenames(dirname):
 
 def save_to_unicode(filename, data, append=False, encoding='utf-8'):
     import codecs  # Python核心库的open函数是按照ascii设计的,读取unicode文件可采用codecs
+
     if append:
         mode = 'w+'
     else:
@@ -41,14 +44,10 @@ def save_to_unicode(filename, data, append=False, encoding='utf-8'):
 
 def save_json_to_csv(filename, obj, mode='w+'):
     import csv
+
     f = csv.writer(open(filename, mode))
     # ...
     f.close()
-
-
-
-
-
 
 
 if __name__ == '__main__':

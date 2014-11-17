@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 import decimal
 
 import mysql_handler
@@ -14,6 +14,7 @@ class DateTimeEncoder(json.JSONEncoder):
     """
     TypeError: datetime.date(2014, 6, 6) is not JSON serializable
     """
+
     def default(self, obj):
         if hasattr(obj, 'isoformat'):
             return obj.isoformat()
@@ -24,7 +25,13 @@ class DateTimeEncoder(json.JSONEncoder):
 
 
 def get_query_string_set(obj):
-    if isinstance(obj, basestring):
+    """
+    Get the query set string for obj.
+
+    :param obj: could be basestring, int, list or tuple
+    :return: If obj is basestring, then just return ('obj').
+    """
+    if isinstance(obj, basestring) or isinstance(obj, int):
         str_set = "('%s')" % obj
     elif isinstance(obj, list) or isinstance(obj, tuple):
         str_set = "','".join(obj)
@@ -35,6 +42,14 @@ def get_query_string_set(obj):
 
 
 def query_records(sql, fields, key_field=None):
+    """
+
+    :param sql: the query sql
+    :param fields: the query filed, use which to build the queried result key value format data.
+    :param key_field: use which to build the result dist.
+    :return: if key_filed is None, then return records as array, else as dist of [key_filed: record]
+    :raise IOError: if key_filed is not None, and not in the queried record.
+    """
     print sql
     cursor = hmysql.getconn().cursor()
     cursor.execute(sql)
@@ -57,6 +72,9 @@ def query_records(sql, fields, key_field=None):
 
 
 def get_stock_codes():
+    """
+    Get all the stock_code from db
+    """
     sql = 'SELECT stock_code FROM stock'
     cursor = hmysql.getconn().cursor()
     cursor.execute(sql)
@@ -80,6 +98,12 @@ def get_stock_info(stock_codes):
 
 
 def get_stock_ids(stock_codes):
+    """
+    Get stock_id for these stock_codes
+
+    :param stock_codes:
+    :return: dict of {stock_code:stock_id}
+    """
     str_codes = get_query_string_set(stock_codes)
     sql = "select s.stock_code, s.stock_id from stock as s " \
           "where s.stock_code in %s " \
@@ -97,7 +121,7 @@ def get_stock_ids(stock_codes):
 
 def get_hist_data(stock_id, dateobj):
     """
-    get history data from database
+    Get history data by stock_id from database
     :param stock_id: stock_id, not stock_code
     :param dateobj: it's type could be: datetime.date, datetime.datetime, string of date, list of dates
     """
@@ -121,6 +145,14 @@ def get_hist_data(stock_id, dateobj):
 
 
 def get_stock_incr(stock_id, start_date, end_date):
+    """
+    Get stock price increment by history data
+
+    :param stock_id:
+    :param start_date:
+    :param end_date:
+    :return: dict of [stock_id, incr, incr_ratio, old_deal, new_deal]
+    """
     date = [start_date, end_date]
     stock_deals = get_hist_data(stock_id, date)
     record = None
@@ -128,9 +160,9 @@ def get_stock_incr(stock_id, start_date, end_date):
         incr = stock_deals[1]['close_price'] - stock_deals[0]['close_price']
         incr_ratio = incr / stock_deals[0]['close_price'] * 100
         for item in stock_deals:
-            del item['stock_id']
+            del item['stock_id']  # add stock_id field in the root level, so delete this one.
 
-        record = dict(stock_id=stock_id, incr=incr, incr_ratio=incr_ratio, old=stock_deals[0], new=stock_deals[1])
+        record = dict(stock_id=stock_id, incr=incr, incr_ratio=incr_ratio, old_deal=stock_deals[0], new_deal=stock_deals[1])
     return record
 
 
@@ -146,6 +178,13 @@ def get_stocks_incr(stock_ids, start_date, end_date):
 
 
 def cmp_stock_field(field1, field2):
+    """
+    Ensure stock_code is first.
+
+    :param field1:
+    :param field2:
+    :return: negative if filed1 less than filed2.
+    """
     if field1 == 'stock_code':
         return -1
     if field2 == 'stock_code':
@@ -153,7 +192,15 @@ def cmp_stock_field(field1, field2):
     return cmp(field1, field2)
 
 
-def export_stocks_incr(start_date, end_date, file_format='json', stock_codes=None):
+def export_stocks_incr(stock_codes=None, start_date=datetime.datetime.now().date() + datetime.timedelta(days=-1), end_date=datetime.datetime.now(), file_format='json'):
+    """
+    If stock_codes is None, then export all the stocks' increment.
+
+    :param stock_codes:
+    :param start_date:
+    :param end_date:
+    :param file_format:
+    """
     if stock_codes is None:
         stock_codes = get_stock_codes()
     stock_code_map = get_stock_ids(stock_codes)
@@ -171,8 +218,7 @@ def export_stocks_incr(start_date, end_date, file_format='json', stock_codes=Non
 
     filename = '/home/chookin/stock/stat.%s' % file_format
     if file_format is 'json':
-        # json.dumps在默认情况下，对于非ascii字符生成的是相对应的字符编码，而非原始字符
-        #   so, add ensure_ascii=False
+        # json.dumps在默认情况下，对于非ascii字符生成的是相对应的字符编码，而非原始字符. so, add ensure_ascii=False
         strdata = json.dumps(stocks_deal, ensure_ascii=False, cls=DateTimeEncoder)
         file_utils.save_to_unicode(filename, strdata)
     elif file_format is 'csv':
@@ -185,8 +231,8 @@ def export_stocks_incr(start_date, end_date, file_format='json', stock_codes=Non
 
 if __name__ == "__main__":
     print
-    stock_code = ['601989', '601991']
+    stock_code = ['601989', '601991', '601992']
     stock_code = '601991'
     # compute_stocks_incr(stock_code, '2014-06-6', '2014-09-19')
-    export_stocks_incr('2014-06-6', '2014-09-19', file_format='csv', stock_codes=('601989', '601991'))
+    export_stocks_incr(('601989', '601991'), '2014-06-6', '2014-09-19', file_format='csv')
     # export_stocks_incr('2014-06-6', '2014-09-19', file_format='csv')

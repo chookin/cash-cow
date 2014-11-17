@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 from collections import OrderedDict
+import collections
 
 """
 A very easy way around all the "'ascii' codec can't encode character…" issues with csvwriter is to instead use unicodecsv, a drop-in replacement for csvwriter.
@@ -8,10 +9,18 @@ A very easy way around all the "'ascii' codec can't encode character…" issues 
 import unicodecsv as csv
 import operator
 
+
 class Table():
     def __init__(self, fields=None, rows=None):
         self.fields = fields
         self.rows = rows
+
+    def __str__(self):
+        if self.fields is None:
+            return ''
+
+        strtb = ','.join(self.fields)
+        return strtb
 
     @staticmethod
     def generate_table_fields(obj, path=None):
@@ -52,6 +61,15 @@ class Table():
             row = {}
             for header, keys in key_map.items():
                 try:
+                    """
+                    reduce(function, sequence, starting_value)：对sequence中的item顺序迭代调用function，如果有starting_value，还可以作为初始值调用，例如可以用来对List求和：
+                            >>> def add(x,y): return x + y
+                            >>> reduce(add, range(1, 11))
+                            55 （注：1+2+3+4+5+6+7+8+9+10）
+                            >>> reduce(add, range(1, 11), 20)
+                            75 （注：1+2+3+4+5+6+7+8+9+10+20）
+                    """
+                    # item[key0][key1][key2][...]
                     row[header] = reduce(operator.getitem, keys, item)
                 except (KeyError, TypeError):
                     raise IOError("failed to process row %s" % row)
@@ -60,13 +78,19 @@ class Table():
         return table
 
     def write_csv(self, filename='output.csv', mode='wb'):
-        """Write the processed rows to the given filename
+        """
+        Write the table data to the given file
+
+        :param filename:
+        :param mode:
+        :raise AttributeError:
         """
         if len(self.rows) <= 0:
             raise AttributeError('No rows were loaded')
         with open(filename, mode) as f:
             # With Python's csv module, you can write a UTF-8 file that Excel will read correctly if you place a BOM at the beginning of the file.
             f.write(u'\ufeff'.encode('utf8'))
+
             writer = csv.DictWriter(f, fieldnames=self.fields, delimiter=',', quoting=csv.QUOTE_ALL)
             writer.writeheader()  # only valid for python version 2.7+
             writer.writerows(self.rows)

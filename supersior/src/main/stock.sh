@@ -23,7 +23,7 @@ echo "Using python" ${PYTHON}
 
 prompt_init="Initializing current host's environment(for example, installing some python library)"
 prompt_setup="Create mysql database tables"
-promt_data_acquisition="Acquisting deal data from web"
+promt_data_extr="Extract deal data from web"
 
 
 case "$1" in
@@ -35,11 +35,16 @@ case "$1" in
         echo -e ${prompt_setup}
         ${PYTHON} src/main/python/update_yum.py $@
         ;;
+  --extr)
+        echo -e ${promt_data_extr}
+        java -jar /home/chookin/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
+        ;;
   *)
         echo "Usage: bash stock.sh <action> [options]"
         echo "<action> description:
         init: $prompt_init
         setup: $prompt_setup
+        --extr: ${promt_data_extr}
         "
         echo "Use bash stock.sh <action> --help to get details on options available."
         exit 1

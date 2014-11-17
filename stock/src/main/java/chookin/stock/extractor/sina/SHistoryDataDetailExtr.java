@@ -2,18 +2,12 @@ package chookin.stock.extractor.sina;
 
 import chookin.etl.common.Extractor;
 import chookin.stock.extractor.HistoryDataDetailExtr;
-import chookin.stock.orm.domain.HistoryDataDetailEntity;
 import chookin.stock.orm.domain.StockEntity;
 import chookin.utils.DateUtils;
-import chookin.utils.io.FileHelper;
-import chookin.utils.web.UrlHelper;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by chookin on 8/2/14.
