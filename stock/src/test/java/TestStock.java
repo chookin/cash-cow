@@ -21,7 +21,7 @@ public class TestStock {
     @Ignore
     public void saveStocks(){
         try {
-            this.zStock.saveStocks();
+            this.zStock.collectStocks();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,7 +30,7 @@ public class TestStock {
     @Ignore
     public void saveCompanyInfo(){
         try {
-            this.zStock.saveCompanyInfo();
+            this.zStock.collectCompanyInfo();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class TestStock {
     @Ignore
     public void saveRealData(){
         try {
-            this.zStock.saveRealData();
+            this.zStock.collectRealData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class TestStock {
     @Test
     public void saveHistoryData(){
         try {
-            this.zStock.saveHistoryData(2003,1, 2003, 2);
+            this.zStock.collectHistoryData(2003, 1, 2003, 2);
         } catch (Throwable e) {
             e.printStackTrace();
         }

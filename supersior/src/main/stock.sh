@@ -19,11 +19,11 @@ if (( $numversion < 26 )); then
     echo "Need python version > 2.6"
     exit 1
 fi
-echo "Using python" ${PYTHON}
+#echo "Using python" ${PYTHON}
 
 prompt_init="Initializing current host's environment(for example, installing some python library)"
 prompt_setup="Create mysql database tables"
-promt_data_extr="Extract deal data from web"
+promt_data_acquistion="Collect deal data from web"
 
 
 case "$1" in
@@ -35,8 +35,8 @@ case "$1" in
         echo -e ${prompt_setup}
         ${PYTHON} src/main/python/update_yum.py $@
         ;;
-  --extr)
-        echo -e ${promt_data_extr}
+  collect)
+        echo -e ${promt_data_acquistion}
         java -jar /home/chookin/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
         ;;
   *)
@@ -44,7 +44,10 @@ case "$1" in
         echo "<action> description:
         init: $prompt_init
         setup: $prompt_setup
-        --extr: ${promt_data_extr}
+        collect: ${promt_data_acquistion}. Such as:
+            bash stock.sh collect --proxy=no --hist # collect history data of current quarter.
+            bash stock.sh collect --proxy=no --hist=2014:3 # collect history data of 3rd quarter 2004.
+            bash stock.sh collect --proxy=no --hist=2013:3:2014:4 # collect history data of from  3rd quarter 2013 to 4th quarter 2014.
         "
         echo "Use bash stock.sh <action> --help to get details on options available."
         exit 1

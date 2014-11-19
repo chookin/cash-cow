@@ -17,7 +17,7 @@ public class OptionParser {
     }
     private void parse(){
         for(String arg: this.args){
-            String myArg = "";
+            String myArg;
             String val = "";
             int indexEqualSign = arg.indexOf("=");
             if(indexEqualSign == -1){
@@ -25,20 +25,12 @@ public class OptionParser {
             }else{
                 val = arg.substring(indexEqualSign + 1, arg.length());
             }
-            if(arg.startsWith("--")){
-                myArg = arg.substring(2, indexEqualSign);
-            }else if(arg.startsWith("-")){
-                myArg = arg.substring(1, indexEqualSign);
-            }
+            myArg = arg.substring(0, indexEqualSign);
             if (!myArg.isEmpty()) {
                 this.options.put(myArg, val);
             }
 
         }
-    }
-    public String getOption(char option){
-        String myOption = "" + option;
-        return getOption(myOption);
     }
 
     /**

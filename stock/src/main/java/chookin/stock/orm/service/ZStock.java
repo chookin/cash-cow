@@ -55,7 +55,7 @@ public class ZStock {
     @Autowired
     private StockRepository stockRepository;
     @Transactional
-    public void saveStocks() throws IOException {
+    public void collectStocks() throws IOException {
         Map<String, StockEntity> stocks = extractStockList();
         this.stockRepository.save(stocks.values());
     }
@@ -64,7 +64,7 @@ public class ZStock {
     private RealDataRepository realDataRepository;
 
     @Transactional
-    public void saveRealData() throws IOException {
+    public void collectRealData() throws IOException {
         Map<String, RealDataEntity> realdatas = extractRealData();
         this.realDataRepository.save(realdatas.values());
     }
@@ -72,7 +72,7 @@ public class ZStock {
     private CompanyInfoRepository companyInfoRepository;
 
     @Transactional
-    public void saveCompanyInfo() throws IOException {
+    public void collectCompanyInfo() throws IOException {
         Map<String, CompanyInfoEntity> companies = extractCompanyInfos();
         this.companyInfoRepository.save(companies.values());
     }
@@ -80,56 +80,63 @@ public class ZStock {
     @Autowired
     private HistoryDataRepository historyDataRepository;
 
-    public void saveCurrentQuarterHistoryData() throws IOException{
+    public void collectCurrentQuarterHistoryData() throws IOException{
         Calendar calendar =Calendar.getInstance();
         int month = calendar.get(Calendar.MONTH) + 1; // 在格里高利历和罗马儒略历中一年中的第一个月是 JANUARY，它为 0
         int quarter = (month + 2) / 3;
         int year = calendar.get(Calendar.YEAR);
-        this.saveHistoryData(year, quarter);
+        this.collectHistoryData(year, quarter);
     }
-    public void saveHistoryData(int startYear, int startQuarter, int endYear, int endQuater) throws IOException {
+    public long collectHistoryData(int startYear, int startQuarter, int endYear, int endQuater) throws IOException {
         LOG.info(String.format("start to save history data for %d-%d to %d-%d", startYear, startQuarter, endYear, endQuater));
+        long count = 0;
         if(startYear > endYear){
-            return;
+            return count;
         }
         if(startYear == endYear){
             for(int quarter = startQuarter; quarter <= endQuater; ++quarter){
-                this.saveHistoryData(startYear, quarter);
+                count += this.collectHistoryData(startYear, quarter);
             }
-            return;
+            return count;
         }
         for(int quarter = startQuarter; quarter <= 4; ++quarter){
-            this.saveHistoryData(startYear, quarter);
+            count += this.collectHistoryData(startYear, quarter);
         }
         for(int year = startYear + 1; year < endYear; ++year){
             for(int quarter = 1; quarter <= 4; ++quarter){
-                this.saveHistoryData(year, quarter);
+                count += this.collectHistoryData(year, quarter);
             }
         }
         for(int quarter = 1; quarter <= endQuater;++quarter ){
-            this.saveHistoryData(endYear, quarter);
+            count += this.collectHistoryData(endYear, quarter);
         }
+        return count;
+    }
+    public long collectHistoryData(Collection<StockEntity> stocks, int year, int quarter) throws IOException {
+        Collection<HistoryDataEntity> histDatas = this.extractHistoryData(stocks, year, quarter);
+        this.historyDataRepository.save(histDatas);
+        return histDatas.size();
     }
     @Transactional
-    public void saveHistoryData(int year, int quarter) throws IOException {
+    public long collectHistoryData(int year, int quarter) throws IOException {
         LOG.info(String.format("start to save history data of %d-%d", year, quarter));
         Map<String, StockEntity> stockMap = this.getStocksMap();
         Collection<StockEntity> stocks = new ArrayList<StockEntity>();
-        int count = 0;
+        long count = 0;
         for(Map.Entry<String, StockEntity> entry: stockMap.entrySet()){
             stocks.add(entry.getValue());
             if(stocks.size() < 100){
                 continue;
             }
-            Collection<HistoryDataEntity> histDatas = this.extractHistoryData(stocks, year, quarter);
-            this.historyDataRepository.save(histDatas);
-            count += histDatas.size();
+            count += this.collectHistoryData(stocks, year, quarter);
             stocks.clear();
         }
+        count += this.collectHistoryData(stocks, year, quarter);
         LOG.info(String.format("%d history data of %d-%d were saved", count, year, quarter));
+        return count;
     }
 
-    public void saveHistoryDetail() throws IOException{
+    public void collectHistoryDetail() throws IOException{
         Map<String, StockEntity> stocksMap = this.getStocksMap();
         for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
             Calendar startDay  = Calendar.getInstance();

@@ -8,8 +8,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.io.IOException;
-
 
 /**
  * Created by chookin on 7/27/14.
@@ -24,7 +22,7 @@ public class Main {
         LOG.info("ZStock started.");
         try {
             OptionParser optionParser = new OptionParser(args);
-            if(optionParser.getOption("proxy") == "yes"){
+            if(optionParser.getOption("--proxy") == "yes"){
                 setProxy(true);
             }else{
                 setProxy(false);
@@ -33,26 +31,27 @@ public class Main {
                     new ClassPathXmlApplicationContext("applicationContext.xml");
 
             Main service = (Main) context.getBean("main");
-            if(optionParser.getOption("extr") != null) {
-                if (optionParser.getOption("stock") != null) {
-                    service.zStock.saveStocks();
+            if(optionParser.getOption("collect") != null) {
+                LOG.info("process option `collect`");
+                if (optionParser.getOption("--stock") != null) {
+                    service.zStock.collectStocks();
                 }
-                if (optionParser.getOption("cmpr") != null) {
-                    service.zStock.saveCompanyInfo();
+                if (optionParser.getOption("--cmpr") != null) {
+                    service.zStock.collectCompanyInfo();
                 }
-                if (optionParser.getOption("hist") != null) {
-                    String para = optionParser.getOption("hist");
+                if (optionParser.getOption("--hist") != null) {
+                    String para = optionParser.getOption("--hist");
                     String[] items = para.split(OptionParser.item_separator);
                     if (items.length == 2) {
-                        service.zStock.saveHistoryData(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
+                        service.zStock.collectHistoryData(Integer.parseInt(items[0]), Integer.parseInt(items[1]));
                     } else if (items.length == 4) {
-                        service.zStock.saveHistoryData(Integer.parseInt(items[0]), Integer.parseInt(items[1]), Integer.parseInt(items[2]), Integer.parseInt(items[3]));
+                        service.zStock.collectHistoryData(Integer.parseInt(items[0]), Integer.parseInt(items[1]), Integer.parseInt(items[2]), Integer.parseInt(items[3]));
                     } else {
-                        service.zStock.saveCurrentQuarterHistoryData();
+                        service.zStock.collectCurrentQuarterHistoryData();
                     }
                 }
-                if (optionParser.getOption("histdetail") != null) {
-                    service.zStock.saveHistoryDetail();
+                if (optionParser.getOption("--histdetail") != null) {
+                    service.zStock.collectHistoryDetail();
                 }
             }
         } catch (Throwable t) {
