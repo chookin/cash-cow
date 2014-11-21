@@ -95,7 +95,7 @@ public class Extractor {
         return this.getDocument(0L);
     }
     /**
-     * download the web resource to local file without parse if not downloaded.
+     * download the web resource to local disk without parsing if not been downloaded.
      * @param minsize ignore the resource if its' byte length less than minsize
      *
      * @return return null when error in fetching remote resource

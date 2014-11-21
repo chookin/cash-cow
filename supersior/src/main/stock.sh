@@ -44,10 +44,21 @@ case "$1" in
         echo "<action> description:
         init: $prompt_init
         setup: $prompt_setup
-        collect: ${promt_data_acquistion}. Such as:
-            bash stock.sh collect --proxy=no --hist # collect history data of current quarter.
-            bash stock.sh collect --proxy=no --hist=2014:3 # collect history data of 3rd quarter 2004.
-            bash stock.sh collect --proxy=no --hist=2013:3:2014:4 # collect history data of from  3rd quarter 2013 to 4th quarter 2014.
+        collect: ${promt_data_acquistion}.
+            Usage:
+                bash stock.sh collect <option> --proxy=no(|yes)
+            <option> could be:
+                --hist          # history data
+                --histdetail    # history detail data
+                --stock         # stock list
+                --cmpr          # stock company info
+            Detail usage such as:
+                --hist # collect history data of current quarter.
+                --hist=2014:3 # collect history data of 3rd quarter 2004.
+                --hist=2013:3:2014:4 # collect history data of from  3rd quarter 2013 to 4th quarter 2014.
+                --histdetail # collect yesterday history detail data.
+                --histdetail=2014-11-12:2014-11-20 # collect history detail data of from  2013-11-12 to 2014-11-20.
+
         "
         echo "Use bash stock.sh <action> --help to get details on options available."
         exit 1

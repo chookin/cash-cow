@@ -51,7 +51,14 @@ public class Main {
                     }
                 }
                 if (optionParser.getOption("--histdetail") != null) {
-                    service.zStock.collectHistoryDetail();
+                    String para = optionParser.getOption("--histdetail");
+                    String[] items = para.split(OptionParser.item_separator);
+                    if (items.length == 2) {
+                        service.zStock.collectHistoryDetail(items[0], items[1]);
+                    } else {
+                        service.zStock.collectYesterdayHistoryDetail();
+                    }
+
                 }
             }
         } catch (Throwable t) {

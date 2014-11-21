@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 # coding:utf-8
 import decimal
-
-import mysql_handler
 import datetime
 import json
-import z_table
+
+import mysql_handler
+from tools import file_utils, z_table
+
 
 hmysql = mysql_handler.MySQLHandler()
 
@@ -213,8 +214,6 @@ def export_stocks_incr(stock_codes=None, start_date=datetime.datetime.now().date
             stock_info = stocks_info[stock_code]
             record.update(stock_info)
             stocks_deal.append(record)
-
-    import file_utils
 
     filename = '/home/chookin/stock/stat.%s' % file_format
     if file_format is 'json':

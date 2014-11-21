@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#coding:utf-8
+# coding:utf-8
 import platform
 import shlex
 import subprocess
@@ -18,6 +18,7 @@ class FatalException(Exception):
     def _get_message(self):
         return str(self)
 
+
 class NonFatalException(Exception):
     def __init__(self, reason):
         self.reason = reason
@@ -28,12 +29,13 @@ class NonFatalException(Exception):
     def _get_message(self):
         return str(self)
 
+
 def is_root():
     '''
     Checks effective UUID
     Returns True if a program is running under root-level privileges.
     '''
-    return os.geteuid() == 0
+    return shlex.os.geteuid() == 0
 
 
 def get_exec_path(cmd):
@@ -43,6 +45,7 @@ def get_exec_path(cmd):
         return out.strip()
     else:
         return None
+
 
 def run_in_shell(cmd):
     print_info_msg('about to run command: ' + str(cmd))
@@ -82,6 +85,7 @@ def print_error_msg(msg):
     Prints an "error" messsage.
     """
     print("ERROR: " + msg)
+
 
 OS, OS_VERSION, _ = platform.linux_distribution()
 OS = OS.lower().strip()

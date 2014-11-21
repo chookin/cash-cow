@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-#coding:utf-8
-import z_common
+# coding:utf-8
+from tools import z_common
 
 MYSQL_EXEC_ARGS_WO_USER_VARS = \
     "--force --host={0} --port={1} --user={2} --password={3} < {5}"
+
 
 class MysqlHelper():
     def __init__(self):

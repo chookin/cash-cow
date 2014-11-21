@@ -61,7 +61,7 @@ class Json2Csv(object):
     def write_csv(self, filename='output.csv'):
         """Write the processed rows to the given filename
         """
-        if (len(self.rows) <= 0):
+        if len(self.rows) <= 0:
             raise AttributeError('No rows were loaded')
         with open(filename, 'wb+') as f:
             writer = csv.DictWriter(f, self.key_map.keys())

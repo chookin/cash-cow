@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding:utf-8
 from collections import OrderedDict
-import collections
 
 """
 A very easy way around all the "'ascii' codec can't encode character…" issues with csvwriter is to instead use unicodecsv, a drop-in replacement for csvwriter.

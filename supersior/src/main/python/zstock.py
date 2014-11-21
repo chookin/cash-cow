@@ -5,8 +5,10 @@ import sys
 import traceback
 
 import z_logging
+from tools.z_common_ex import *
 
-from z_common_ex import *
+
+
 
 
 # action commands
@@ -52,7 +54,7 @@ def load_default_db_properties(args):
     pass
 
 def setup(args):
-    from mysql_helper import MysqlHelper
+    from tools.mysql_helper import MysqlHelper
     load_default_db_properties(args)
     MysqlHelper.execute_script(args, "../resources/stock-ddl-mysql-create.sql")
 
@@ -70,7 +72,7 @@ def stop(args):
 def main():
     print 'OS VERSION:', OS, OS_VERSION
 
-    z_logging.ZLogging().initLogger()
+    z_logging.ZLogging().init()
 
     parser = optparse.OptionParser(
         usage="usage: python %prog [options] action",)

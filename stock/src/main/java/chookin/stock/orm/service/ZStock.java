@@ -19,6 +19,7 @@ import chookin.stock.orm.repository.CompanyInfoRepository;
 import chookin.stock.orm.repository.HistoryDataRepository;
 import chookin.stock.orm.repository.RealDataRepository;
 import chookin.stock.orm.repository.StockRepository;
+import chookin.utils.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -135,15 +136,25 @@ public class ZStock {
         LOG.info(String.format("%d history data of %d-%d were saved", count, year, quarter));
         return count;
     }
+    public void collectYesterdayHistoryDetail() throws IOException{
+        Calendar startDay  = Calendar.getInstance();
+        startDay.add(Calendar.DAY_OF_YEAR, -1);
+        this.collectHistoryDetail(startDay, startDay);
+    }
 
-    public void collectHistoryDetail() throws IOException{
+    /**
+     *
+     * @param startDay format is 'yyyy-MM-dd'
+     * @param endDay format is 'yyyy-MM-dd'
+     * @throws IOException
+     */
+    public void collectHistoryDetail(String startDay, String endDay) throws IOException{
+        collectHistoryDetail(DateUtils.convertDateStringToCalendar(startDay), DateUtils.convertDateStringToCalendar(endDay));
+    }
+
+    public void collectHistoryDetail(Calendar startDay, Calendar endDay) throws IOException{
         Map<String, StockEntity> stocksMap = this.getStocksMap();
         for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
-            Calendar startDay  = Calendar.getInstance();
-            startDay.add(Calendar.DAY_OF_YEAR, -3);
-            Calendar endDay = Calendar.getInstance();
-            endDay.add(Calendar.DAY_OF_YEAR, -3);
-
             for ( Calendar curDay = startDay; curDay.compareTo(endDay) <= 0; curDay.add(Calendar.DAY_OF_YEAR, 1) ){
                 int weekDay = curDay.get(Calendar.DAY_OF_WEEK);
                 if(weekDay == 1 || weekDay == 7){//SUNDAY, SATURDAY
@@ -159,8 +170,8 @@ public class ZStock {
                 }
             }
         }
-
     }
+
     public Map<String, StockEntity> extractStockList() throws IOException{
         StockListExtr extractor = new EmStockListExtr();
         return extractor.getNewStocks(this.getStocksMap());
