@@ -9,6 +9,7 @@ import zlib
 from mongo_handler import MongoHandler
 import entities
 from tools import file_utils
+from tools import date_utils
 
 
 """
@@ -22,7 +23,7 @@ sys.setdefaultencoding("utf-8")
 class SHistDetail():
     def __init__(self):
         self.stock_code = None
-        self.date = None
+        self.date = None  # datetime type
         self.exchanges = []
         pass
 
@@ -68,7 +69,7 @@ class SHistDetail():
 
         stock.stock_code = filename[indexLastSlash + 3: indexLastDot]  # remove the sz or sh
         strdate = filename[indexNextLastSlash + 1: indexLastSlash]
-        stock.date = datetime.datetime.strptime(strdate, '%Y-%m-%d').date()
+        stock.date = date_utils.str2date(strdate)
         f = open(filename)
         count = -1
         while True:
@@ -115,6 +116,57 @@ class MongoHistDetailHandler(MongoHandler):
         """
         return self.get_conn().stock.hist_detail
 
+    def insert(self, hist_detail):
+        self.table.insert(hist_detail)
+
+    def query_by_date(self, stock_code, date):
+        str_id = MongoHistDetailHandler.get_id(stock_code, date)
+        record = self.table.find_one({"_id": str_id})
+        return MongoHistDetailHandler.decode_json(record)
+
+    def query_by_date_string(self, stock_code, str_date):
+        return self.query_by_date(stock_code, date_utils.str2date(str_date))
+
+    def _load_from_file(self, filename):
+        record = SHistDetail.extract(filename)
+        json_record = MongoHistDetailHandler.get_json(record)
+        self.insert(json_record)
+        self.table.close()
+        return 1
+
+    def _load_from_files(self, filenames):
+        hist_details = []
+        count = 0
+        for item in filenames:
+            record = SHistDetail.extract(item)
+            count += 1
+            json_record = MongoHistDetailHandler.get_json(record)
+            hist_details.append(json_record)
+            if len(hist_details) == 50:
+                self.insert(hist_details)
+                print '%s records inserted' % count
+                hist_details = []
+        if len(hist_details) > 0:
+            # If the list is empty, PyMongo raises an exception:
+            #   pymongo.errors.InvalidOperation: cannot do an empty bulk insert
+            self.insert(hist_details)
+            print 'insert the end %s records' % len(hist_details)
+        self.table.close()
+        return count
+
+    def load_from_path(self, path):
+        """
+        Save hist details that stored in files under a path to mongo.
+
+        :param path: name of the path, the path could be a directory or a file
+        """
+        if os.path.isfile(path):
+            count = self._load_from_file(path)
+        else:
+            filenames = file_utils.getfilenames(path)
+            count = self._load_from_files(filenames)
+        print 'total insert %s records for %s' % (count, path)
+
     @staticmethod
     def get_id(stock_code, date):
         return stock_code + datetime.date.strftime(date, '%Y%m%d')
@@ -126,17 +178,16 @@ class MongoHistDetailHandler(MongoHandler):
 
         :param hist_detail: the HistDetail object
         :param compress: whether compress exchange detail
-        :return: a json object, not a json string
+        :return: a json object, not a json string. Its format is {'_id':stock_code+date, 'v':time:'price,trade_hand,sell'}
         """
         stock = {'_id': MongoHistDetailHandler.get_id(hist_detail.stock_code, hist_detail.date)}
         exchanges = {}
         for exchange in hist_detail.exchanges:
             value = "%s,%s,%s" % (exchange.price, exchange.trade_hand, exchange.sell)
             exchanges[exchange.time] = value
-        if compress:
-            exchanges = zlib.compress(json.dumps(exchanges), zlib.Z_BEST_COMPRESSION)
-            exchanges = b64encode(exchanges)
         stock['v'] = exchanges
+        if compress:
+            MongoHistDetailHandler.compress(stock)
         return stock
 
     @staticmethod
@@ -145,56 +196,23 @@ class MongoHistDetailHandler(MongoHandler):
         decode the json object that fetching from mongodb
         :param encoding: the source json object
         :param compress: whether the source json object is compressed
-        :return:
+        :return: if compress=False, just return encoding; or else decompress and return.
         """
         stock = encoding
         if compress:
-            tmp = b64decode(stock['v'])
-            tmp = zlib.decompress(tmp)
-            stock['v'] = json.JSONDecoder().decode(tmp)
+            MongoHistDetailHandler.decompress(stock)
         return stock
 
-    def insert(self, hist_detail):
-        self.table.insert(hist_detail)
-
-    def query_by_date_string(self, stock_code, str_date):
-        str_id = MongoHistDetailHandler.get_id(stock_code, datetime.datetime.strptime(str_date, '%Y-%m-%d').date())
-        record = self.table.find_one({"_id": str_id})
-        return MongoHistDetailHandler.decode_json(record)
+    @staticmethod
+    def compress(hist_detail):
+        exchanges = zlib.compress(json.dumps(hist_detail['v']), zlib.Z_BEST_COMPRESSION)
+        hist_detail['v'] = b64encode(exchanges)
 
     @staticmethod
-    def save_hist_detail(path):
-        """
-        Save hist detail int the file of path
-        :param path: name of the path, the path could be a directory or a file
-        """
-        dboper = MongoHistDetailHandler()
-        if os.path.isfile(path):
-            record = SHistDetail.extract(path)
-            record = MongoHistDetailHandler.get_json(record)
-            dboper.insert(record)
-            dboper.table.close()
-            return
-
-        filenames = file_utils.getfilenames(path)
-        hist_details = []
-        count = 0
-        for item in filenames:
-            count += 1
-            record = SHistDetail.extract(item)
-            record = MongoHistDetailHandler.get_json(record)
-            hist_details.append(record)
-            if len(hist_details) == 50:
-                dboper.insert(hist_details)
-                print '%s reords inserted' % count
-                hist_details = []
-        if len(hist_details) > 0:
-            # If the list is empty, PyMongo raises an exception:
-            #   pymongo.errors.InvalidOperation: cannot do an empty bulk insert
-            dboper.insert(hist_details)
-            print 'insert %s reords' % len(hist_details)
-        print 'total insert %s records for %s' % (count, path)
-        dboper.table.close()
+    def decompress(hist_detail):
+        tmp = b64decode(hist_detail['v'])
+        tmp = zlib.decompress(tmp)
+        hist_detail['v'] = json.JSONDecoder().decode(tmp)
 
 
 if __name__ == "__main__":

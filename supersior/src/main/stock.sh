@@ -37,6 +37,14 @@ case "$1" in
         ;;
   collect)
         echo -e ${promt_data_acquistion}
+        for para in $*
+        do
+            case ${para} in
+                --histdetail)
+                echo -e "load histdetail from downloaded files"
+                ;;
+            esac
+        done
         java -jar /home/chookin/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
         ;;
   *)
@@ -62,7 +70,7 @@ case "$1" in
         "
         echo "Use bash stock.sh <action> --help to get details on options available."
         exit 1
-esac
+esac # esac 和 case是一对，就像fi 和 if.
 
 exit 0
 
