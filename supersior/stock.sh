@@ -3,8 +3,8 @@
 # -a File: true if File exists
 # -z Var: true if Var length is 0
 
-if [ -a /usr/bin/python2.6 ]; then
-    PYTHON=/usr/bin/python2.6
+if [ -a /usr/local/bin/python2.7 ]; then
+    PYTHON=/usr/local/bin/python2.7
 fi
 
 if [ -z "$PYTHON" ]; then
@@ -15,43 +15,43 @@ fi
 majversion=`${PYTHON} -V 2>&1 | awk '{print $2}' | cut -d'.' -f1`
 minversion=`${PYTHON} -V 2>&1 | awk '{print $2}' | cut -d'.' -f2`
 numversion=$(( 10 * $majversion + $minversion))
-if (( $numversion < 26 )); then
-    echo "Need python version > 2.6"
+if (( $numversion < 27 )); then
+    echo "Need python version >= 2.7"
     exit 1
 fi
-#echo "Using python" ${PYTHON}
 
 prompt_init="Initializing current host's environment(for example, installing some python library)"
-prompt_setup="Create mysql database tables"
+prompt_create_db="Create mysql database tables"
 promt_data_acquistion="Collect deal data from web"
 
 
 case "$1" in
   init)
         echo -e ${prompt_init}
-        bash src/main/shell/init-depoloyer-host.sh $@
+        bash src/main/shell/init.sh $@
         ;;
-  setup)
-        echo -e ${prompt_setup}
-        ${PYTHON} src/main/python/update_yum.py $@
+  create_db)
+        echo -e ${prompt_create_db}
+        ${PYTHON} src/main/python/mysql_handler.py $@
         ;;
   collect)
         echo -e ${promt_data_acquistion}
+        java -jar /home/chookin/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
         for para in $*
         do
             case ${para} in
                 --histdetail)
                 echo -e "load histdetail from downloaded files"
+                ${PYTHON} src/main/python/hist_detail.py load_remove
                 ;;
             esac
         done
-        java -jar /home/chookin/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
         ;;
   *)
         echo "Usage: bash stock.sh <action> [options]"
         echo "<action> description:
         init: $prompt_init
-        setup: $prompt_setup
+        create_db: $prompt_create_db
         collect: ${promt_data_acquistion}.
             Usage:
                 bash stock.sh collect <option> --proxy=no(|yes)

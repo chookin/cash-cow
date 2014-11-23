@@ -13,20 +13,23 @@ os.walk(top,topdown=True,onerror=None)
 """
 
 
-def getsubdirs(dirname):
+def get_sub_dirs(dirname):
     for parent, subdirnames, filenames in os.walk(dirname):
         return subdirnames
     return []
 
 
-def getfilenames(dirname):
+def get_file_names(dirname, recursive=False):
     rst = []
     for parent, subdirnames, filenames in os.walk(dirname):
         for item in filenames:
             rst.append(os.path.join(parent, item))
+        if recursive:
+            for subdir in subdirnames:
+                local_dir = os.path.join(parent, subdir)
+                rst.extend(get_file_names(local_dir, recursive))  # extend()方法只接受一个列表作为参数，并将该参数的每个元素都添加到原有的列表中。
         rst.sort()
         return rst
-    return rst
 
 
 def save_to_unicode(filename, data, append=False, encoding='utf-8'):
@@ -51,5 +54,5 @@ def save_json_to_csv(filename, obj, mode='w+'):
 
 
 if __name__ == '__main__':
-    filenames = getfilenames("/home/chookin")
+    filenames = get_file_names("/home/chookin")
     print filenames

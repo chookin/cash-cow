@@ -34,7 +34,7 @@ for rpm in ${rpms_need_on_depoloyer_host[@]}
 		echo
 		echo "$rpm is no install"
 		echo
-		sudo yum -y install $rpm
+		yum -y install $rpm
 	fi
 done
 
@@ -49,11 +49,11 @@ done
 # wget https://bootstrap.pypa.io/get-pip.py
 # python get-pip.py
 
-sudo easy_install MySQL-python
-sudo easy_install PyMongo
-sudo easy_install unicodecsv #json2csv, used for python 2.6.6
+easy_install MySQL-python
+easy_install PyMongo
+easy_install unicodecsv #json2csv, used for python 2.6.6
 sudo easy_install argparse  #json2csv
-# sudo easy_install http://argparse.googlecode.com/files/argparse-1.2.1.tar.gz
+# easy_install http://argparse.googlecode.com/files/argparse-1.2.1.tar.gz
 
 chkconfig mysqld on
 chkconfig mongod on

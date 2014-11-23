@@ -11,7 +11,7 @@ class MysqlHelper():
         pass
 
     @staticmethod
-    def execute_script(args, script):
+    def execute_sql_script(args, script):
         cmd = '{0} {1}'.format(args.dbms, MYSQL_EXEC_ARGS_WO_USER_VARS.format(
             args.database_host,
             args.database_port,

@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # coding:utf-8
+import optparse
+import traceback
 import MySQLdb
+import sys
+import params
+from tools.mysql_helper import MysqlHelper
 
 
 class MySQLHandler():
@@ -28,17 +33,58 @@ class MySQLHandler():
         self.conn.close()
 
 
+# Set database properties to default values
+def load_default_db_properties(args):
+    args.dbms = "mysql"
+    args.database_host = "localhost"
+    args.database_port = "3306"
+    args.database_username = "root"
+    args.database_password = "root"
+    pass
+
+
+class MysqlDBManager():
+    def __init__(self):
+        self.parser = optparse.OptionParser(usage="",)
+
+    def init_parser(self):
+        parser = self.parser
+        parser.add_option('--dbms',
+                          default='mysql',
+                          help="Database to use mysql|postgres|oracle",
+                          dest="dbms")
+        parser.add_option('--host',
+                          default='localhost',
+                          help="Hostname of database server",
+                          dest="database_host")
+        parser.add_option('--port',
+                          default='3306',
+                          help="Database port",
+                          dest="database_port")
+        parser.add_option('--dbname',
+                          default=None,
+                          help="Database/Schema/Service name or ServiceID",
+                          dest="database_name")
+        parser.add_option('--user',
+                          default='root',
+                          help="Database user login",
+                          dest="database_username")
+        parser.add_option('--passwd',
+                          default='root',
+                          help="Database user password",
+                          dest="database_password")
+
+    def create_db(self, args):
+        load_default_db_properties(args)
+        MysqlHelper.execute_sql_script(args, params.mysql_db_create_script)
+
+    def action(self):
+        self.init_parser()
+        (options, args) = self.parser.parse_args()
+        action = sys.argv[1]
+        print 'mysql handler executes action`%s`' % action
+        if action == 'create_db':
+            self.create_db(options)
 if __name__ == '__main__':
-    try:
-        conn = MySQLHandler("localhost", "root", "root", "stock", 3306).getconn()
-        cursor = conn.cursor()
-        cursor.execute("SELECT count(*) AS count FROM stock")
-        for row in cursor.fetchall():
-            print row[0]
-        conn.close()
-    except Exception as e:
-        print e
-        pass
-
-
+    MysqlDBManager().action()
 

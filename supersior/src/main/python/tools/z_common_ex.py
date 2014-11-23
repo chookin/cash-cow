@@ -31,10 +31,10 @@ class NonFatalException(Exception):
 
 
 def is_root():
-    '''
+    """
     Checks effective UUID
     Returns True if a program is running under root-level privileges.
-    '''
+    """
     return shlex.os.geteuid() == 0
 
 

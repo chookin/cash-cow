@@ -8,8 +8,10 @@ import zlib
 
 from mongo_handler import MongoHandler
 import entities
+import params
 from tools import file_utils
 from tools import date_utils
+from tools import z_common
 
 
 """
@@ -39,7 +41,7 @@ class SHistDetail():
         """
         stocks = []
 
-        files = file_utils.getfilenames(dir_name)
+        files = file_utils.get_file_names(dir_name)
         for item in files:
             stock = SHistDetail.extract(item)
             stocks.append(stock)
@@ -163,7 +165,7 @@ class MongoHistDetailHandler(MongoHandler):
         if os.path.isfile(path):
             count = self._load_from_file(path)
         else:
-            filenames = file_utils.getfilenames(path)
+            filenames = file_utils.get_file_names(path, recursive=True)
             count = self._load_from_files(filenames)
         print 'total insert %s records for %s' % (count, path)
 
@@ -216,5 +218,8 @@ class MongoHistDetailHandler(MongoHandler):
 
 
 if __name__ == "__main__":
-
+    # print "脚本名：", sys.argv[0]
+    if sys.argv[1] == 'load_remove':
+        MongoHistDetailHandler().load_from_path(params.s_hist_data_file)
+        z_common.execute_command('rm -rf %s/*' % params.s_hist_data_file)
     pass
