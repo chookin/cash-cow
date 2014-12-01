@@ -136,9 +136,9 @@ public class ZStock {
         LOG.info(String.format("%d history data of %d-%d were saved", count, year, quarter));
         return count;
     }
-    public void collectYesterdayHistoryDetail() throws IOException{
+    public void collectPrevDayHistoryDetail() throws IOException{
         Calendar startDay  = Calendar.getInstance();
-        startDay.add(Calendar.DAY_OF_YEAR, -1);
+        startDay = DateUtils.getPrevWorkDay(startDay);
         this.collectHistoryDetail(startDay, startDay);
     }
 
@@ -154,19 +154,19 @@ public class ZStock {
 
     public void collectHistoryDetail(Calendar startDay, Calendar endDay) throws IOException{
         Map<String, StockEntity> stocksMap = this.getStocksMap();
-        for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
-            for ( Calendar curDay = startDay; curDay.compareTo(endDay) <= 0; curDay.add(Calendar.DAY_OF_YEAR, 1) ){
-                int weekDay = curDay.get(Calendar.DAY_OF_WEEK);
-                if(weekDay == 1 || weekDay == 7){//SUNDAY, SATURDAY
-                    continue;
-                }
+        for ( Calendar curDay = (Calendar) startDay.clone(); curDay.compareTo(endDay) <= 0; curDay.add(Calendar.DAY_OF_YEAR, 1) ){
+            if(DateUtils.isWeekend(curDay)){
+                continue;
+            }
+            for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
                 StockEntity entity = entry.getValue();
                 HistoryDataDetailExtr extr = new SHistoryDataDetailExtr(entity);
-                extr.extract(curDay.getTime());
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if(extr.extract(curDay.getTime())) {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

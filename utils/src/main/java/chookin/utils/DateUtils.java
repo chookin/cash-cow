@@ -52,4 +52,27 @@ public class DateUtils {
         calendar.setTime(convertDateStringToDate(str));
         return calendar;
     }
+
+    public static boolean isWeekend(java.util.Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return isWeekend(calendar);
+    }
+    public static boolean isWeekend(Calendar calendar){
+        int weekDay = calendar.get(Calendar.DAY_OF_WEEK);
+        if(weekDay == 1 || weekDay == 7){//SUNDAY, SATURDAY
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    public static Calendar getPrevWorkDay(Calendar calendar){
+
+        Calendar curDay = (Calendar) calendar.clone();
+        do {
+            curDay.add(Calendar.DAY_OF_YEAR, -1);
+        } while (isWeekend(curDay));
+        return curDay;
+    }
 }

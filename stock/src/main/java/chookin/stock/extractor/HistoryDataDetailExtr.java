@@ -13,5 +13,5 @@ public abstract class HistoryDataDetailExtr {
     public HistoryDataDetailExtr(StockEntity stock){
         this.stock = stock;
     }
-    public abstract void extract(Date date) throws IOException;
+    public abstract boolean extract(Date date) throws IOException;
 }

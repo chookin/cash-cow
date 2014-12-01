@@ -61,8 +61,8 @@ case "$1" in
                 --hist # collect history data of current quarter.
                 --hist=2014:3 # collect history data of 3rd quarter 2004.
                 --hist=2013:3:2014:4 # collect history data of from  3rd quarter 2013 to 4th quarter 2014.
-                --histdetail # collect yesterday history detail data.
-                --histdetail=2014-11-12:2014-11-20 # collect history detail data of from  2013-11-12 to 2014-11-20.
+                --histdetail # collect the previous day's history detail data.
+                --histdetail=2014-11-12:2014-11-20 # collect history detail data of from 2013-11-12 to 2014-11-20.
 
         "
         echo "Use bash stock.sh <action> --help to get details on options available."

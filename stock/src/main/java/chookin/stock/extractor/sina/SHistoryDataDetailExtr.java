@@ -20,11 +20,11 @@ public class SHistoryDataDetailExtr extends HistoryDataDetailExtr {
 
     }
     @Override
-    public void extract(Date date) throws IOException {
+    public boolean extract(Date date) throws IOException {
         String url = String.format("http://market.finance.sina.com.cn/downxls.php?date=%s&symbol=%s%s", DateUtils.convertToDateString(date), this.stock.getExchange(),this.stock.getStockCode());
         LOG.info("extract "+url);
         Extractor extractor = new MyExtractor(url);
-        extractor.saveAsResource(100);
+        return extractor.saveAsResource(100);
     }
     class MyExtractor extends Extractor{
 

@@ -101,10 +101,10 @@ public class Extractor {
      * @return return null when error in fetching remote resource
      * @throws IOException
      */
-    public void saveAsResource(int minsize) throws IOException {
+    public boolean saveAsResource(int minsize) throws IOException {
         File file = new File(this.getFileName());
         if (file.exists()) {
-            return;
+            return false;
         }
         byte[] bytes;
         while(true){
@@ -125,8 +125,9 @@ public class Extractor {
             }
         }
         if(bytes.length < minsize){
-            return;
+            return true;
         }
         FileHelper.save(bytes, this.getFileName());
+        return true;
     }
 }

@@ -134,7 +134,7 @@ public class LinkHelper {
 			return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut)
 					.ignoreContentType(true).execute().bodyAsBytes();
 		} catch (ConnectException e) {
-			throw new ConnectException(e.getMessage() + " " + url);
+			throw new IOException(e.getMessage() + " " + url, e);
 		} catch (java.net.MalformedURLException e) {
 			LOG.warn(e.getMessage() + " " + url);
 			return null;

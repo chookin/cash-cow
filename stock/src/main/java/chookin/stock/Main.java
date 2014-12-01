@@ -56,7 +56,7 @@ public class Main {
                     if (items.length == 2) {
                         service.zStock.collectHistoryDetail(items[0], items[1]);
                     } else {
-                        service.zStock.collectYesterdayHistoryDetail();
+                        service.zStock.collectPrevDayHistoryDetail();
                     }
 
                 }
