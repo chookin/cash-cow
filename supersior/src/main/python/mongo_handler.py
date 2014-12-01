@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # coding:utf-8
-import datetime
 
 """
 mongodb data store directory is controlled by config 'dbpath' in /etc/mongod.conf

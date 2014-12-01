@@ -1,21 +1,21 @@
 #!/bin/sh bash
 
 # init the host for call remote commands
-# python-devel' # depenecy for paramiko
+# python-devel # depenecy for paramiko
 # python-setuptools python-setuptools-devel  #easy_install dependency
 
 if [ "$2" = "-h" ] || [ "$2" = "--help" ]; then
-	echo "Options:
-	-h, --help  show this help message and exit"
-	exit 0
+    echo "Options:
+    -h, --help  show this help message and exit"
+    exit 0
 fi
 
 echo -e 'Are you sure to initialize?(press "y" for yes:)\c'
 read ch
 if [ "$ch" != "y" ]
 then
-  	echo -e 'quit for pressed key is' $ch
-  	exit 0
+    echo -e 'quit for pressed key is' $ch
+    exit 0
 fi
 
 rpms_need_on_depoloyer_host=("python python-devel python-setuptools python-setuptools-devel")
@@ -24,18 +24,18 @@ echo
 
 # travesal array of shell
 for rpm in ${rpms_need_on_depoloyer_host[@]}
-	do
-	if  rpm -qa | grep $rpm
-	then
-		echo
-		echo "$rpm was installed"
-		echo
-	else
-		echo
-		echo "$rpm is no install"
-		echo
-		yum -y install $rpm
-	fi
+    do
+    if  rpm -qa | grep $rpm
+    then
+        echo
+        echo "$rpm was installed"
+        echo
+    else
+        echo
+        echo "$rpm is no install"
+        echo
+        yum -y install $rpm
+    fi
 done
 
 # the newest python version of centos yum repository is 2.6.6

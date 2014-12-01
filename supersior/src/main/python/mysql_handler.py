@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 # coding:utf-8
 import optparse
-import traceback
-import MySQLdb
 import sys
+
+import MySQLdb
+
 import params
 from tools.mysql_helper import MysqlHelper
 
