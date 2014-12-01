@@ -1,8 +1,5 @@
 #!/bin/bash bash
 
-# -a File: true if File exists
-# -z Var: true if Var length is 0
-
 if [ -a /usr/local/bin/python2.7 ]; then
     PYTHON=/usr/local/bin/python2.7
 fi
