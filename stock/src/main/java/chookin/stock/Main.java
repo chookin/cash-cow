@@ -22,7 +22,8 @@ public class Main {
         LOG.info("ZStock started.");
         try {
             OptionParser optionParser = new OptionParser(args);
-            if(optionParser.getOption("--proxy") == "yes"){
+            String paraProxy = optionParser.getOption("--proxy").toLowerCase();
+            if(paraProxy.equals("yes") || paraProxy.equals("y") || paraProxy.equals("on")){
                 setProxy(true);
             }else{
                 setProxy(false);
@@ -78,6 +79,7 @@ public class Main {
         }
         String host = "proxy.cmcc";
         int port = 8080;
+        LOG.info("enable proxy: "+host +":"+port);
         String authUser = "";
         String authPassword = "";
         System.setProperty("http.proxyHost", host);

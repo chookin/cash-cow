@@ -3,6 +3,7 @@ package chookin.etl.web.jsoup;
 import java.io.File;
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +27,7 @@ public class LinkHelper {
 
 	private static String[] documentExtensions = { "", ".htm", ".html" };
 	private static boolean ignorePound = true;
-	private static int timeOut = 300000;
+	private static int timeOut = 60000;
 	private static boolean isIgnore3W = true;
 
 	private static String protocolRegex = "[a-zA-Z]+://";
@@ -66,7 +67,7 @@ public class LinkHelper {
 	/**
 	 * "#" indicates inner page jump mostly, so may be you need to trim strings
 	 * behind "#"
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -81,7 +82,7 @@ public class LinkHelper {
 
 	/**
 	 * parse HTML links from a doc file.
-	 * 
+	 *
 	 * @param in
 	 * @param charsetName
 	 * @param baseUrl
@@ -108,7 +109,7 @@ public class LinkHelper {
 	private static String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US)";
 
 	/**
-     * retrieve html document by url
+	 * retrieve html document by url
 	 * @param url
 	 * @return parsed document
 	 * @throws IOException
@@ -120,30 +121,32 @@ public class LinkHelper {
 	/**
 	 * use Jsoup to fetch any URL and get the data as bytes, if you don't want
 	 * to parse it as HTML
-	 * 
+	 *
 	 * @param url
 	 * @return null when error.
 	 * @throws IOException
 	 */
 	public static byte[] getDocumentBytes(String url) throws IOException {
-		// ignoreContentType(true) is set because otherwise Jsoup will throw an
-		// exception that the content is not HTML parseable -- that's OK in this
+		// ignoreContentType(true) is set because otherwise Jsoup will throw an exception that the content is not HTML parseable -- that's OK in this
 		// case because we're using bodyAsBytes() to get the response body,
 		// rather than parsing.
-		try {
-			return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut)
-					.ignoreContentType(true).execute().bodyAsBytes();
-		} catch (ConnectException e) {
-			throw new IOException(e.getMessage() + " " + url, e);
-		} catch (java.net.MalformedURLException e) {
-			LOG.warn(e.getMessage() + " " + url);
-			return null;
+		while (true) {
+			try {
+				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).execute().bodyAsBytes();
+			} catch (SocketTimeoutException e) {
+				LOG.warn(e.getMessage()+" "+url, e);
+			} catch (ConnectException e) {
+				throw new IOException(e.getMessage() + " " + url, e);
+			} catch (java.net.MalformedURLException e) {
+				LOG.warn(e.getMessage() + " " + url);
+				return null;
+			}
 		}
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param url
 	 * @return
 	 * @throws IOException
@@ -158,7 +161,7 @@ public class LinkHelper {
 
 	/**
 	 * get all the links of a HTML web page
-	 * 
+	 *
 	 * @param doc
 	 *            HTML document
 	 * @return
@@ -186,7 +189,7 @@ public class LinkHelper {
 	/**
 	 * judge whether resource indicated by the URL is a HTML page by the URL's
 	 * extension
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -225,7 +228,7 @@ public class LinkHelper {
 
 	/**
 	 * get the domain without protocol and resource name for a URL
-	 * 
+	 *
 	 * @param url
 	 * @return a site domain contains no protocol
 	 */
@@ -240,7 +243,7 @@ public class LinkHelper {
 
 	/**
 	 * erase the protocol of a URL and return the erased.
-	 * 
+	 *
 	 * @param url
 	 * @return
 	 */
@@ -248,8 +251,8 @@ public class LinkHelper {
 		return url.replaceAll(String.format("(?i)%s", LinkHelper.getProtocolRegex()), "");
 	}
 	public static String getUrlWithoutProtocolAndStart3W(String url) {
-        // (?i)让表达式忽略大小写进行匹配;
-        // '^'和'$'分别匹配字符串的开始和结束
+		// (?i)让表达式忽略大小写进行匹配;
+		// '^'和'$'分别匹配字符串的开始和结束
 		return getUrlWithoutProtocol(url).replaceAll("(?i)(^www.)", "");
 	}
 }

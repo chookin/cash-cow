@@ -219,7 +219,8 @@ class MongoHistDetailHandler(MongoHandler):
 
 if __name__ == "__main__":
     # print "脚本名：", sys.argv[0]
-    if sys.argv[1] == 'load_remove':
-        MongoHistDetailHandler().load_from_path(params.s_hist_data_file)
-        z_common.execute_command('rm -rf %s/*' % params.s_hist_data_file)
+    if len(sys.argv) > 1:
+        if sys.argv[1] == 'load_remove':
+            MongoHistDetailHandler().load_from_path(params.s_hist_data_path)
+            z_common.execute_command('rm -rf %s/*' % params.s_hist_data_path)
     pass

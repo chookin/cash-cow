@@ -112,20 +112,24 @@ public class Extractor {
                 bytes = LinkHelper.getDocumentBytes(this.getUrl());
                 break;
             } catch (HttpStatusException e) {
-                if(e.getStatusCode() == 503){
-                    LOG.warn(null, e);
-                    try {
-                        Thread.sleep(5000);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                    continue;
+                switch (e.getStatusCode()){
+                    case 500:
+                    case 502:
+                    case 503:
+                        LOG.warn("http status code "+e.getStatusCode(), e);
+                        try {
+                            Thread.sleep(3000);
+                        } catch (InterruptedException e1) {
+                            e1.printStackTrace();
+                        }
+                        break;
+                    default:
+                        throw new IOException(e);
                 }
-                throw new IOException(e);
             }
         }
         if(bytes.length < minsize){
-            return true;
+            return false;
         }
         FileHelper.save(bytes, this.getFileName());
         return true;

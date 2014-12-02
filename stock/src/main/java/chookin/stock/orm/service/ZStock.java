@@ -163,7 +163,7 @@ public class ZStock {
                 HistoryDataDetailExtr extr = new SHistoryDataDetailExtr(entity);
                 if(extr.extract(curDay.getTime())) {
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(300);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
