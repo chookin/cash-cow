@@ -82,7 +82,7 @@ public class Extractor {
             long time = file.lastModified();
             long now = new Date().getTime();
             if(now - time < existedValidPeriod){ // this file is still new
-                return Jsoup.parse(file, "utf-8");
+                return Jsoup.parse(file, "utf-8", this.getUrl());
             }
         }
         Document doc = LinkHelper.getDocument(this.getUrl());

@@ -7,8 +7,19 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
-    <orderEntry type="jdk" jdkName="jdk1.7" jdkType="JavaSDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library name="PHP">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../../ub-lab/targetV3/SSLib" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../../ub-lab/targetV3/SSLib" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Maven: com.mycila:mycila-xmltool:4.0.ga" level="project" />
     <orderEntry type="library" name="Maven: org.jsoup:jsoup:1.7.3" level="project" />
     <orderEntry type="library" name="Maven: net.sf.supercsv:super-csv:2.2.0" level="project" />

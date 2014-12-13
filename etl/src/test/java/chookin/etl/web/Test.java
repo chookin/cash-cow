@@ -3,6 +3,7 @@ package chookin.etl.web;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,15 +34,16 @@ import chookin.etl.web.table.TableExtract;
 
 public class Test {
 	private final static Logger LOG = Logger.getLogger(Test.class);
+	private final static String RESOURCE_PATH="etl/src/main/resources/";
 
 	public static void main(String[] args) {
         try {
-            extractTable();
+//            extractTable();
 //            testLinkExtract();
 //            testTableExtract();
 //            testSiteUrlExtract();
 //            testLoadPage();
-//            testDownloadSite();
+            testDownloadSite();
 //            testLocalFileSaver();
 //            testSiteSearch();
 //            testGoogleSearch();
@@ -52,7 +54,8 @@ public class Test {
 	}
 
 	public static void testLinkExtract() throws IOException {
-		String filePath = "D:/developing/chookin.etl/Online Data Extractor.htm";
+		String filePath = RESOURCE_PATH + "index.html";
+		System.out.println("cur dir:" + System.getProperty("user.dir"));//user.dir指定了当前的路径
 		File in = new File(filePath);
 		String charsetName = "utf-8";
 		String baseUrl = null;
