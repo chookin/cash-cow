@@ -1,5 +1,6 @@
 package chookin.utils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -137,5 +138,18 @@ public final class StringUtil {
             return true;
         }
         return false;
+    }
+
+    public static Collection<String> parseCollections(String items){
+        String[] arr = items.split(",");
+        Collection<String> rst = new ArrayList<String>();
+        for(String item : arr){
+            String myItem = item.trim();
+            if(myItem.isEmpty()){
+                continue;
+            }
+            rst.add(myItem);
+        }
+        return rst;
     }
 }

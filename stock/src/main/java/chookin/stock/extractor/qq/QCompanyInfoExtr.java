@@ -1,17 +1,14 @@
 package chookin.stock.extractor.qq;
 
 import chookin.etl.common.Extractor;
-import chookin.stock.Configuration;
 import chookin.stock.extractor.CompanyInfoExtr;
 import chookin.stock.orm.domain.CompanyInfoEntity;
 import chookin.stock.orm.domain.StockEntity;
-import chookin.stock.orm.repository.CompanyInfoRepository;
 import chookin.utils.DateUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.IOException;
 import java.util.Iterator;

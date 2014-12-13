@@ -1,0 +1,23 @@
+<configuration>
+    <property>
+        <name>proxy.enable</name>
+        <value>false</value>
+        <description>true | false</description>
+    </property>
+    <property>
+        <name>proxy.host</name>
+        <value>proxy.cmcc</value>
+    </property>
+    <property>
+        <name>proxy.port</name>
+        <value>8080</value>
+    </property>
+    <property>
+        <name>proxy.user</name>
+        <value>""</value>
+    </property>
+    <property>
+        <name>proxy.password</name>
+        <value>""</value>
+    </property>
+</configuration>

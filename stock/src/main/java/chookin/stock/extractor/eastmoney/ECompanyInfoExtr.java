@@ -1,7 +1,6 @@
 package chookin.stock.extractor.eastmoney;
 
 import chookin.etl.common.Extractor;
-import chookin.stock.Configuration;
 import chookin.stock.extractor.CompanyInfoExtr;
 import chookin.stock.orm.domain.CompanyInfoEntity;
 import chookin.stock.orm.domain.StockEntity;

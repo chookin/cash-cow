@@ -2,6 +2,8 @@ package chookin.stock;
 
 import chookin.stock.orm.service.ZStock;
 import chookin.utils.OptionParser;
+import chookin.utils.configuration.ConfigManager;
+import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -20,6 +22,8 @@ public class Main {
     private ZStock zStock;
     public static void main(String[] args) {
         LOG.info("ZStock started.");
+        ConfigManager.setFile("stock.xml");
+        NetworkHelper.setProxy(ConfigManager.getPropertyAsBool("proxy.enable"));
         try {
             OptionParser optionParser = new OptionParser(args);
             String paraProxy = optionParser.getOption("--proxy").toLowerCase();

@@ -1,7 +1,6 @@
 package chookin.stock.extractor.gtimg;
 
 import chookin.etl.common.Extractor;
-import chookin.stock.Configuration;
 import chookin.stock.extractor.RealDataExtr;
 import chookin.stock.orm.domain.RealDataEntity;
 import chookin.stock.orm.domain.StockEntity;
