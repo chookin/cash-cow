@@ -2,12 +2,12 @@ package chookin.etl.web.jsoup;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
@@ -115,7 +115,35 @@ public class LinkHelper {
 	 * @throws IOException
 	 */
 	public static Document getDocument(String url) throws IOException {
-		return Jsoup.connect(url).ignoreContentType(true).userAgent(userAgent).timeout(timeOut).get();
+		while (true) {
+			try {
+				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).get();
+			} catch (MalformedURLException e) {
+				throw new IOException(e.getMessage() + " " + url, e);
+			} catch (  SocketException | SocketTimeoutException e){
+				LOG.warn(url, e);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					LOG.error(null, e1);
+				}
+			} catch(HttpStatusException e) {
+				switch (e.getStatusCode()){
+					case 500:
+					case 502:
+					case 503:
+						LOG.warn("http status code "+e.getStatusCode(), e);
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e1) {
+							LOG.warn(null, e);
+						}
+						break;
+					default:
+						throw new IOException(e.getMessage() + " " + url, e);
+				}
+			}
+		}
 	}
 
 	/**
@@ -133,13 +161,69 @@ public class LinkHelper {
 		while (true) {
 			try {
 				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).execute().bodyAsBytes();
-			} catch (SocketTimeoutException e) {
-				LOG.warn(e.getMessage()+" "+url, e);
-			} catch (ConnectException e) {
+			} catch (MalformedURLException e) {
 				throw new IOException(e.getMessage() + " " + url, e);
-			} catch (java.net.MalformedURLException e) {
-				LOG.warn(e.getMessage() + " " + url);
-				return null;
+			} catch (  UnknownHostException | SocketException | SocketTimeoutException e){
+				LOG.warn(url, e);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					LOG.error(null, e1);
+				}
+			} catch(HttpStatusException e) {
+				switch (e.getStatusCode()){
+					case 500:
+					case 502:
+					case 503:
+						LOG.warn("http status code "+e.getStatusCode(), e);
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e1) {
+							LOG.error(null, e);
+						}
+						break;
+					default:
+						throw new IOException(e.getMessage() + " " + url, e);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get the body of the response as a plain string.
+	 * @return body
+	 */
+	public static String getDocumentBody(String url) throws IOException {
+		// ignoreContentType(true) is set because otherwise Jsoup will throw an exception that the content is not HTML parseable -- that's OK in this
+		// case because we're using bodyAsBytes() to get the response body,
+		// rather than parsing.
+		while (true) {
+			try {
+				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).execute().body();
+			} catch (MalformedURLException e) {
+				throw new IOException(e.getMessage() + " " + url, e);
+			} catch ( UnknownHostException |  SocketException | SocketTimeoutException e){
+				LOG.warn(url, e);
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					LOG.error(null, e1);
+				}
+			} catch(HttpStatusException e) {
+				switch (e.getStatusCode()){
+					case 500:
+					case 502:
+					case 503:
+						LOG.warn("http status code "+e.getStatusCode(), e);
+						try {
+							Thread.sleep(3000);
+						} catch (InterruptedException e1) {
+							LOG.error(null, e);
+						}
+						break;
+					default:
+						throw new IOException(e.getMessage() + " " + url, e);
+				}
 			}
 		}
 	}

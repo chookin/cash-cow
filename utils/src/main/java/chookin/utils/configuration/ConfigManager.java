@@ -67,6 +67,7 @@ public class ConfigManager {
 		if (now < lastReConfigTime + configMinInter) {
 			return;
 		}
+		LOG.info("configuration file is '" + fileName + "'.");
 		lastReConfigTime = now;
 		paras = new ConfigFile(fileName).getProperties();
 	}

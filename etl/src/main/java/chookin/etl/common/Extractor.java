@@ -76,7 +76,7 @@ public class Extractor {
      * @throws java.io.IOException
      */
     public Document getDocument(long existedValidPeriod) throws IOException {
-        LOG.info("get document " + this.getUrl());
+        LOG.trace("get document " + this.getUrl());
         File file = new File(this.getFileName());
         if(file.exists()){
             long time = file.lastModified();
@@ -106,28 +106,7 @@ public class Extractor {
         if (file.exists()) {
             return false;
         }
-        byte[] bytes;
-        while(true){
-            try {
-                bytes = LinkHelper.getDocumentBytes(this.getUrl());
-                break;
-            } catch (HttpStatusException e) {
-                switch (e.getStatusCode()){
-                    case 500:
-                    case 502:
-                    case 503:
-                        LOG.warn("http status code "+e.getStatusCode(), e);
-                        try {
-                            Thread.sleep(3000);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
-                        break;
-                    default:
-                        throw new IOException(e);
-                }
-            }
-        }
+        byte[] bytes = LinkHelper.getDocumentBytes(this.getUrl());
         if(bytes.length < minsize){
             return false;
         }
