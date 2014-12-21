@@ -217,10 +217,13 @@ class MongoHistDetailHandler(MongoHandler):
         hist_detail['v'] = json.JSONDecoder().decode(tmp)
 
 
+def action_load_remove():
+    MongoHistDetailHandler().load_from_path(params.s_hist_data_path)
+    z_common.execute_command('rm -rf %s/*' % params.s_hist_data_path)
+
 if __name__ == "__main__":
     # print "脚本名：", sys.argv[0]
     if len(sys.argv) > 1:
         if sys.argv[1] == 'load_remove':
-            MongoHistDetailHandler().load_from_path(params.s_hist_data_path)
-            z_common.execute_command('rm -rf %s/*' % params.s_hist_data_path)
+            action_load_remove()
     pass

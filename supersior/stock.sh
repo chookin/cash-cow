@@ -20,7 +20,7 @@ fi
 prompt_init="Initializing current host's environment(for example, installing some python library)"
 prompt_create_db="Create mysql database tables"
 promt_data_acquistion="Collect deal data from web"
-
+username=`whoami`
 
 case "$1" in
   init)
@@ -33,7 +33,7 @@ case "$1" in
         ;;
   collect)
         echo -e ${promt_data_acquistion}
-        java -jar /home/chookin/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
+        java -jar /home/${username}/project/myworks/cash-cow/stock/target/stock-1.0.jar $@
         for para in $*
         do
             case ${para} in
