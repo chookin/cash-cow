@@ -6,6 +6,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import chookin.utils.configuration.ConfigManager;
 import org.apache.log4j.Logger;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -91,7 +92,7 @@ public class LinkHelper {
 	 */
 	public static List<Link> parse(File in, String charsetName, String baseUrl)
 			throws IOException {
-		Document doc = null;
+		Document doc;
 		if (baseUrl == null || baseUrl.isEmpty()) {
 			doc = Jsoup.parse(in, charsetName);
 		} else {
@@ -104,9 +105,7 @@ public class LinkHelper {
 		return getDocument(url).title();
 	}
 
-	// private static String userAgent =
-	// "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.31 (KHTML, like Gecko) Chrome/26.0.1410.64 Safari/537.31";
-	private static String userAgent = "Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US)";
+	private static String userAgent = ConfigManager.getProperty("userAgent");
 
 	/**
 	 * retrieve html document by url
@@ -129,18 +128,16 @@ public class LinkHelper {
 				}
 			} catch(HttpStatusException e) {
 				switch (e.getStatusCode()){
-					case 500:
-					case 502:
-					case 503:
+					case 404: // 请求的网页不存在
+						throw new IOException(e.getMessage() + " " + url, e);
+					default:
 						LOG.warn("http status code "+e.getStatusCode(), e);
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
 							LOG.warn(null, e);
 						}
-						break;
-					default:
-						throw new IOException(e.getMessage() + " " + url, e);
+
 				}
 			}
 		}
@@ -172,18 +169,16 @@ public class LinkHelper {
 				}
 			} catch(HttpStatusException e) {
 				switch (e.getStatusCode()){
-					case 500:
-					case 502:
-					case 503:
+					case 404: // 请求的网页不存在
+						throw new IOException(e.getMessage() + " " + url, e);
+					default:
 						LOG.warn("http status code "+e.getStatusCode(), e);
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
-							LOG.error(null, e);
+							LOG.warn(null, e);
 						}
-						break;
-					default:
-						throw new IOException(e.getMessage() + " " + url, e);
+
 				}
 			}
 		}
@@ -211,18 +206,16 @@ public class LinkHelper {
 				}
 			} catch(HttpStatusException e) {
 				switch (e.getStatusCode()){
-					case 500:
-					case 502:
-					case 503:
+					case 404: // 请求的网页不存在
+						throw new IOException(e.getMessage() + " " + url, e);
+					default:
 						LOG.warn("http status code "+e.getStatusCode(), e);
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
-							LOG.error(null, e);
+							LOG.warn(null, e);
 						}
-						break;
-					default:
-						throw new IOException(e.getMessage() + " " + url, e);
+
 				}
 			}
 		}

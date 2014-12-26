@@ -1,5 +1,6 @@
 package chookin.utils.configuration;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.SortedMap;
 
@@ -10,7 +11,7 @@ import org.xml.sax.SAXException;
 
 public class ConfigManager {
 	private final static Logger LOG = Logger.getLogger(ConfigManager.class);
-	private static Object fileName;
+	private static Object file;
 	private static long lastReConfigTime = Long.MIN_VALUE;
 	/**
 	 * time interval between two configurations, ms
@@ -19,16 +20,14 @@ public class ConfigManager {
 	private static SortedMap<String, String> paras;
 
 	public static synchronized void setFile(String fileName){
-		if(fileName.contains("/")){
-			ConfigManager.fileName = fileName;
-		}else {
-			Thread.currentThread().getContextClassLoader();
-			String myFileName = ClassLoader.getSystemResource(fileName).getPath();
-			ConfigManager.fileName = myFileName;
+		if(new File(fileName).exists()){
+			ConfigManager.file = fileName;
+		}else{
+			ConfigManager.file = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 		}
 	}
 	public static synchronized String getProperty(String item){
-		if(ConfigManager.fileName == null){
+		if(ConfigManager.file == null){
 			LOG.warn("without configuration file");
 			return null;
 		}
@@ -56,6 +55,9 @@ public class ConfigManager {
 	public static synchronized int getPropertyAsInteger(String item){
 		return Integer.parseInt(getProperty(item));
 	}
+	public static synchronized long getPropertyAsLong(String item){
+		return Long.parseLong(getProperty(item));
+	}
 	/**
 	 * reload configuration file, and update configuration parameters
 	 * @throws IOException
@@ -67,9 +69,9 @@ public class ConfigManager {
 		if (now < lastReConfigTime + configMinInter) {
 			return;
 		}
-		LOG.info("configuration file is '" + fileName + "'.");
+		LOG.info("configuration file is '" + file + "'.");
 		lastReConfigTime = now;
-		paras = new ConfigFile(fileName).getProperties();
+		paras = new ConfigFile(file).getProperties();
 	}
 }
 

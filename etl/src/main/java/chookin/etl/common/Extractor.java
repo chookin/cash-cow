@@ -72,7 +72,7 @@ public class Extractor {
     /**
      * get the html document identified by this.url.
      * When the html document got and existedValidPeriod is bigger than 0L, saving it to local disk.
-     * @param existedValidPeriod the valid period of the downloaded file for this url. If local file expired, will download again. Unit is millisecond.
+     * @param existedValidPeriod the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
      * @throws java.io.IOException
      */
     public Document getDocument(long existedValidPeriod) throws IOException {
@@ -81,7 +81,7 @@ public class Extractor {
         if(file.exists()){
             long time = file.lastModified();
             long now = new Date().getTime();
-            if(now - time < existedValidPeriod){ // this file is still new
+            if(now - time < existedValidPeriod * 1000){ // this file is still new
                 return Jsoup.parse(file, "utf-8", this.getUrl());
             }
         }
