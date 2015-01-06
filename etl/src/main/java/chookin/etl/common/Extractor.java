@@ -27,7 +27,7 @@ public class Extractor {
     protected String localFileName = null;
     protected String localPath;
     private static String basePath = null;
-
+    private Document doc;
     public static String getBasePath() {
         return basePath;
     }
@@ -58,41 +58,39 @@ public class Extractor {
 
     public String getFileName(){
         if(this.localFileName == null ){
-            String url = UrlHelper.eraseProtocolAndStart3W(this.url);
-            String filename = String.format("%s/%s", this.getLocalPath(), url);
-            filename = FileHelper.formatFileName(filename);
-            if(FileHelper.getExtension(filename).isEmpty()){
-                filename = filename + ".html";
-            }
-            this.localFileName = filename;
+            localFileName = String.format("%s/%s", this.getLocalPath(), FileHelper.getUrlFileName(this.url));
         }
         return this.localFileName;
     }
 
     /**
      * get the html document identified by this.url.
-     * When the html document got and existedValidPeriod is bigger than 0L, saving it to local disk.
-     * @param existedValidPeriod the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
+     * When the html document got and validateSeconds is bigger than 0L, saving it to local disk.
+     * @param validateSeconds the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
      * @throws java.io.IOException
      */
-    public Document getDocument(long existedValidPeriod) throws IOException {
+    public Document getDocument(long validateSeconds) throws IOException {
         LOG.trace("get document " + this.getUrl());
-        File file = new File(this.getFileName());
-        if(file.exists()){
-            long time = file.lastModified();
-            long now = new Date().getTime();
-            if(now - time < existedValidPeriod * 1000){ // this file is still new
-                return Jsoup.parse(file, "utf-8", this.getUrl());
+        if(validateSeconds > 0L){
+            File file = new File(this.getFileName());
+            if(file.exists()){
+                long time = file.lastModified();
+                long now = new Date().getTime();
+                if(now - time < validateSeconds * 1000){ // this file is still new
+                    return doc = Jsoup.parse(file, "utf-8", this.getUrl());
+                }
             }
         }
-        Document doc = LinkHelper.getDocument(this.getUrl());
-        if(existedValidPeriod > 0L){
-            FileHelper.save(doc.toString(), this.getFileName());
-        }
-        return doc;
+        return doc = LinkHelper.getDocument(this.getUrl());
     }
     public Document getDocument() throws IOException{
         return this.getDocument(0L);
+    }
+    public void saveDocument() throws IOException {
+        if(doc == null){
+            getDocument();
+        }
+        FileHelper.save(doc.toString(), this.getFileName());
     }
     /**
      * download the web resource to local disk without parsing if not been downloaded.

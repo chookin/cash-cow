@@ -12,6 +12,7 @@ public class NetworkHelper {
         if(!enable){
             System.setProperty("http.proxyHost", "");
             System.setProperty("http.proxyPort", Integer.toString(0));
+            LOG.info("without proxy");
             return;
         }
         String host = ConfigManager.getProperty("proxy.host");

@@ -1,16 +1,27 @@
 package chookin.utils.io;
 
+import chookin.utils.web.UrlHelper;
+import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chookin on 7/6/14.
  */
 public class FileHelper {
     private final static Logger LOG = Logger.getLogger(FileHelper.class);
+
+    public static String getUrlFileName(String url){
+        String filename = UrlHelper.eraseProtocolAndStart3W(url);
+        filename = FileHelper.formatFileName(filename);
+        if(FileHelper.getExtension(filename).isEmpty()){
+            filename = filename + ".html";
+        }
+        return filename;
+    }
     public static String formatFileName(String fileName){
         return fileName.replaceAll("&|<|>","-");
     }
@@ -35,19 +46,46 @@ public class FileHelper {
      */
     public static void save(String str, String fileName)
             throws IOException {
-        LOG.info(String.format("save file %s", fileName));
+        LOG.trace(String.format("save file %s", fileName));
         String directory = fileName.substring(0, fileName.lastIndexOf('/'));
         mkdirs(directory);
 
-        FileWriter writer;
-        writer = new FileWriter(fileName);
-        writer.write(str);
-        writer.close();
+        Writer out = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream(fileName), "UTF-8"));
+        try {
+            out.write(str);
+        } finally {
+            out.close();
+        }
     }
-
+    public static List<String> readLines(String fileName) throws IOException {
+        List<String> lines = new ArrayList<>();
+        // In Java 7 you should use auto close features.
+        try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine();
+            while (line != null) {
+                lines.add(line);
+                line = br.readLine();
+            }
+        }
+        return lines;
+    }
+    public static String readString(String fileName) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        // In Java 7 you should use auto close features.
+        try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine();
+            while (line != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+                line = br.readLine();
+            }
+        }
+        return sb.toString();
+    }
     public static void save(byte[] bytes, String fileName)
             throws IOException {
-        LOG.info(String.format("save file %s", fileName));
+        LOG.trace(String.format("save file %s", fileName));
         int index = fileName.lastIndexOf('/');
         if(index != -1){
             String directory = fileName.substring(0, index);

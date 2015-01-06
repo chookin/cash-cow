@@ -29,7 +29,6 @@ public class LinkHelper {
 	private static String[] documentExtensions = { "", ".htm", ".html" };
 	private static boolean ignorePound = true;
 	private static int timeOut = 60000;
-	private static boolean isIgnore3W = true;
 
 	private static String protocolRegex = "[a-zA-Z]+://";
 
@@ -119,12 +118,12 @@ public class LinkHelper {
 				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).get();
 			} catch (MalformedURLException e) {
 				throw new IOException(e.getMessage() + " " + url, e);
-			} catch (  SocketException | SocketTimeoutException e){
+			} catch (  UnknownHostException | SocketException | SocketTimeoutException e){
 				LOG.warn(url, e);
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
-					LOG.error(null, e1);
+					LOG.warn(null, e1);
 				}
 			} catch(HttpStatusException e) {
 				switch (e.getStatusCode()){

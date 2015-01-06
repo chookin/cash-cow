@@ -6,6 +6,7 @@ import java.util.SortedMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -25,6 +26,7 @@ public class ConfigManager {
 		}else{
 			ConfigManager.file = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 		}
+		NetworkHelper.setProxy(ConfigManager.getPropertyAsBool("proxy.enable"));
 	}
 	public static synchronized String getProperty(String item){
 		if(ConfigManager.file == null){
