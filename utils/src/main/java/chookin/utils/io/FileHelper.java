@@ -1,7 +1,9 @@
 package chookin.utils.io;
 
 import chookin.utils.web.UrlHelper;
+import com.sun.corba.se.spi.orbutil.fsm.Input;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.NullArgumentException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -46,8 +48,9 @@ public class FileHelper {
      */
     public static void save(String str, String fileName)
             throws IOException {
-        LOG.trace(String.format("save file %s", fileName));
-        String directory = fileName.substring(0, fileName.lastIndexOf('/'));
+        String absPath = new File(fileName).getAbsolutePath();
+        LOG.trace(String.format("save file %s", absPath));
+        String directory = absPath.substring(0, absPath.lastIndexOf('/'));
         mkdirs(directory);
 
         Writer out = new BufferedWriter(new OutputStreamWriter(
@@ -57,6 +60,18 @@ public class FileHelper {
         } finally {
             out.close();
         }
+    }
+    public static void save(InputStream in, String fileName) throws IOException {
+        if(in == null){
+            return;
+        }
+        if(fileName == null || fileName.trim().isEmpty()){
+            throw new IllegalArgumentException("fileName");
+        }
+        OutputStream out = new FileOutputStream(fileName);
+        IOUtils.copy(in, out);
+        in.close();
+        out.close();
     }
     public static List<String> readLines(String fileName) throws IOException {
         List<String> lines = new ArrayList<>();
@@ -97,7 +112,9 @@ public class FileHelper {
         output.close();
     }
     /**
-     * note: can't create a file and a folder with the same name and in the same folder. The OS would not allow you to do that since the name is the id for that file/folder object. So we have delete the older file
+     * Note:
+     * <li>Can't create a file and a folder with the same name and in the same folder. The OS would not allow you to do that since the name is the id for that file/folder object. So we have delete the older file</li>
+     * <li>While File#mkdirs only return false if a file already exists with the same name.</li>
      * @param dirpath
      * @throws IOException
      *             if exists a file with the same name
@@ -125,7 +142,7 @@ public class FileHelper {
             }
             java.io.File file = new java.io.File(basePath);
             if (file.isFile()) {
-                throw new IOException(String.format("already exist file %s",
+                throw new IOException(String.format("failed to make dir '%s', because a file already exists with that name",
                         file.getPath()));
             }
             if(file.exists()){
@@ -133,7 +150,7 @@ public class FileHelper {
             }
             boolean isCreated = file.mkdir();
             if(isCreated){
-                LOG.info(String.format("dir %s created", file.getAbsolutePath()));
+                LOG.info(String.format("make dir '%s'", file.getAbsolutePath()));
             }
         }
     }

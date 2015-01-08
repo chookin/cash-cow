@@ -1,5 +1,7 @@
 package chookin.utils;
 
+import org.apache.commons.lang.NullArgumentException;
+
 /**
  * Simple validation methods.
  */
@@ -10,20 +12,11 @@ public final class Validate {
     /**
      * Validates that the object is not null
      * @param obj object to test
+     * @param argName the name of the argument that was <code>null</code>.
      */
-    public static void notNull(Object obj) {
+    public static void notNull(Object obj, String argName) {
         if (obj == null)
-            throw new IllegalArgumentException("Object must not be null");
-    }
-
-    /**
-     * Validates that the object is not null
-     * @param obj object to test
-     * @param msg message to output if validation fails
-     */
-    public static void notNull(Object obj, String msg) {
-        if (obj == null)
-            throw new IllegalArgumentException(msg);
+            throw new NullArgumentException(argName);
     }
 
     /**

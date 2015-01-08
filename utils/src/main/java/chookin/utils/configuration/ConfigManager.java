@@ -2,16 +2,19 @@ package chookin.utils.configuration;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.SortedMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import chookin.utils.io.FileHelper;
 import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
 public class ConfigManager {
 	private final static Logger LOG = Logger.getLogger(ConfigManager.class);
+	private static String fileName;
 	private static Object file;
 	private static long lastReConfigTime = Long.MIN_VALUE;
 	/**
@@ -21,12 +24,17 @@ public class ConfigManager {
 	private static SortedMap<String, String> paras;
 
 	public static synchronized void setFile(String fileName){
+		ConfigManager.fileName = fileName;
 		if(new File(fileName).exists()){
 			ConfigManager.file = fileName;
 		}else{
 			ConfigManager.file = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 		}
 		NetworkHelper.setProxy(ConfigManager.getPropertyAsBool("proxy.enable"));
+	}
+	public static void dumpConfigFile() throws IOException {
+		FileHelper.save(Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName), fileName);
+		LOG.info("save configuration file to "+fileName);
 	}
 	public static synchronized String getProperty(String item){
 		if(ConfigManager.file == null){
@@ -63,15 +71,15 @@ public class ConfigManager {
 	/**
 	 * reload configuration file, and update configuration parameters
 	 * @throws IOException
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
+	 * @throws SAXException
+	 * @throws ParserConfigurationException
 	 */
 	public static synchronized void reConfig() throws ParserConfigurationException, SAXException, IOException {
 		long now = System.currentTimeMillis();
 		if (now < lastReConfigTime + configMinInter) {
 			return;
 		}
-		LOG.info("configuration file is '" + file + "'.");
+		LOG.trace("configuration file is '" + file + "'.");
 		lastReConfigTime = now;
 		paras = new ConfigFile(file).getProperties();
 	}

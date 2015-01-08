@@ -316,6 +316,14 @@ public class LinkHelper {
 		}
 		return myUrl.substring(0, lastLeftSlashIndex);
 	}
+	public static String getBaseDomain(String url) {
+		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
+		int index = myUrl.indexOf('/');
+		if (index == -1) {
+			return myUrl;
+		}
+		return myUrl.substring(0, index);
+	}
 
 	/**
 	 * erase the protocol of a URL and return the erased.

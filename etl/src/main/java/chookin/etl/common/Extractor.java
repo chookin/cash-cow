@@ -1,6 +1,7 @@
 package chookin.etl.common;
 
 import chookin.etl.web.jsoup.LinkHelper;
+import chookin.utils.configuration.ConfigManager;
 import chookin.utils.io.FileHelper;
 import chookin.utils.web.UrlHelper;
 import org.apache.commons.lang.NullArgumentException;
@@ -25,40 +26,21 @@ public class Extractor {
     private final static Logger LOG = Logger.getLogger(Extractor.class);
     private String url;
     protected String localFileName = null;
-    protected String localPath;
-    private static String basePath = null;
+    private static String basePath = ConfigManager.getProperty("webpage.download.directory");
     private Document doc;
-    public static String getBasePath() {
-        return basePath;
-    }
-
-    public static void setBasePath(String basePath) {
-        if(basePath == null || basePath.trim().isEmpty()){
-            throw new IllegalArgumentException("basePath");
-        }
-        Extractor.basePath = basePath;
-    }
 
     public Extractor(String url){
         if(url == null){
             throw new NullArgumentException("url");
         }
         this.url = url;
-        String username = System.getProperty("user.name");
-        if(basePath == null){
-            this.localPath = String.format("/home/%s/stock", username);
-        }else {
-            this.localPath = basePath;
-        }
     }
 
     public String getUrl(){return this.url;}
 
-    public String getLocalPath() {return this.localPath;}
-
     public String getFileName(){
         if(this.localFileName == null ){
-            localFileName = String.format("%s/%s", this.getLocalPath(), FileHelper.getUrlFileName(this.url));
+            localFileName = String.format("%s/%s", basePath, FileHelper.getUrlFileName(this.url));
         }
         return this.localFileName;
     }

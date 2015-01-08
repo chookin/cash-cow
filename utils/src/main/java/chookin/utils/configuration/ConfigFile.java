@@ -12,6 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import chookin.utils.Validate;
+import org.apache.commons.lang.NullArgumentException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -33,7 +34,7 @@ public class ConfigFile {
 	private Object file;
 
 	public ConfigFile(Object file) {
-		Validate.notNull(file);
+		Validate.notNull(file, "file");
 		this.file = file;
 	}
 
