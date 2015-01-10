@@ -30,7 +30,7 @@ public class ConfigManager {
 		}else{
 			ConfigManager.file = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
 		}
-		NetworkHelper.setProxy(ConfigManager.getPropertyAsBool("proxy.enable"));
+		NetworkHelper.setProxy();
 	}
 	public static void dumpConfigFile() throws IOException {
 		FileHelper.save(Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName), fileName);

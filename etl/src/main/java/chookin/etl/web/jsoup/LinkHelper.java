@@ -6,11 +6,12 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import chookin.utils.Validate;
 import chookin.utils.configuration.ConfigManager;
+import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
-import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -117,9 +118,9 @@ public class LinkHelper {
 			try {
 				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).get();
 			} catch (MalformedURLException e) {
-				throw new IOException(e.getMessage() + " " + url, e);
+				throw new IOException(e.toString() + " " + url, e);
 			} catch (  UnknownHostException | SocketException | SocketTimeoutException e){
-				LOG.warn(url, e);
+				LOG.warn(e.toString() + " on getDocument of " + url);
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
@@ -128,15 +129,15 @@ public class LinkHelper {
 			} catch(HttpStatusException e) {
 				switch (e.getStatusCode()){
 					case 404: // 请求的网页不存在
-						throw new IOException(e.getMessage() + " " + url, e);
+						throw new IOException(e.toString() + " " + url, e);
 					default:
-						LOG.warn("http status code "+e.getStatusCode(), e);
+						LOG.warn("http status code "+e.getStatusCode() + " on getDocument of " + url);
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
 							LOG.warn(null, e);
 						}
-
+						NetworkHelper.switchProxy();
 				}
 			}
 		}
@@ -158,9 +159,9 @@ public class LinkHelper {
 			try {
 				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).execute().bodyAsBytes();
 			} catch (MalformedURLException e) {
-				throw new IOException(e.getMessage() + " " + url, e);
+				throw new IOException(e.toString() + " " + url, e);
 			} catch (  UnknownHostException | SocketException | SocketTimeoutException e){
-				LOG.warn(url, e);
+				LOG.warn(e.toString() + " on getDocumentBytes of " + url);
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
@@ -171,7 +172,7 @@ public class LinkHelper {
 					case 404: // 请求的网页不存在
 						throw new IOException(e.getMessage() + " " + url, e);
 					default:
-						LOG.warn("http status code "+e.getStatusCode(), e);
+						LOG.warn("http status code "+e.getStatusCode() + " on getDocumentBytes of " + url);
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
@@ -197,7 +198,7 @@ public class LinkHelper {
 			} catch (MalformedURLException e) {
 				throw new IOException(e.getMessage() + " " + url, e);
 			} catch ( UnknownHostException |  SocketException | SocketTimeoutException e){
-				LOG.warn(url, e);
+				LOG.warn(e.getMessage() + " on getDocumentBody of " + url);
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
@@ -208,7 +209,7 @@ public class LinkHelper {
 					case 404: // 请求的网页不存在
 						throw new IOException(e.getMessage() + " " + url, e);
 					default:
-						LOG.warn("http status code "+e.getStatusCode(), e);
+						LOG.warn("http status code "+e.getStatusCode() + " on getDocumentBody of " + url);
 						try {
 							Thread.sleep(3000);
 						} catch (InterruptedException e1) {
@@ -294,6 +295,9 @@ public class LinkHelper {
 		}
 	}
 	public static String getHost(String url){
+		if(url == null){
+			return null;
+		}
 		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
 		int firstSlashIndex = myUrl.indexOf('/');
 		if(firstSlashIndex == -1){
@@ -309,6 +313,9 @@ public class LinkHelper {
 	 * @return a site domain contains no protocol
 	 */
 	public static String getDomain(String url) {
+		if(url == null){
+			return null;
+		}
 		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
 		int lastLeftSlashIndex = myUrl.lastIndexOf('/');
 		if (lastLeftSlashIndex == -1) {
@@ -317,6 +324,9 @@ public class LinkHelper {
 		return myUrl.substring(0, lastLeftSlashIndex);
 	}
 	public static String getBaseDomain(String url) {
+		if(url == null){
+			return null;
+		}
 		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
 		int index = myUrl.indexOf('/');
 		if (index == -1) {
@@ -332,9 +342,15 @@ public class LinkHelper {
 	 * @return
 	 */
 	public static String getUrlWithoutProtocol(String url) {
+		if(url == null){
+			return null;
+		}
 		return url.replaceAll(String.format("(?i)%s", LinkHelper.getProtocolRegex()), "");
 	}
 	public static String getUrlWithoutProtocolAndStart3W(String url) {
+		if(url == null){
+			return null;
+		}
 		// (?i)让表达式忽略大小写进行匹配;
 		// '^'和'$'分别匹配字符串的开始和结束
 		return getUrlWithoutProtocol(url).replaceAll("(?i)(^www.)", "");

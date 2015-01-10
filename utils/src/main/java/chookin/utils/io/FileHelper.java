@@ -150,7 +150,7 @@ public class FileHelper {
             }
             boolean isCreated = file.mkdir();
             if(isCreated){
-                LOG.info(String.format("make dir '%s'", file.getAbsolutePath()));
+                LOG.trace(String.format("make dir '%s'", file.getAbsolutePath()));
             }
         }
     }
