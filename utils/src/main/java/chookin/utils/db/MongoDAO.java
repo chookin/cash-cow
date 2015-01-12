@@ -30,6 +30,17 @@ public abstract class MongoDAO {
                 // TODO add user pwd support
                 this.mongo = new MongoClient(serverAddress);
             }
+            this.mongo.isLocked();
+        } catch (MongoTimeoutException mt){
+            LOG.error(mt.toString());
+            LOG.trace("retry connect mongodb after 5 seconds");
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                LOG.warn(null, e);
+            }
+            this.mongo = null;
+            return this.getMongo();
         } catch (UnknownHostException e) {
             LOG.fatal(null, e);
             System.exit(-1);
