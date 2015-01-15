@@ -5,15 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>chookin.cashcow</groupId>
-    <artifactId>chookin-etl</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>etl-commons</artifactId>
     <version>1.0</version>
     <dependencies>
-        <dependency>
-            <groupId>chookin.cashcow</groupId>
-            <artifactId>etl-commons</artifactId>
-            <version>1.0</version>
-        </dependency>
         <dependency>
             <groupId>chookin.cashcow</groupId>
             <artifactId>chookin-utils</artifactId>
@@ -41,4 +35,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

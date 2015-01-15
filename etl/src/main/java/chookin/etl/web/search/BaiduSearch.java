@@ -6,13 +6,13 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import chookin.etl.common.Link;
+import chookin.etl.common.LinkHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import chookin.etl.web.data.Link;
-import chookin.etl.web.jsoup.LinkHelper;
 
 public class BaiduSearch extends SearchEngine {
 	private static final Logger LOG = Logger.getLogger(BaiduSearch.class);
@@ -20,7 +20,7 @@ public class BaiduSearch extends SearchEngine {
 		super("www.baidu.com");
 	}
 	public Map<String, Link> queryHosts(String keyword, int pageDepth) throws IOException {
-		Map<String, Link> links = new HashMap<String, Link>();
+		Map<String, Link> links = new HashMap<>();
 		if(keyword == null || keyword.isEmpty()){
 			return links;
 		}

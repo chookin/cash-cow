@@ -1,25 +1,20 @@
 package chookin.etl.web.site;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
+import java.util.*;
 
+import chookin.etl.common.Link;
 import org.apache.log4j.Logger;
 import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 
-import chookin.etl.web.data.Link;
 
 public abstract class Saver {
 	private static final Logger LOG = Logger.getLogger(Saver.class);
 	public static boolean rewrite = false;
 	private SiteCrawler crawler;
-	protected Set<Link> crawledLinks = new HashSet<Link>();
-	protected Map<Link, Document> errorLinks = new HashMap<Link, Document>();
+	protected Set<Link> crawledLinks = new HashSet<>();
+	protected Map<Link, Document> errorLinks = new HashMap<>();
 
 	public Saver(SiteCrawler crawler) {
 		Validate.notNull(crawler);
@@ -33,7 +28,6 @@ public abstract class Saver {
 	/**
 	 * @param maxTraversalDepth
 	 *            if 0, download all the pages of this domain
-	 * @param fs
 	 * @return
 	 * @throws IOException
 	 */
@@ -64,7 +58,7 @@ public abstract class Saver {
 			if (isCrawlDone && docs.isEmpty()) {
 				break;
 			}
-			for (Entry<Link, Document> entry : docs.entrySet()) {
+			for (Map.Entry<Link, Document> entry : docs.entrySet()) {
 				Link link = entry.getKey();
 				if (this.crawledLinks.add(link) || rewrite) {
 					LOG.info(String.format("save page: %s", link.getHref()));
@@ -79,7 +73,7 @@ public abstract class Saver {
 		}
 		while (!this.errorLinks.isEmpty()) {
 			LOG.info("resave pages that happendd errors when download");
-			for (Entry<Link, Document> entry : this.errorLinks.entrySet()) {
+			for (Map.Entry<Link, Document> entry : this.errorLinks.entrySet()) {
 				LOG.info(String.format("save page: %s", entry.getKey()
 						.getHref()));
 				try {

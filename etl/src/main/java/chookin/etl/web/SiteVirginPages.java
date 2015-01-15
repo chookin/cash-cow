@@ -11,8 +11,8 @@ import java.util.TreeSet;
 import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Element;
 
-import chookin.etl.web.data.Link;
-import chookin.etl.web.jsoup.LinkHelper;
+import chookin.etl.common.Link;
+import chookin.etl.common.LinkHelper;
 import chookin.etl.web.site.Site;
 
 public class SiteVirginPages extends Site {

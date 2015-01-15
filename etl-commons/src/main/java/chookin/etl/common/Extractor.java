@@ -1,21 +1,15 @@
 package chookin.etl.common;
 
-import chookin.etl.web.jsoup.LinkHelper;
 import chookin.utils.configuration.ConfigManager;
 import chookin.utils.io.FileHelper;
-import chookin.utils.web.UrlHelper;
 import org.apache.commons.lang.NullArgumentException;
 import org.apache.log4j.Logger;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by chookin on 7/6/14.

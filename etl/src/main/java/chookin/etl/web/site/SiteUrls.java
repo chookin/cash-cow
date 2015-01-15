@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 
-import chookin.etl.web.data.Link;
+import chookin.etl.common.Link;
 
 public class SiteUrls extends Site{
 	private static final Logger LOG = Logger.getLogger(SiteUrls.class);

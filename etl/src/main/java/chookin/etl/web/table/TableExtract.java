@@ -11,7 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import chookin.etl.web.jsoup.LinkHelper;
+import chookin.etl.common.LinkHelper;
 import chookin.etl.web.jsoup.TableHelper;
 
 public class TableExtract {

@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/../etl-utils/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -22,7 +23,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="etl-commons" />
     <orderEntry type="module" module-name="utils" />
     <orderEntry type="library" name="Maven: com.mycila:mycila-xmltool:4.0.ga" level="project" />
     <orderEntry type="library" name="Maven: net.sf.supercsv:super-csv:2.2.0" level="project" />

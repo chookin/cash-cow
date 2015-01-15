@@ -6,6 +6,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import chookin.etl.common.Link;
+import chookin.etl.common.LinkHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.helper.Validate;
@@ -13,8 +15,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import chookin.etl.web.data.Link;
-import chookin.etl.web.jsoup.LinkHelper;
 
 public class GoogleSearch extends SearchEngine {
 	private static final Logger LOG = Logger.getLogger(GoogleSearch.class);

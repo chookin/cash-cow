@@ -26,8 +26,8 @@ import org.jsoup.select.Elements;
 import chookin.utils.Pair;
 
 import chookin.etl.common.ResourceHelper;
-import chookin.etl.web.data.Link;
-import chookin.etl.web.jsoup.LinkHelper;
+import chookin.etl.common.Link;
+import chookin.etl.common.LinkHelper;
 import chookin.etl.web.site.Site;
 
 public class SitePages extends Site {

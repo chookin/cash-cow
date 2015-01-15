@@ -11,13 +11,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import chookin.etl.common.Link;
+import chookin.etl.common.LinkHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 
 import chookin.etl.web.SitePages;
-import chookin.etl.web.data.Link;
-import chookin.etl.web.jsoup.LinkHelper;
 
 /**
  * crawl all the web pages of a web site
@@ -160,8 +160,6 @@ public class SiteCrawler extends Site implements Runnable {
 	 *            URLs traverse from
 	 * @param curDepth
 	 *            current traverse depth, depth from 1
-	 * @param maxTraversalDepth
-	 *            max traverse depth
 	 * @return the new turn URLs that will be traversed from
 	 * @throws IOException
 	 */

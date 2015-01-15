@@ -1,6 +1,4 @@
-package chookin.etl.web.data;
-
-import chookin.etl.web.jsoup.LinkHelper;
+package chookin.etl.common;
 
 /**
  * web page link

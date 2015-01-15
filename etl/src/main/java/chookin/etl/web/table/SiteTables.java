@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 
-import chookin.etl.web.data.Link;
+import chookin.etl.common.Link;
 import chookin.etl.web.site.SiteCrawler;
 
 public class SiteTables {

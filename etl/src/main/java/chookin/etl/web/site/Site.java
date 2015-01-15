@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import chookin.etl.common.Link;
+import chookin.etl.common.LinkHelper;
 import chookin.etl.common.ResourceHelper;
 import org.jsoup.helper.Validate;
 
-import chookin.etl.web.data.Link;
-import chookin.etl.web.jsoup.LinkHelper;
 
 public class Site {
 	private String domain;
