@@ -8,11 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * Created by zhuyin on 7/6/14.
  * MySQL的JDBC URL格式：
     jdbc:mysql//[hostname][:port]/[dbname][?param1=value1][&param2=value2]….
     for example：jdbc:mysql://localhost:3306/sample_db?user=root&password=your_password
 
- * Created by chookin on 7/19/14.
+ * Created by zhuyin on 7/19/14.
  */
 public class MysqlDao {
     String connectionString = null;

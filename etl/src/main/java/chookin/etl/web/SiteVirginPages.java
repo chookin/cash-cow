@@ -29,7 +29,7 @@ public class SiteVirginPages extends Site {
 			maxTraversalDepth = Integer.MAX_VALUE;
 		}
 		Link link = new Link().setHref(this.getStartUrl()).setTitle(
-				LinkHelper.getPageTitle(this.getStartUrl()));
+				LinkHelper.getDocument(this.getStartUrl()).title());
 		Collection<String> myUrls = new ArrayList<String>();
 		myUrls.add(this.getStartUrl());
 		return this;
@@ -44,7 +44,7 @@ public class SiteVirginPages extends Site {
 		}
 		List<Element> rst = new ArrayList<Element>();
 		Link link = new Link().setHref(this.getStartUrl()).setTitle(
-				LinkHelper.getPageTitle(this.getStartUrl()));
+				LinkHelper.getDocument(this.getStartUrl()).title());
 		Collection<String> myUrls = new ArrayList<String>();
 		myUrls.add(this.getStartUrl());
 

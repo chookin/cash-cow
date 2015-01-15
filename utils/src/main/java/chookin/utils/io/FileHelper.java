@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by chookin on 7/6/14.
+ * Created by zhuyin on 7/6/14.
  */
 public class FileHelper {
     private final static Logger LOG = Logger.getLogger(FileHelper.class);

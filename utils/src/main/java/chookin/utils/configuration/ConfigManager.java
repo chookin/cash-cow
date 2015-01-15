@@ -12,6 +12,9 @@ import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
+/**
+ * Created by zhuyin on 7/6/14.
+ */
 public class ConfigManager {
 	private final static Logger LOG = Logger.getLogger(ConfigManager.class);
 	private static String fileName;

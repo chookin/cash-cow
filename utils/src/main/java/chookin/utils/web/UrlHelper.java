@@ -1,7 +1,7 @@
 package chookin.utils.web;
 
 /**
- * Created by chookin on 7/6/14.
+ * Created by zhuyin on 7/6/14.
  */
 public class UrlHelper {
     private static String protocolRegex = "[a-zA-Z]+://";

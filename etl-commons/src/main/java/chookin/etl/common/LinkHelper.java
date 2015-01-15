@@ -20,11 +20,8 @@ import org.jsoup.select.Elements;
  *
  */
 public class LinkHelper {
-	private LinkHelper() {
-	}
-
 	private static final Logger LOG = Logger.getLogger(LinkHelper.class);
-
+	private static String userAgent = ConfigManager.getProperty("userAgent");
 	private static String[] documentExtensions = { "", ".htm", ".html" };
 	private static boolean ignorePound = true;
 	private static int timeOut = 60000;
@@ -35,7 +32,8 @@ public class LinkHelper {
 		return protocolRegex;
 	}
 
-
+	private LinkHelper() {
+	}
 	public static String trimUrl(String url) {
 		Validate.notNull(url);
 		String myUrl = url.trim();
@@ -98,12 +96,6 @@ public class LinkHelper {
 		}
 		return getDocumentLinks(doc);
 	}
-
-	public static String getPageTitle(String url) throws IOException {
-		return getDocument(url).title();
-	}
-
-	private static String userAgent = ConfigManager.getProperty("userAgent");
 
 	/**
 	 * retrieve html document by url
@@ -187,9 +179,6 @@ public class LinkHelper {
 	 * @return body
 	 */
 	public static String getDocumentBody(String url) throws IOException {
-		// ignoreContentType(true) is set because otherwise Jsoup will throw an exception that the content is not HTML parseable -- that's OK in this
-		// case because we're using bodyAsBytes() to get the response body,
-		// rather than parsing.
 		while (true) {
 			try {
 				return Jsoup.connect(url).userAgent(userAgent).timeout(timeOut).ignoreContentType(true).execute().body();
@@ -228,7 +217,7 @@ public class LinkHelper {
 	 */
 	public static List<Link> getDocumentLinks(String url) throws IOException {
 		if (!isHtmlPage(url)) {
-			return new ArrayList<Link>();
+			return new ArrayList<>();
 		}
 		Document doc = getDocument(url);
 		return getDocumentLinks(doc);

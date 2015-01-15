@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 /**
- * Created by chookin on 7/30/14.
+ * Created by zhuyin on 7/30/14.
  */
 public class DateUtils {
     public static final long DAY_MILLISECONDS = 1000L * 3600 * 24;

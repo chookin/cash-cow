@@ -69,7 +69,6 @@ public class GoogleSearch extends SearchEngine {
 			String host = LinkHelper.getHost(url);
 			if (links.containsKey(host)) {
 				Link link = links.get(host);
-				link.setWeight(link.getWeight() + 1.0f);
 			} else {
 				links.put(host, new Link().setHref(host));
 			}

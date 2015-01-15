@@ -1,8 +1,7 @@
 package chookin.utils;
 
-import org.apache.commons.lang.NullArgumentException;
-
 /**
+ * Created by zhuyin on 7/6/14.
  * Simple validation methods.
  */
 public final class Validate {

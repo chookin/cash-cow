@@ -12,9 +12,8 @@ import java.io.IOException;
 import java.util.Date;
 
 /**
- * Created by chookin on 7/6/14.
+ * Created by zhuyin on 7/6/14.
  *
- * If not saved in local disk, then download it.
  */
 public class Extractor {
     private final static Logger LOG = Logger.getLogger(Extractor.class);
@@ -40,7 +39,7 @@ public class Extractor {
     }
 
     /**
-     * get the html document identified by this.url.
+     * Get the html document identified by this url.
      * When the html document got and validateSeconds is bigger than 0L, saving it to local disk.
      * @param validateSeconds the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
      * @throws java.io.IOException
@@ -59,20 +58,18 @@ public class Extractor {
         }
         return doc = LinkHelper.getDocument(this.getUrl());
     }
-    public Document getDocument() throws IOException{
-        return this.getDocument(0L);
-    }
+
     public void saveDocument() throws IOException {
         if(doc == null){
-            getDocument();
+            getDocument(0L);
         }
         FileHelper.save(doc.toString(), this.getFileName());
     }
     /**
-     * download the web resource to local disk without parsing if not been downloaded.
+     * Download the web resource to local disk without parsing if not been downloaded.
      * @param minsize ignore the resource if its' byte length less than minsize
      *
-     * @return return null when error in fetching remote resource
+     * @return null when error in fetching remote resource
      * @throws IOException
      */
     public boolean saveAsResource(int minsize) throws IOException {

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
+ * Created by zhuyin on 7/6/14.
  * A minimal String utility class. Designed for internal jsoup use only.
  */
 public final class StringUtil {

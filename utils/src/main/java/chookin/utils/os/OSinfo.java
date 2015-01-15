@@ -1,6 +1,7 @@
 package chookin.utils.os;
 
 /**
+ * Created by zhuyin on 7/6/14.
  * 操作系统类：
  * 获取System.getProperty("os.name")对应的操作系统
  */

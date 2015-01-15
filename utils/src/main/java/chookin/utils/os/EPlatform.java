@@ -1,7 +1,7 @@
 package chookin.utils.os;
 
 /**
- * Created by chookin on 7/6/14.
+ * Created by zhuyin on 7/6/14.
  */
 public enum EPlatform {
     Any("any"),

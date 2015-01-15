@@ -17,7 +17,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import chookin.etl.common.LocalDir;
-import chookin.etl.web.jsoup.LinkHelper;
+import chookin.etl.common.LinkHelper;
 
 public class LocalFileSaver extends Saver {
 	public LocalFileSaver(SiteCrawler site, LocalDir dir) {

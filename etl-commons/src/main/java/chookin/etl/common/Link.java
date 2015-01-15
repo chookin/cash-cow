@@ -9,14 +9,7 @@ public class Link implements Comparable<Link> {
 	private String text;
 
 	private String title;
-	private float weight = 1f;
-	public Link setWeight(float weight){
-		this.weight = weight;
-		return this;
-	}
-	public float getWeight(){
-		return this.weight;
-	}
+
 	public String getHref() {
 		return this.href;
 	}
