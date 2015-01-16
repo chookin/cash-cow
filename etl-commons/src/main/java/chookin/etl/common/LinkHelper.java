@@ -285,7 +285,7 @@ public class LinkHelper {
 		if(url == null){
 			return null;
 		}
-		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
+		String myUrl = trimProtocolAndStart3W(url).toLowerCase();
 		int firstSlashIndex = myUrl.indexOf('/');
 		if(firstSlashIndex == -1){
 			return myUrl;
@@ -303,7 +303,7 @@ public class LinkHelper {
 		if(url == null){
 			return null;
 		}
-		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
+		String myUrl = trimProtocolAndStart3W(url).toLowerCase();
 		int lastLeftSlashIndex = myUrl.lastIndexOf('/');
 		if (lastLeftSlashIndex == -1) {
 			return myUrl;
@@ -314,7 +314,7 @@ public class LinkHelper {
 		if(url == null){
 			return null;
 		}
-		String myUrl = getUrlWithoutProtocolAndStart3W(url).toLowerCase();
+		String myUrl = trimProtocolAndStart3W(url).toLowerCase();
 		int index = myUrl.indexOf('/');
 		if (index == -1) {
 			return myUrl;
@@ -328,18 +328,18 @@ public class LinkHelper {
 	 * @param url
 	 * @return
 	 */
-	public static String getUrlWithoutProtocol(String url) {
+	public static String trimProtocol(String url) {
 		if(url == null){
 			return null;
 		}
 		return url.replaceAll(String.format("(?i)%s", LinkHelper.getProtocolRegex()), "");
 	}
-	public static String getUrlWithoutProtocolAndStart3W(String url) {
+	public static String trimProtocolAndStart3W(String url) {
 		if(url == null){
 			return null;
 		}
 		// (?i)让表达式忽略大小写进行匹配;
 		// '^'和'$'分别匹配字符串的开始和结束
-		return getUrlWithoutProtocol(url).replaceAll("(?i)(^www.)", "");
+		return trimProtocol(url).replaceAll("(?i)(^www.)", "");
 	}
 }

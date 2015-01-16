@@ -96,6 +96,11 @@ public class NetworkHelper {
             this.passwd = passwd;
             this.desc = "";
         }
+
+        /**
+         * Use command is:
+         * java -Dhttp.proxyHost=proxy.cmcc  -Dhttp.proxyPort=8080 -jar my.jar
+         */
         public void set(){
             System.setProperty("http.proxyHost", host);
             System.setProperty("http.proxyPort", port);

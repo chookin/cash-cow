@@ -149,7 +149,7 @@ public class ZStock {
      * @throws IOException
      */
     public void collectHistoryDetail(String startDay, String endDay) throws IOException{
-        collectHistoryDetail(DateUtils.convertDateStringToCalendar(startDay), DateUtils.convertDateStringToCalendar(endDay));
+        collectHistoryDetail(DateUtils.convertDateStringToCalendar(startDay, "yyyy-MM-dd"), DateUtils.convertDateStringToCalendar(endDay, "yyyy-MM-dd"));
     }
 
     public void collectHistoryDetail(Calendar startDay, Calendar endDay) throws IOException{

@@ -45,4 +45,8 @@ public class OptionParser {
             return null;
         }
     }
+
+    public boolean existOption(String option){
+        return this.options.containsKey(option);
+    }
 }

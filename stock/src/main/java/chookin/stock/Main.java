@@ -23,15 +23,8 @@ public class Main {
     public static void main(String[] args) {
         LOG.info("ZStock started.");
         ConfigManager.setFile("stock.xml");
-        NetworkHelper.setProxy(ConfigManager.getPropertyAsBool("proxy.enable"));
         try {
             OptionParser optionParser = new OptionParser(args);
-            String paraProxy = optionParser.getOption("--proxy").toLowerCase();
-            if(paraProxy.equals("yes") || paraProxy.equals("y") || paraProxy.equals("on")){
-                setProxy(true);
-            }else{
-                setProxy(false);
-            }
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("applicationContext.xml");
 
@@ -70,26 +63,5 @@ public class Main {
             LOG.error(null, t);
         }
         LOG.info("ZStock stopped.");
-    }
-    /**
-     * Set system proxy.
-     * java -Dhttp.proxyHost=proxy.cmcc  -Dhttp.proxyPort=8080 -jar stock.jar
-     */
-    public static void setProxy(boolean enable){
-        if(!enable){
-            System.setProperty("http.proxyHost", "");
-            System.setProperty("http.proxyPort", Integer.toString(0));
-            return;
-        }
-        String host = "proxy.cmcc";
-        int port = 8080;
-        LOG.info("enable proxy: "+host +":"+port);
-        String authUser = "";
-        String authPassword = "";
-        System.setProperty("http.proxyHost", host);
-        System.setProperty("http.proxyPort", Integer.toString(port));
-        System.setProperty("http.proxyUser", authUser);
-        System.setProperty("http.proxyPassword", authPassword);
-
     }
 }

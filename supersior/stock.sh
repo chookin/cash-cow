@@ -51,7 +51,7 @@ case "$1" in
         create_db: $prompt_create_db
         collect: ${promt_data_acquistion}.
             Usage:
-                bash stock.sh collect <option> --proxy=no(|yes)
+                bash stock.sh collect <option>
             <option> could be:
                 --hist          # history data
                 --histdetail    # history detail data

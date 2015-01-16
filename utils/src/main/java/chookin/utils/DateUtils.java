@@ -38,8 +38,31 @@ public class DateUtils {
         return sdf.format(date);
     }
 
-    public static java.util.Date convertDateStringToDate(String str){
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd");
+    /**
+
+     G 年代标志符
+     y 年
+     M 月
+     d 日
+     h 时 在上午或下午 (1~12)
+     H 时 在一天中 (0~23)
+     m 分
+     s 秒
+     S 毫秒
+     E 星期
+     D 一年中的第几天
+     F 一月中第几个星期几
+     w 一年中第几个星期
+     W 一月中第几个星期
+     a 上午 / 下午 标记符
+     k 时 在一天中 (1~24)
+     K 时 在上午或下午 (0~11)
+     z 时区
+
+     * yyyy-MM-dd
+     */
+    public static java.util.Date convertDateStringToDate(String str, String dateformat){
+        SimpleDateFormat sdf= new SimpleDateFormat(dateformat);
         try {
             return sdf.parse(str);
         } catch (ParseException e) {
@@ -47,9 +70,9 @@ public class DateUtils {
         }
     }
 
-    public static Calendar convertDateStringToCalendar(String str){
+    public static Calendar convertDateStringToCalendar(String strDate, String dateformat){
         Calendar calendar = Calendar.getInstance();
-        calendar.setTime(convertDateStringToDate(str));
+        calendar.setTime(convertDateStringToDate(strDate, dateformat));
         return calendar;
     }
 
