@@ -116,6 +116,7 @@ public class LinkHelper {
 				} catch (InterruptedException e1) {
 					LOG.warn(null, e1);
 				}
+				NetworkHelper.switchProxy();
 			} catch(HttpStatusException e) {
 				switch (e.getStatusCode()){
 					case 404: // 请求的网页不存在

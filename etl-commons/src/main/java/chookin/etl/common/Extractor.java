@@ -20,13 +20,28 @@ public class Extractor {
     private String url;
     protected String localFileName = null;
     private static String basePath = ConfigManager.getProperty("webpage.download.directory");
-    private Document doc;
+    private Document doc =null;
+    private long validateSeconds ;
 
+    /**
+     * Get document from internet.
+     * @param url
+     */
     public Extractor(String url){
+        this(url, 0L);
+    }
+
+    /**
+     * If validateSeconds > 0, then get document from internet or from local disk.
+     * @param url
+     * @param validateSeconds the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
+     */
+    public Extractor(String url, long validateSeconds){
         if(url == null){
             throw new NullArgumentException("url");
         }
         this.url = url;
+        this.validateSeconds = validateSeconds;
     }
 
     public String getUrl(){return this.url;}
@@ -37,33 +52,41 @@ public class Extractor {
         }
         return this.localFileName;
     }
-
+    public boolean isAlreadySaved(){
+        if(validateSeconds == 0L){
+            return false;
+        }
+        File file = new File(this.getFileName());
+        if(file.exists()){
+            long time = file.lastModified();
+            long now = new Date().getTime();
+            if(now - time < validateSeconds * 1000){ // this file is still new
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Get the html document identified by this url.
      * When the html document got and validateSeconds is bigger than 0L, saving it to local disk.
-     * @param validateSeconds the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
      * @throws java.io.IOException
      */
-    public Document getDocument(long validateSeconds) throws IOException {
+    public Document getDocument() throws IOException {
+        if(doc != null){
+            return doc;
+        }
         LOG.trace("get document " + this.getUrl());
-        if(validateSeconds > 0L){
-            File file = new File(this.getFileName());
-            if(file.exists()){
-                long time = file.lastModified();
-                long now = new Date().getTime();
-                if(now - time < validateSeconds * 1000){ // this file is still new
-                    return doc = Jsoup.parse(file, "utf-8", this.getUrl());
-                }
-            }
+        if(isAlreadySaved()){
+            return doc = Jsoup.parse(new File(getFileName()), "utf-8", this.getUrl());
         }
         return doc = LinkHelper.getDocument(this.getUrl());
     }
 
     public void saveDocument() throws IOException {
-        if(doc == null){
-            getDocument(0L);
+        if(this.isAlreadySaved()){
+            return;
         }
-        FileHelper.save(doc.toString(), this.getFileName());
+        FileHelper.save(getDocument().toString(), this.getFileName());
     }
     /**
      * Download the web resource to local disk without parsing if not been downloaded.
@@ -73,8 +96,7 @@ public class Extractor {
      * @throws IOException
      */
     public boolean saveAsResource(int minsize) throws IOException {
-        File file = new File(this.getFileName());
-        if (file.exists()) {
+        if(isAlreadySaved()){
             return false;
         }
         byte[] bytes = LinkHelper.getDocumentBytes(this.getUrl());
