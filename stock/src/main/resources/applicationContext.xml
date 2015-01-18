@@ -25,8 +25,9 @@
         </property>
     </bean>
     <context:annotation-config/>
-    <bean id="main" class="chookin.stock.Main"/>
+    <bean id="main" class="chookin.stock.StockCLI"/>
     <context:component-scan base-package="chookin.stock.orm"/>
+    <context:component-scan base-package="chookin.stock.handler"/>
     <!-- 建立数据源 -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <!-- 数据库驱动 -->

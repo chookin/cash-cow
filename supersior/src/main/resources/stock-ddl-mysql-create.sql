@@ -14,6 +14,13 @@ grant all on *.* to 'chookin'@'%' identified by 'winwin';
 
 use 'stock';
 
+create table if not exists holiday(
+  day date comment '日期',
+  descr varchar(32) COMMENT '描述',
+  PRIMARY KEY (day),
+  UNIQUE (day)
+);
+
 create table if not exists stock(
   stock_id int not null auto_increment comment '股票id',
   stock_code varchar(6) not null comment '股票代码',

@@ -26,8 +26,8 @@ public class SCompanyInfoExtr extends CompanyInfoExtr {
     }
     @Override
     public void extract(CompanyInfoEntity entity) throws IOException {
-        Extractor extractor = new Extractor(this.url);
-        Document doc = extractor.getDocument(DateUtils.YEAR_MILLISECONDS);
+        Extractor extractor = new Extractor(this.url, DateUtils.YEAR_MILLISECONDS);
+        Document doc = extractor.getDocument();
         Elements elements = doc.select("table#comInfo1");
         elements = elements.select("td");
         for(Iterator<Element> iter = elements.iterator();iter.hasNext();){

@@ -29,7 +29,7 @@ public class SHistoryDataDetailExtr extends HistoryDataDetailExtr {
     class MyExtractor extends Extractor{
 
         public MyExtractor(String url) {
-            super(url);
+            super(url, Long.MAX_VALUE);
         }
         @Override
         public String getFileName(){

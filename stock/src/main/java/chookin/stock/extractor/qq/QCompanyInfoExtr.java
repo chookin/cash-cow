@@ -26,8 +26,8 @@ public class QCompanyInfoExtr extends CompanyInfoExtr {
     }
     @Override
     public void extract(CompanyInfoEntity entity) throws IOException {
-        Extractor extractor = new Extractor(this.url);
-        Document doc = extractor.getDocument(DateUtils.YEAR_MILLISECONDS);
+        Extractor extractor = new Extractor(this.url, DateUtils.YEAR_MILLISECONDS);
+        Document doc = extractor.getDocument();
         extractProfits(doc, entity);
         extractSpot(doc, entity);
     }

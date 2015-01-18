@@ -1,4 +1,4 @@
-import chookin.stock.orm.service.ZStock;
+import chookin.stock.handler.CollectHandler;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -16,12 +16,12 @@ import java.io.IOException;
 @ContextConfiguration({"/applicationContext.xml"})
 public class TestStock {
     @Autowired
-    private ZStock zStock;
+    private CollectHandler collectHandler;
 
     @Ignore
     public void saveStocks(){
         try {
-            this.zStock.collectStocks();
+            this.collectHandler.collectStocks();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -30,7 +30,7 @@ public class TestStock {
     @Ignore
     public void saveCompanyInfo(){
         try {
-            this.zStock.collectCompanyInfo();
+            this.collectHandler.collectCompanyInfo();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -39,7 +39,7 @@ public class TestStock {
     @Ignore
     public void saveRealData(){
         try {
-            this.zStock.collectRealData();
+            this.collectHandler.collectRealData();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class TestStock {
     @Test
     public void saveHistoryData(){
         try {
-            this.zStock.collectHistoryData(2003, 1, 2003, 2);
+            this.collectHandler.collectHistoryData(2003, 1, 2003, 2);
         } catch (Throwable e) {
             e.printStackTrace();
         }

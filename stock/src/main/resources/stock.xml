@@ -2,7 +2,7 @@
     <!--utils-->
     <property>
         <name>proxy.enable</name>
-        <value>true</value>
+        <value>false</value>
         <description>whether using proxy, value is true | false</description>
     </property>
     <property>

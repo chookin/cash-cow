@@ -31,8 +31,8 @@ public class SHistoryDataExtr extends HistoryDataExtr {
         String url = String.format("http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/%s.phtml?year=%d&jidu=%d",this.stock.getStockCode(), year, quarter);
         LOG.info("extract "+url);
         List<HistoryDataEntity> rst = new ArrayList<HistoryDataEntity>();
-        Extractor extractor = new Extractor(url);
-        Document doc = extractor.getDocument(DateUtils.DAY_MILLISECONDS);
+        Extractor extractor = new Extractor(url, DateUtils.DAY_MILLISECONDS);
+        Document doc = extractor.getDocument();
         Elements elements = doc.select("table#FundHoldSharesTable");
         elements = elements.select("tr");
         for(Element element : elements){

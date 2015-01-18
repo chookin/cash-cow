@@ -1,4 +1,4 @@
-package chookin.stock.orm.service;
+package chookin.stock.handler;
 
 import chookin.stock.extractor.HistoryDataDetailExtr;
 import chookin.stock.extractor.HistoryDataExtr;
@@ -11,14 +11,8 @@ import chookin.stock.extractor.qq.QCompanyInfoExtr;
 import chookin.stock.extractor.sina.SCompanyInfoExtr;
 import chookin.stock.extractor.sina.SHistoryDataDetailExtr;
 import chookin.stock.extractor.sina.SHistoryDataExtr;
-import chookin.stock.orm.domain.CompanyInfoEntity;
-import chookin.stock.orm.domain.HistoryDataEntity;
-import chookin.stock.orm.domain.RealDataEntity;
-import chookin.stock.orm.domain.StockEntity;
-import chookin.stock.orm.repository.CompanyInfoRepository;
-import chookin.stock.orm.repository.HistoryDataRepository;
-import chookin.stock.orm.repository.RealDataRepository;
-import chookin.stock.orm.repository.StockRepository;
+import chookin.stock.orm.domain.*;
+import chookin.stock.orm.repository.*;
 import chookin.utils.DateUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +27,8 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * Created by chookin on 7/6/14.
  */
 @Service
-public class ZStock {
-    private final static Logger LOG = Logger.getLogger(ZStock.class);
+public class CollectHandler {
+    private final static Logger LOG = Logger.getLogger(CollectHandler.class);
     private Map<String, StockEntity> stocksMap = new ConcurrentSkipListMap<String, StockEntity>();
 
     public Map<String, StockEntity> getStocksMap(){
@@ -55,6 +49,9 @@ public class ZStock {
 
     @Autowired
     private StockRepository stockRepository;
+    @Autowired
+    private HolidayRepository holidayRepository;
+
     @Transactional
     public void collectStocks() throws IOException {
         Map<String, StockEntity> stocks = extractStockList();
@@ -151,11 +148,27 @@ public class ZStock {
     public void collectHistoryDetail(String startDay, String endDay) throws IOException{
         collectHistoryDetail(DateUtils.convertDateStringToCalendar(startDay, "yyyy-MM-dd"), DateUtils.convertDateStringToCalendar(endDay, "yyyy-MM-dd"));
     }
-
+    private Set<Long> holidays =new TreeSet<>();
+    private Collection<Long> getHolidays(){
+        if(!this.holidays.isEmpty()){
+            return this.holidays;
+        }
+        Iterable<HolidayEntity> holidays = this.holidayRepository.findAll();
+        for(HolidayEntity entity: holidays){
+            this.holidays.add(entity.getDay().getTime());
+        }
+        return this.holidays;
+    }
+    boolean isHoliday(Calendar day){
+        if(DateUtils.isWeekend(day)){
+            return true;
+        }
+        return this.getHolidays().contains(day.getTimeInMillis());
+    }
     public void collectHistoryDetail(Calendar startDay, Calendar endDay) throws IOException{
         Map<String, StockEntity> stocksMap = this.getStocksMap();
         for ( Calendar curDay = (Calendar) startDay.clone(); curDay.compareTo(endDay) <= 0; curDay.add(Calendar.DAY_OF_YEAR, 1) ){
-            if(DateUtils.isWeekend(curDay)){
+            if(isHoliday(curDay)){
                 continue;
             }
             for(Map.Entry<String, StockEntity> entry: stocksMap.entrySet()){
@@ -163,7 +176,7 @@ public class ZStock {
                 HistoryDataDetailExtr extr = new SHistoryDataDetailExtr(entity);
                 if(extr.extract(curDay.getTime())) {
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(100);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

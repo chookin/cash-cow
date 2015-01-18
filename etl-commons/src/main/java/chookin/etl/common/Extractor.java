@@ -21,7 +21,7 @@ public class Extractor {
     protected String localFileName = null;
     private static String basePath = ConfigManager.getProperty("webpage.download.directory");
     private Document doc =null;
-    private long validateSeconds ;
+    private long validateMiliSeconds;
 
     /**
      * Get document from internet.
@@ -32,7 +32,7 @@ public class Extractor {
     }
 
     /**
-     * If validateSeconds > 0, then get document from internet or from local disk.
+     * If validateMiliSeconds > 0, then get document from internet or from local disk.
      * @param url
      * @param validateSeconds the valid period of the downloaded file for this url. If local file expired, will download again. Unit is second.
      */
@@ -41,7 +41,11 @@ public class Extractor {
             throw new NullArgumentException("url");
         }
         this.url = url;
-        this.validateSeconds = validateSeconds;
+        if(validateSeconds == Long.MAX_VALUE){
+            this.validateMiliSeconds = Long.MAX_VALUE;
+        }else {
+            this.validateMiliSeconds = validateSeconds * 1000L;
+        }
     }
 
     public String getUrl(){return this.url;}
@@ -53,14 +57,14 @@ public class Extractor {
         return this.localFileName;
     }
     public boolean isAlreadySaved(){
-        if(validateSeconds == 0L){
+        if(validateMiliSeconds == 0L){
             return false;
         }
         File file = new File(this.getFileName());
         if(file.exists()){
             long time = file.lastModified();
             long now = new Date().getTime();
-            if(now - time < validateSeconds * 1000){ // this file is still new
+            if(now - time < validateMiliSeconds ){ // this file is still new
                 return true;
             }
         }
@@ -68,7 +72,7 @@ public class Extractor {
     }
     /**
      * Get the html document identified by this url.
-     * When the html document got and validateSeconds is bigger than 0L, saving it to local disk.
+     * When the html document got and validateMiliSeconds is bigger than 0L, saving it to local disk.
      * @throws java.io.IOException
      */
     public Document getDocument() throws IOException {

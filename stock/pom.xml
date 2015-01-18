@@ -37,7 +37,7 @@
                         <manifest>
                             <!--http://maven.apache.org/shared/maven-archiver/examples/classpath.html-->
                             <addClasspath>true</addClasspath>
-                            <mainClass>chookin.stock.Main</mainClass>
+                            <mainClass>chookin.stock.StockCLI</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

@@ -19,16 +19,5 @@
         <!--enables logging of all generated SQL to the console-->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
-
-        <property name="connection.url">jdbc:mysql://localhost:3306/stock</property>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.username">chookin</property>
-        <property name="connection.password">winwin</property>
-
-        <mapping class="chookin.stock.orm.domain.CompanyInfoEntity"/>
-        <mapping class="chookin.stock.orm.domain.HistoryDataEntity"/>
-        <mapping class="chookin.stock.orm.domain.HistoryDataDetailEntity"/>
-        <mapping class="chookin.stock.orm.domain.RealDataEntity"/>
-        <mapping class="chookin.stock.orm.domain.StockEntity"/>
     </session-factory>
 </hibernate-configuration>

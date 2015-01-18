@@ -37,7 +37,7 @@ public class EmStockListExtr extends StockListExtr {
     @Override
     public Map<String, StockEntity> getNewStocks(Map<String, StockEntity> existedStocks) throws IOException{
         Map<String, StockEntity> stocks = new TreeMap<String, StockEntity>();
-        Document doc = new Extractor(this.getUrl()).getDocument(DateUtils.WEEK_MILLISECONDS);
+        Document doc = new Extractor(this.getUrl(), DateUtils.WEEK_MILLISECONDS).getDocument();
         Elements elements = doc.select("div.qox");
         elements = elements.select(".sltit, li");
         Exchange exchange = Exchange.Unknown;
