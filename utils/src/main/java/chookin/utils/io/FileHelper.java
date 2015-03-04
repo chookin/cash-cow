@@ -1,9 +1,7 @@
 package chookin.utils.io;
 
-import chookin.utils.web.UrlHelper;
-import com.sun.corba.se.spi.orbutil.fsm.Input;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.NullArgumentException;
 import org.apache.log4j.Logger;
 
 import java.io.*;
@@ -16,30 +14,11 @@ import java.util.List;
 public class FileHelper {
     private final static Logger LOG = Logger.getLogger(FileHelper.class);
 
-    public static String getUrlFileName(String url){
-        String filename = UrlHelper.eraseProtocolAndStart3W(url);
-        filename = FileHelper.formatFileName(filename);
-        if(FileHelper.getExtension(filename).isEmpty()){
-            filename = filename + ".html";
-        }
-        return filename;
-    }
     public static String formatFileName(String fileName){
-        return fileName.replaceAll("&|<|>","-");
+        String myName = fileName.replaceAll("&|<|>|\n", "-");
+        return FilenameUtils.normalize(myName);
     }
-    public static String getExtension(String filename) {
-        filename = filename.replace('\\', '/');
-        int indexLastSlash = filename.lastIndexOf('/');
-        if (indexLastSlash == -1) {
-            indexLastSlash = 0;
-        }
-        int indexLastDot = filename.substring(indexLastSlash).lastIndexOf('.');
-        if (indexLastDot == -1) {
-            return "";
-        } else {
-            return filename.substring(indexLastDot).toLowerCase();
-        }
-    }
+
     /**
      * Writes a string to a file. Create parent directories if not exist.
      * @param str
@@ -50,8 +29,7 @@ public class FileHelper {
             throws IOException {
         String absPath = new File(fileName).getAbsolutePath();
         LOG.trace(String.format("save file %s", absPath));
-        String directory = absPath.substring(0, absPath.lastIndexOf('/'));
-        mkdirs(directory);
+        makeParentDirs(fileName);
 
         Writer out = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream(fileName), "UTF-8"));
@@ -65,9 +43,7 @@ public class FileHelper {
         if(in == null){
             return;
         }
-        if(fileName == null || fileName.trim().isEmpty()){
-            throw new IllegalArgumentException("fileName");
-        }
+        makeParentDirs(fileName);
         OutputStream out = new FileOutputStream(fileName);
         IOUtils.copy(in, out);
         in.close();
@@ -77,6 +53,20 @@ public class FileHelper {
         List<String> lines = new ArrayList<>();
         // In Java 7 you should use auto close features.
         try(BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line = br.readLine();
+            while (line != null) {
+                lines.add(line);
+                line = br.readLine();
+            }
+        }
+        return lines;
+    }
+    public static List<String> readLines(String fileName, String code) throws IOException {
+        List<String> lines = new ArrayList<>();
+        FileInputStream fInputStream = new FileInputStream(fileName);
+        InputStreamReader inputStreamReader = new InputStreamReader(fInputStream, code);
+        // In Java 7 you should use auto close features.
+        try(BufferedReader br = new BufferedReader(inputStreamReader)) {
             String line = br.readLine();
             while (line != null) {
                 lines.add(line);
@@ -98,31 +88,36 @@ public class FileHelper {
         }
         return sb.toString();
     }
+
     public static void save(byte[] bytes, String fileName)
             throws IOException {
         LOG.trace(String.format("save file %s", fileName));
-        int index = fileName.lastIndexOf('/');
-        if(index != -1){
-            String directory = fileName.substring(0, index);
-            mkdirs(directory);
-        }
-
+        makeParentDirs(fileName);
         FileOutputStream output = new FileOutputStream(fileName);
         output.write(bytes);
         output.close();
     }
+
+    public static void makeParentDirs(String fileName) throws IOException {
+        if(fileName == null || fileName.trim().isEmpty()){
+            throw new IllegalArgumentException("fileName");
+        }
+        FileHelper.mkdir(new File(fileName).getAbsoluteFile().getParentFile().getAbsolutePath());
+    }
+
     /**
      * Note:
      * <li>Can't create a file and a folder with the same name and in the same folder. The OS would not allow you to do that since the name is the id for that file/folder object. So we have delete the older file</li>
-     * <li>While File#mkdirs only return false if a file already exists with the same name.</li>
+     * <li>While File#mkdir only return false if a file already exists with the same name.</li>
      * @param dirpath
      * @throws IOException
-     *             if exists a file with the same name
+     *    if exists a file with the same name, or if failed to make dir because of security error.
      */
-    public static void mkdirs(String dirpath) throws IOException {
+    public static void mkdir(String dirpath) throws IOException {
         if (new java.io.File(dirpath).isDirectory()) {
             return;
         }
+        LOG.info("make dir: "+ dirpath);
         dirpath = dirpath.replace('\\', '/').replace("//", "/");
 
         String basePath = "";
@@ -152,6 +147,17 @@ public class FileHelper {
             if(isCreated){
                 LOG.trace(String.format("make dir '%s'", file.getAbsolutePath()));
             }
+        }
+        if (!new File(dirpath).isDirectory()) {
+            throw new IOException("Failed to create dir "+ dirpath);
+        }
+    }
+    public static void main(String[] args){
+        try {
+            FileHelper.save("abc", "/home/zhuyin/stock/tmp/a.m.taobao.com/i40924136103.htm?sid=88ad6ad\n" +
+                    "7be926117-abtest=13-rn=9c93719bf63a792f388116731db40f33");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

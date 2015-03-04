@@ -64,10 +64,9 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="etl-commons" />
     <orderEntry type="library" name="Maven: chookin.cashcow:utils:1.0" level="project" />
-    <orderEntry type="library" name="Maven: chookin.cashcow:etl-commons:1.0" level="project" />
-    <orderEntry type="module" module-name="utils" />
+    <orderEntry type="module" module-name="etl-commons (1)" />
+    <orderEntry type="module" module-name="chookin-utils" />
     <orderEntry type="library" name="Maven: com.mycila:mycila-xmltool:4.0.ga" level="project" />
     <orderEntry type="library" name="Maven: net.sf.supercsv:super-csv:2.2.0" level="project" />
     <orderEntry type="library" name="Maven: com.google.inject:guice:3.0" level="project" />

@@ -52,7 +52,9 @@ public class HistoryDataEntity{
     public void setTime(Date time) {
         this.time = time;
     }
-
+    public void setTime(java.util.Date time) {
+        this.time = new Date(time.getTime());
+    }
     @Basic
     @Column(name = "open_price")
     public Double getOpenPrice() {

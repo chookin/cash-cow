@@ -34,12 +34,12 @@ public class FutureService<T> {
         return batchEntity;
     }
     public static interface CallableCreator<T>{
-        Callable<Integer> create(Collection<T> items);
+        Callable<Long> create(Collection<T> items);
     }
-    List<Future<Integer>> createFutures(Collection<T> items, CallableCreator<T> creator){
+    List<Future<Long>> createFutures(Collection<T> items, CallableCreator<T> creator){
         ArrayList<T>[] batchEntity = shuffle(items);
         executorService = Executors.newFixedThreadPool(poolSize);
-        List<Future<Integer>> futures = new ArrayList<>();
+        List<Future<Long>> futures = new ArrayList<>();
         for(Collection<T> batch : batchEntity){
             futures.add(executorService
                     .submit(creator.create(batch)));
@@ -47,11 +47,11 @@ public class FutureService<T> {
         return futures;
     }
 
-    int getFutureResult(Collection<Future<Integer>> futures){
+    long getFutureResult(Collection<Future<Long>> futures){
         int count = 0;
         while (true){
             boolean allDone = true;
-            for(Future<Integer> future: futures){
+            for(Future<Long> future: futures){
                 try {
                     if (future.isDone() && !future.isCancelled()) {
                         count += future.get();
@@ -60,24 +60,20 @@ public class FutureService<T> {
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     LOG.error(future, e);
-                    future.cancel(true);
+//                    future.cancel(true);
                 }
             }
             if(allDone){
                 break;
             }else {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    LOG.warn(null, e);
-                }
+                    ThreadHelper.sleep(1000);
             }
         }
         this.executorService.shutdown();
         return count;
     }
-    public int action(){
-        List<Future<Integer>> futures = createFutures(items, creator);
+    public long action(){
+        List<Future<Long>> futures = createFutures(items, creator);
         return getFutureResult(futures);
     }
 }

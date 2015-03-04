@@ -23,6 +23,12 @@ class Table():
 
     @staticmethod
     def generate_table_fields(obj, path=None):
+        """
+
+        :param obj:
+        :param path:
+        :return:
+        """
         fields = []
         if isinstance(obj, dict):
             for key, value in obj.items():

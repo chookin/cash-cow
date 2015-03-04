@@ -78,13 +78,6 @@ public class CollectHandler {
     @Autowired
     private HistoryDataRepository historyDataRepository;
 
-    public void collectCurrentQuarterHistoryData() throws IOException{
-        Calendar calendar =Calendar.getInstance();
-        int month = calendar.get(Calendar.MONTH) + 1; // 在格里高利历和罗马儒略历中一年中的第一个月是 JANUARY，它为 0
-        int quarter = (month + 2) / 3;
-        int year = calendar.get(Calendar.YEAR);
-        this.collectHistoryData(year, quarter);
-    }
     public long collectHistoryData(int startYear, int startQuarter, int endYear, int endQuater) throws IOException {
         LOG.info(String.format("start to save history data for %d-%d to %d-%d", startYear, startQuarter, endYear, endQuater));
         long count = 0;
@@ -132,11 +125,6 @@ public class CollectHandler {
         count += this.collectHistoryData(stocks, year, quarter);
         LOG.info(String.format("%d history data of %d-%d were saved", count, year, quarter));
         return count;
-    }
-    public void collectPrevDayHistoryDetail() throws IOException{
-        Calendar startDay  = Calendar.getInstance();
-        startDay = DateUtils.getPrevWorkDay(startDay);
-        this.collectHistoryDetail(startDay, startDay);
     }
 
     /**

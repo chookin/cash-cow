@@ -11,7 +11,10 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 class Json2Csv(object):
-    """Process a JSON object to a CSV file"""
+    """
+    Process a JSON object to a CSV file
+    https://github.com/evidens/json2csv/blob/master/json2csv.py
+    """
     collection = None
 
     def __init__(self, outline):

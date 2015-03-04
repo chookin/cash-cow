@@ -11,7 +11,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 import java.util.Iterator;
 
 /**
@@ -26,7 +26,7 @@ public class SCompanyInfoExtr extends CompanyInfoExtr {
     }
     @Override
     public void extract(CompanyInfoEntity entity) throws IOException {
-        Extractor extractor = new Extractor(this.url, DateUtils.YEAR_MILLISECONDS);
+        Extractor extractor = new Extractor(this.url, DateUtils.MONTH_MILLISECONDS);
         Document doc = extractor.getDocument();
         Elements elements = doc.select("table#comInfo1");
         elements = elements.select("td");

@@ -15,7 +15,7 @@ public class Link implements Comparable<Link> {
 	}
 
 	public Link setHref(String href) {
-		this.href = LinkHelper.trimUrl(href);
+		this.href = UrlHelper.trimUrl(href);
 		return this;
 	}
 
@@ -38,7 +38,7 @@ public class Link implements Comparable<Link> {
 	}
 
 	public boolean equals(String href) {
-		String myHref = LinkHelper.trimUrl(href);
+		String myHref = UrlHelper.trimUrl(href);
 		return this.href.compareTo(myHref) == 0;
 	}
 
@@ -77,7 +77,10 @@ public class Link implements Comparable<Link> {
 	}
 
 	@Override
-	public int compareTo(Link arg0) {
-		return this.href.compareTo(arg0.href);
+	public int compareTo(Link rhs) {
+		if(rhs == null){
+			throw new NullPointerException();
+		}
+		return this.href.compareTo(rhs.href);
 	}
 }

@@ -1,23 +1,58 @@
 package chookin.utils.db;
 
+import chookin.utils.concurrent.ThreadHelper;
 import chookin.utils.configuration.ConfigManager;
 import com.mongodb.*;
 import org.apache.log4j.Logger;
 
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by zhuyin on 12/15/14.
  */
 public abstract class MongoDAO<T> {
     private static final Logger LOG = Logger.getLogger(MongoDAO.class);
-    private static String database = ConfigManager.getProperty("mongo.database");
-    private Mongo mongo;
-    public Mongo getMongo(){
-        if(mongo != null){
-            return mongo;
+    private static final String database = ConfigManager.getProperty("mongo.database");
+    private static final Lock poolLock = new ReentrantLock();
+    private static final Queue<Mongo> pool = new ArrayDeque<>();
+
+    private Mongo mongo = null;
+    private Mongo getMongo(){
+        if(mongo == null){
+            mongo = findOrCreateMongo();
         }
+        return mongo;
+    }
+    public MongoDAO close(){
+        if(this.mongo == null){
+            return this;
+        }
+        poolLock.lock();
+        try{
+            pool.add(mongo);
+            mongo = null;
+        }finally {
+            poolLock.unlock();
+        }
+        return this;
+    }
+    private static Mongo findOrCreateMongo() {
+        poolLock.lock();
+        try {
+            if (pool.isEmpty()) {
+                return createMongo();
+            }else{
+                return pool.remove();
+            }
+        }finally {
+            poolLock.unlock();
+        }
+    }
+    private static Mongo createMongo(){
+        Mongo mongo = null;
         String host = ConfigManager.getProperty("mongo.host");
         int port = ConfigManager.getPropertyAsInteger("mongo.port");
         String user = ConfigManager.getProperty("mongo.user");
@@ -25,31 +60,27 @@ public abstract class MongoDAO<T> {
         try {
             String pwd = ConfigManager.getProperty("mongo.password");
             if(user == null || user.isEmpty()){
-                this.mongo = new MongoClient(host, port);
+                mongo = new MongoClient(host, port);
             }else {
                 ServerAddress serverAddress = new ServerAddress(host, port);
                 // TODO add user pwd support
-                this.mongo = new MongoClient(serverAddress);
+                mongo = new MongoClient(serverAddress);
             }
-            this.mongo.isLocked();
+            mongo.isLocked();
         } catch (MongoTimeoutException mt){
             LOG.error(mt.toString());
             LOG.warn("retry connect mongodb after 5 seconds");
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                LOG.warn(null, e);
-            }
-            this.mongo = null;
-            return this.getMongo();
+            ThreadHelper.sleep(5000);
+            return createMongo();
         } catch (UnknownHostException e) {
             LOG.fatal(null, e);
             System.exit(-1);
         }
-        return this.mongo;
+        return mongo;
     }
+
     public DB getDB(){
-        return this.getMongo().getDB(database); // E-commerce
+        return this.getMongo().getDB(database);
     }
 
     /**
@@ -69,13 +100,18 @@ public abstract class MongoDAO<T> {
         }
         return count;
     }
-
-    public void dropField(String field){
-        DBCollection dbCollection = this.getCollection();
-        dbCollection.update(new BasicDBObject(), new BasicDBObject("$unset", new BasicDBObject(field, 1)), false, true);
+    public int save(T entity){
+        List<T> entities = new ArrayList<>();
+        entities.add(entity);
+        return save(entities);
     }
 
-    protected abstract DBCollection getCollection();
+    public void dropField(String field, DBObject query){
+        DBCollection dbCollection = this.getCollection();
+        dbCollection.update(query, new BasicDBObject("$unset", new BasicDBObject(field, 1)), false, true);
+    }
+
+    public abstract DBCollection getCollection();
     protected abstract String get_id(T entity);
     protected abstract BasicDBObject getBasicDBObject(T entity);
     protected abstract T parse(DBObject dbObject);
@@ -109,12 +145,23 @@ public abstract class MongoDAO<T> {
         QueryBuilder queryBuilder = new QueryBuilder().put(field).exists(isWith);
         return find(queryBuilder.get());
     }
+
+    /**
+     * update by _id
+     * @param entity
+     * @return
+     */
     public int update(T entity){
         DBCollection dbCollection = this.getCollection();
-        WriteResult writeResult = dbCollection.update(new BasicDBObject("_id", get_id(entity)), getBasicDBObject(entity));
+        WriteResult writeResult = dbCollection.update(new BasicDBObject("_id", get_id(entity)), getBasicDBObject(entity), true, false);
         return writeResult.getN();
     }
 
+    /**
+     * update by _id. Use BulkWriteOperation, remove the old and insert new.
+     * @param entities
+     * @return
+     */
     public int update(Collection<T> entities){
         if(entities.isEmpty()){
             return 0;
@@ -128,7 +175,7 @@ public abstract class MongoDAO<T> {
             bulkop.insert(getBasicDBObject(entity));
         }
         BulkWriteResult result=bulkop.execute();
-        LOG.trace(result);
+        LOG.trace("Mongo update: " + result);
         return result.getInsertedCount();
     }
 
@@ -147,7 +194,7 @@ public abstract class MongoDAO<T> {
             bulkop.insert(getBasicDBObject(entity));
         }
         BulkWriteResult result=bulkop.execute();
-        LOG.trace(result);
+        LOG.trace("Mongo update: " + result);
         return result.getInsertedCount();
     }
 }

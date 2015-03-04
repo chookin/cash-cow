@@ -1,7 +1,7 @@
 
 # configurations
     <property>
-        <name>webpage.download.directory</name>
+        <name>page.download.directory</name>
         <value>/home/work/stock</value>
         <description>The directory where web pages download to. Warn, cannot use "~/"</description>
     </property>

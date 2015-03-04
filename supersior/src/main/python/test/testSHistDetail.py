@@ -2,7 +2,7 @@
 # coding:utf-8
 import unittest
 import datetime
-from hist_detail import SHistDetail
+from mongo_handler import SDayExchangeDetail
 import params
 from tools import debug_utils
 
@@ -19,7 +19,7 @@ class TestSHistDetail(unittest.TestCase):
     # 具体的测试用例，一定要以test开头
     def test_hist_extract(self):
         filename = params.s_hist_data_file
-        stock = SHistDetail.extract(filename)
+        stock = SDayExchangeDetail.extract(filename)
         self.assertEqual(stock.date, datetime.datetime.strptime('2014-09-25', '%Y-%m-%d').date())
         self.assertEqual(stock.stock_code, '300397')
         last_exchange = stock.exchanges[len(stock.exchanges)-1]

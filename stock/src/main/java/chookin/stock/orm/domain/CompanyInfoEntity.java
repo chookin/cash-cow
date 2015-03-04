@@ -69,6 +69,9 @@ public class CompanyInfoEntity {
     public void setListingDate(Date listingDate) {
         this.listingDate = listingDate;
     }
+    public void setListingDate(java.util.Date listingDate) {
+        this.listingDate = new Date(listingDate.getTime());
+    }
 
     private Double issurePrice;
 
@@ -105,7 +108,9 @@ public class CompanyInfoEntity {
     public void setRegistrationDate(Date registrationDate) {
         this.registrationDate = registrationDate;
     }
-
+    public void setRegistrationDate(java.util.Date registrationDate) {
+        this.registrationDate = new Date(registrationDate.getTime());
+    }
     private Double registeredCapital;
 
     @Basic

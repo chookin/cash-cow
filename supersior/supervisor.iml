@@ -10,11 +10,11 @@
     <orderEntry type="module-library">
       <library name="PHP">
         <CLASSES>
-          <root url="file://$MODULE_DIR$/../../ub-lab/targetV3/SSLib" />
+          <root url="file://$USER_HOME$/project/ub-lab/targetV3/SSLib" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="file://$MODULE_DIR$/../../ub-lab/targetV3/SSLib" />
+          <root url="file://$USER_HOME$/project/ub-lab/targetV3/SSLib" />
         </SOURCES>
       </library>
     </orderEntry>
