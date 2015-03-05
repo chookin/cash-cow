@@ -12,6 +12,12 @@ import java.util.Map;
  * Created by zhuyin on 3/2/15.
  */
 public class Request {
+    public Request(String url) {
+        if(url == null || url.trim().isEmpty()){
+            throw new IllegalArgumentException("Must supply a valid URL");
+        }
+        this.url = url;
+    }
     /**
      * Url of request web page.
      */
@@ -20,6 +26,11 @@ public class Request {
      * Store additional information in extras.
      */
     private Map<String, Object> extras;
+
+    /**
+     * Count of request schedule retry.
+     */
+    private int retryCount = 0;
 
     /**
      * Type of target resource.
@@ -69,13 +80,6 @@ public class Request {
         return url;
     }
 
-    public Request setUrl(String url) {
-        if(url == null || url.trim().isEmpty()){
-            throw new IllegalArgumentException("Must supply a valid URL");
-        }
-        this.url = url;
-        return this;
-    }
     public Object getExtra(String key) {
         if (extras == null) {
             return null;
@@ -88,6 +92,15 @@ public class Request {
             extras = new HashMap<>();
         }
         extras.put(key, value);
+        return this;
+    }
+
+    public int getRetryCount(){
+        return retryCount;
+    }
+
+    public Request incrRetryCount(){
+        ++retryCount;
         return this;
     }
 

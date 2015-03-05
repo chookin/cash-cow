@@ -33,7 +33,7 @@ public class CasperJsDownloader implements Downloader {
      * @return downloader process.
      * @throws IOException
      */
-    public Process getDownloaderProcess(String url, String userAgent) throws IOException {
+    private Process getDownloaderProcess(String url, String userAgent) throws IOException {
         List<String> command = new ArrayList<>();
         command.add("casperjs");
         command.add(getJsPath(this.script));
@@ -61,7 +61,7 @@ public class CasperJsDownloader implements Downloader {
         boolean isTimeOut = false;
         String s;
         while ((s = stdInput.readLine()) != null) {
-            System.out.println(s);
+            LOG.debug(s);
             if(System.currentTimeMillis() > start + spider.getTimeOut()){
                 isTimeOut = true;
                 break;
@@ -80,7 +80,7 @@ public class CasperJsDownloader implements Downloader {
      * @return
      * @throws java.io.IOException
      */
-    public static String getJsPath(String jsFile) throws IOException {
+    public String getJsPath(String jsFile) throws IOException {
         String path = jsFile;
         File file = new File(path);
         path = file.getAbsolutePath();
@@ -94,7 +94,7 @@ public class CasperJsDownloader implements Downloader {
     }
     public Document getDocument(String url, String userAgent) throws IOException {
         return (Document) download(
-                new Request().setUrl(url),
+                new Request(url),
                 new Spider()
                         .setUserAgent(userAgent)
         ).getResource();

@@ -1,4 +1,4 @@
-package chookin.utils.web;
+package chookin.etl.common;
 
 import org.apache.log4j.Logger;
 
@@ -102,20 +102,20 @@ public class Proxy {
         return this;
     }
 
-    public Float getSpeed() {
-        return speed;
+    public Double getAccessTime() {
+        return accessTime;
     }
 
-    public Proxy setSpeed(Float speed) {
-        this.speed = speed;
+    public Proxy setAccessTime(Double time) {
+        this.accessTime = time;
         return this;
     }
 
-    public Float getConnectTime() {
+    public Double getConnectTime() {
         return connectTime;
     }
 
-    public Proxy setConnectTime(Float connectTime) {
+    public Proxy setConnectTime(Double connectTime) {
         this.connectTime = connectTime;
         return this;
     }
@@ -138,10 +138,48 @@ public class Proxy {
     String country;
     String location;
     boolean isHighAnonymity;
+    /**
+     * HTTP or HTTPS.
+     */
     String type;
-    Float speed;
-    Float connectTime;
+    /**
+     * Time usage to access, in seconds.
+     */
+    Double accessTime;
+
+    /**
+     * Time usage to establish connection, in seconds
+     */
+    Double connectTime;
+
+    /**
+     * Time of validate this proxy usability.
+     */
     Date validateTime;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Proxy proxy = (Proxy) o;
+
+        if (port != proxy.port) return false;
+        if (host != null ? !host.equals(proxy.host) : proxy.host != null) return false;
+        if (passwd != null ? !passwd.equals(proxy.passwd) : proxy.passwd != null) return false;
+        if (user != null ? !user.equals(proxy.user) : proxy.user != null) return false;
+        if (validateTime != null ? !validateTime.equals(proxy.validateTime) : proxy.validateTime != null) return false;
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = host != null ? host.hashCode() : 0;
+        result = 31 * result + port;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        result = 31 * result + (passwd != null ? passwd.hashCode() : 0);
+        return result;
+    }
 
     @Override
     public String toString() {

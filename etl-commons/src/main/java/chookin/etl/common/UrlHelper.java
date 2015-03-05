@@ -7,17 +7,17 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
- *
+ * Created by zhuyin on 3/2/14.
  */
 public class UrlHelper {
-	private static String basePath = new File(ConfigManager.getProperty("page.download.directory", "/tmp")).getAbsolutePath();
-	private static String[] documentExtensions = { "", ".htm", ".html" };
+	private static final String basePath = new File(ConfigManager.getProperty("page.download.directory", "/tmp")).getAbsolutePath();
+	private static final String[] documentExtensions = { "", ".htm", ".html" };
+	private static final String protocolRegex = "([a-zA-Z]+)://";
 	private static boolean ignorePound = true;
-
-	private static String protocolRegex = "[a-zA-Z]+://";
-
 
 	private UrlHelper() {
 	}
@@ -166,6 +166,14 @@ public class UrlHelper {
 		return myUrl.substring(0, index);
 	}
 
+	public static String getProtocol(String url){
+		Pattern p=Pattern.compile(protocolRegex);
+		Matcher matcher=p.matcher(url);
+		if (matcher.groupCount() > 1) {
+			return matcher.group(1);
+		}
+		return null;
+	}
 
 	private static String getFileName(String url) {
 		String filename = UrlHelper.eraseProtocolAndStart3W(url);

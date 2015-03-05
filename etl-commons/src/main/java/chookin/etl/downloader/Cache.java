@@ -25,8 +25,8 @@ public class Cache {
         this.spider = spider;
     }
     /**
-     * Can use cached document?
-     * @return
+     * Can use cached resource?
+     * @return true if can use cache.
      */
     public boolean usable(){
         if(getSpider().getValidateMilliSeconds() <= 0L){

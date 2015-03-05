@@ -4,7 +4,6 @@ import chookin.etl.Spider;
 import chookin.etl.common.Request;
 import chookin.etl.common.ResultItems;
 import chookin.utils.io.FileHelper;
-import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
@@ -30,7 +29,7 @@ public class JsoupDownloader implements Downloader {
     }
     public Document getDocument(String url, String userAgent) throws IOException {
         return (Document) download(
-                new Request().setUrl(url),
+                new Request(url),
                 new Spider()
                         .setUserAgent(userAgent)
         ).getResource();
@@ -76,7 +75,6 @@ public class JsoupDownloader implements Downloader {
                     throw new IOException(e.toString() + " " + url, e);
                 default:
                     LOG.error("http status code " + e.getStatusCode() + " on get " + url);
-                    NetworkHelper.switchProxy();
             }
         }
         return resultItems.needSwitchProxy(true);

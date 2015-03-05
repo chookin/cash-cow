@@ -8,9 +8,9 @@ import chookin.etl.common.ResultItems;
 public interface PageProcessor {
 
     /**
-     * process the page, extract urls to fetch, extract the data and store
+     * Process the page, extract urls to fetch, extract the data and store
      *
-     * @param page
+     * @param page downloaded web resource.
      */
     public void process(ResultItems page);
 }

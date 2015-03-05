@@ -2,7 +2,6 @@ package chookin.utils.configuration;
 
 import chookin.utils.concurrent.ThreadHelper;
 import chookin.utils.io.FileHelper;
-import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 import org.xml.sax.SAXException;
 
@@ -32,7 +31,6 @@ public class ConfigManager {
 		}else{
 			LOG.info("Main configuration file  is class resource '" + mainConfigFileName + "'.");
 		}
-		NetworkHelper.setProxy();
 	}
 	public static void dumpConfigFile() throws IOException {
 		dumpConfigFile(mainConfigFileName);

@@ -21,6 +21,28 @@ public class FutureService<T> {
         this.creator = creator;
         this.poolSize = poolSize;
     }
+
+    public long action(){
+        List<Future<Long>> futures = createFutures(items, creator);
+        return getFutureResult(futures);
+    }
+
+    List<Future<Long>> createFutures(Collection<T> items, CallableCreator<T> creator){
+        ArrayList<T>[] batchEntity = shuffle(items);
+        executorService = Executors.newFixedThreadPool(poolSize);
+        List<Future<Long>> futures = new ArrayList<>();
+        for(Collection<T> batch : batchEntity){
+            futures.add(executorService
+                    .submit(creator.create(batch)));
+        }
+        return futures;
+    }
+
+    public static interface CallableCreator<T>{
+        Callable<Long> create(Collection<T> items);
+    }
+
+    @SuppressWarnings("unchecked")
     ArrayList<T>[] shuffle(Collection<T> categoryEntities){
         ArrayList<T>[] batchEntity = new ArrayList[this.poolSize];
         for(int i = 0; i< batchEntity.length;++i){
@@ -32,19 +54,6 @@ public class FutureService<T> {
             ++index;
         }
         return batchEntity;
-    }
-    public static interface CallableCreator<T>{
-        Callable<Long> create(Collection<T> items);
-    }
-    List<Future<Long>> createFutures(Collection<T> items, CallableCreator<T> creator){
-        ArrayList<T>[] batchEntity = shuffle(items);
-        executorService = Executors.newFixedThreadPool(poolSize);
-        List<Future<Long>> futures = new ArrayList<>();
-        for(Collection<T> batch : batchEntity){
-            futures.add(executorService
-                    .submit(creator.create(batch)));
-        }
-        return futures;
     }
 
     long getFutureResult(Collection<Future<Long>> futures){
@@ -60,20 +69,16 @@ public class FutureService<T> {
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     LOG.error(future, e);
-//                    future.cancel(true);
+                    // future.cancel(true);
                 }
             }
             if(allDone){
                 break;
             }else {
-                    ThreadHelper.sleep(1000);
+                ThreadHelper.sleep(1000);
             }
         }
         this.executorService.shutdown();
         return count;
-    }
-    public long action(){
-        List<Future<Long>> futures = createFutures(items, creator);
-        return getFutureResult(futures);
     }
 }

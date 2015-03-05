@@ -1,4 +1,4 @@
-package chookin.utils.web;
+package chookin.etl.common;
 
 import chookin.utils.configuration.ConfigManager;
 
@@ -11,36 +11,26 @@ import java.util.List;
 class ProxyPool{
     private static List<Proxy> proxies =null;
     private int index = 0;
-    private long lastSwitchTime = 0;
 
-    public synchronized void switchProxy(){
-        long switchInterval = 5000; // interval between two proxy setting up.
-        if(System.currentTimeMillis() - lastSwitchTime < switchInterval){
-            return;
-        }
-        Proxy proxy = getNextProxy();
-        if(proxy != null) {
-            proxy.set();
-            lastSwitchTime = System.currentTimeMillis();
-        }
-    }
     synchronized void init(){
         proxies = new ArrayList<>();
-        proxies.addAll(getConfiguredProxies());
+        NetworkHelper.checkNetwork();
+        proxies.addAll(NetworkHelper.checkProxy(getConfiguredProxies()));
         proxies.add(NetworkHelper.getInitialProxy());
     }
-    List<Proxy> getProxies(){
+    List<Proxy> proxies(){
         if(proxies == null){
             init();
         }
         return proxies;
     }
-    Proxy getNextProxy(){
-        List<Proxy> myProxies = getProxies();
+    Proxy nextProxy(){
+        List<Proxy> myProxies = proxies();
         if(myProxies.isEmpty()){
             return null;
         }
         if(index == myProxies.size()){
+            init(); // reload configuration.
             index = 0;
         }
         return myProxies.get(index++);

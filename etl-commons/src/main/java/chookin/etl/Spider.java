@@ -1,5 +1,6 @@
 package chookin.etl;
 
+import chookin.etl.common.NetworkHelper;
 import chookin.etl.common.Request;
 import chookin.etl.common.ResultItems;
 import chookin.etl.downloader.Downloader;
@@ -8,9 +9,9 @@ import chookin.etl.pipeline.ConsolePipeline;
 import chookin.etl.pipeline.Pipeline;
 import chookin.etl.processor.PageProcessor;
 import chookin.etl.scheduler.QueueScheduler;
+import chookin.etl.scheduler.Scheduler;
 import chookin.utils.concurrent.CountableThreadPool;
 import chookin.utils.concurrent.ThreadHelper;
-import chookin.utils.web.NetworkHelper;
 import org.apache.log4j.Logger;
 
 import java.io.Closeable;
@@ -27,11 +28,11 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class Spider implements Runnable {
     private static final Logger LOG = Logger.getLogger(Spider.class);
-    private QueueScheduler scheduler = new QueueScheduler();
+    private Scheduler scheduler = new QueueScheduler();
     private Set<Pipeline> pipelines = new HashSet<>();
     private String userAgent;
     private long validateMilliSeconds;
-    private int timeOut = 60000;
+    private int timeOut = 10000;
     private int sleepMillisecond = 100000;
     private Downloader downloader;
     private PageProcessor pageProcessor;
@@ -75,12 +76,13 @@ public class Spider implements Runnable {
         return uuid;
     }
     /**
-     *
-     * @param timeOut Unit is seconds.
-     * @return
+     * Set the request timeouts (connect and read). If a timeout occurs, an IOException will be thrown. The default
+     * timeout is 10 seconds (10000 millis). A timeout of zero is treated as an infinite timeout.
+     * @param millis number of milliseconds (thousandths of a second) before timing out connects or reads.
+     * @return this Connection, for chaining
      */
-    public Spider setTimeOut(int timeOut){
-        this.timeOut = timeOut;
+    public Spider setTimeOut(int millis){
+        this.timeOut = millis;
         return this;
     }
 
@@ -96,8 +98,6 @@ public class Spider implements Runnable {
     }
     /**
      * Set the downloader of spider
-     *
-     * @param downloader
      * @return this
      * @see Downloader
      */
@@ -218,7 +218,7 @@ public class Spider implements Runnable {
                     if (threadPool.getThreadAlive() == 0) {
                         request = scheduler.poll(); // must has these check, or else cause a bug: if after poll a null, the old request process just done and submit a new request, but the new request will be never processed.
                     }else{ // has request processing.
-                        ThreadHelper.sleep(50);
+                        ThreadHelper.sleep(10);
                         continue;
                     }
                 }
@@ -239,6 +239,7 @@ public class Spider implements Runnable {
                         if (page != null) {
                             if (page.needSwitchProxy()) {
                                 NetworkHelper.switchProxy();
+                                return;
                             }
                             if (page.isCacheUsed()) { // if not use cache, then no need to sleep
                                 return;
@@ -281,7 +282,7 @@ public class Spider implements Runnable {
             destroyEach(pipeline);
         }
         threadPool.shutdown();
-
+        LOG.info("Statistics: total processed "+ getPageCount() + " pages.");
     }
     private void destroyEach(Object object) {
         if (object instanceof Closeable) {
@@ -299,7 +300,7 @@ public class Spider implements Runnable {
         }else{
             page = request.getDownloader().download(request, this);
         }
-        if(page == null){
+        if(page == null || page.getResource() == null){
             onError(request);
             return page;
         }
@@ -333,6 +334,7 @@ public class Spider implements Runnable {
         return this;
     }
     public Spider addRequest(Request request){
+        request.incrRetryCount();
         scheduler.push(request);
         return this;
     }

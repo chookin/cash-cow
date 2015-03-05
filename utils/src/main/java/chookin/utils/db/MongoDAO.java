@@ -26,6 +26,11 @@ public abstract class MongoDAO<T> {
         }
         return mongo;
     }
+
+    /**
+     * Must call this method to recycle the Mongo instance(MongoClient).
+     * @return this
+     */
     public MongoDAO close(){
         if(this.mongo == null){
             return this;
