@@ -81,12 +81,11 @@ public class NetworkHelper {
             }
         } catch (IOException e) {
             LOG.trace(e.getMessage());
-        } finally {
-            if(!proxy.equals(getInitialProxy())) {
-                setProxy();
-            }
         }
         LOG.warn("fail to access " + url + " on proxy "+proxy);
+        if(!proxy.equals(getInitialProxy())) {
+            setProxy();
+        }
         return false;
     }
 

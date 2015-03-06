@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class UrlHelper {
 	private static final String basePath = new File(ConfigManager.getProperty("page.download.directory", "/tmp")).getAbsolutePath();
 	private static final String[] documentExtensions = { "", ".htm", ".html" };
-	private static final String protocolRegex = "([a-zA-Z]+)://";
+	private static final String protocolRegex = "(?i)^([a-zA-Z]+)://";
 	private static boolean ignorePound = true;
 
 	private UrlHelper() {
@@ -35,7 +35,7 @@ public class UrlHelper {
 		if(url == null){
 			return null;
 		}
-		return url.replaceAll(String.format("(?i)^%s", UrlHelper.getProtocolRegex()), "");
+		return url.replaceAll(String.format("%s", UrlHelper.getProtocolRegex()), "");
 	}
 	public static String eraseProtocolAndStart3W(String url) {
 		if(url == null){
@@ -169,7 +169,8 @@ public class UrlHelper {
 	public static String getProtocol(String url){
 		Pattern p=Pattern.compile(protocolRegex);
 		Matcher matcher=p.matcher(url);
-		if (matcher.groupCount() > 1) {
+		if (matcher.find()) {
+			// group(0) contains whole matched string.
 			return matcher.group(1);
 		}
 		return null;

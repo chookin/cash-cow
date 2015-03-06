@@ -14,15 +14,15 @@ public class TestUrlHelper extends TestCase{
     }
     public void testEraseProtocol(){
         String dst = UrlHelper.eraseProtocol(simpleUrl);
-        Assert.assertEquals(dst, "www.126.com");
+        Assert.assertEquals("www.126.com", dst);
     }
 
     public void testEraseProtocolAndStart3W(){
         String dst = UrlHelper.eraseProtocolAndStart3W(simpleUrl);
-        Assert.assertEquals(dst, "126.com");
+        Assert.assertEquals("126.com", dst);
     }
 
     public void testGetProtocol(){
-        Assert.assertEquals(UrlHelper.getProtocol(simpleUrl), "http");
+        Assert.assertEquals("http", UrlHelper.getProtocol(simpleUrl));
     }
 }

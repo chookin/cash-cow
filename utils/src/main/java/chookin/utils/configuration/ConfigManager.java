@@ -51,6 +51,13 @@ public class ConfigManager {
 	}
 
 	public static synchronized String getProperty(String item){
+		if(item == null){
+			return null;
+		}
+		String val = System.getProperty(item);
+		if(val != null){
+			return val;
+		}
 		if(ConfigManager.mainConfigFileName == null){
 			LOG.warn("without configuration mainConfigFile");
 			return null;
@@ -64,7 +71,12 @@ public class ConfigManager {
 				System.exit(-1);
 			}
 		}
-		return paras.get(item.toLowerCase());
+		val = paras.get(item.toLowerCase());
+		if(new ParameterParser().parseRegions(val).isEmpty()){
+			return val;
+		}else{
+			return new ParameterParser().getReal(val);
+		}
 	}
 
 	public static synchronized String getProperty(String item, String defaultValue){
@@ -75,8 +87,6 @@ public class ConfigManager {
 	 * The {@code boolean} returned represents the value {@code true} if the string argument
 	 * is not {@code null} and is equal, ignoring case, to the string
 	 * {@code "true"}. <p>
-	 * Example: {@code Boolean.parseBoolean("True")} returns {@code true}.<br>
-	 * Example: {@code Boolean.parseBoolean("yes")} returns {@code false}.
 	 */
 	public static synchronized boolean getPropertyAsBool(String item){
 		String val = checkConfigured(item);

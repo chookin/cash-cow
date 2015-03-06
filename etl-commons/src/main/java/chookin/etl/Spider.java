@@ -32,7 +32,7 @@ public class Spider implements Runnable {
     private Set<Pipeline> pipelines = new HashSet<>();
     private String userAgent;
     private long validateMilliSeconds;
-    private int timeOut = 10000;
+    private int timeOut = 5000;
     private int sleepMillisecond = 100000;
     private Downloader downloader;
     private PageProcessor pageProcessor;
@@ -77,7 +77,7 @@ public class Spider implements Runnable {
     }
     /**
      * Set the request timeouts (connect and read). If a timeout occurs, an IOException will be thrown. The default
-     * timeout is 10 seconds (10000 millis). A timeout of zero is treated as an infinite timeout.
+     * timeout is 5 seconds (5000 millis). A timeout of zero is treated as an infinite timeout.
      * @param millis number of milliseconds (thousandths of a second) before timing out connects or reads.
      * @return this Connection, for chaining
      */
