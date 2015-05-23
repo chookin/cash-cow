@@ -1,7 +1,6 @@
 package chookin.stock.extractor.qq;
 
 import chookin.stock.orm.domain.CompanyInfoEntity;
-import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
@@ -21,14 +20,15 @@ public class CompanyPageProcessor implements PageProcessor {
      * http://stockhtm.finance.qq.com/sstock/ggcx/600030.shtml
      * @return
      */
-    public static String getUrl(StockEntity stock){
-        return String.format("http://stockhtm.finance.qq.com/sstock/ggcx/%s.shtml",stock.getCode());
+    public static String getUrl(CompanyInfoEntity entity){
+        return String.format("http://stockhtm.finance.qq.com/sstock/ggcx/%s.shtml",entity.getStockCode());
     }
 
-    public static Request getRequest(StockEntity stock){
+    public static Request getRequest(CompanyInfoEntity entity){
         return new Request()
                 .setPageProcessor(new CompanyPageProcessor())
-                .setUrl(getUrl(stock));
+                .setUrl(getUrl(entity))
+                .putExtra("company", entity);
     }
     @Override
     public void process(ResultItems page) {

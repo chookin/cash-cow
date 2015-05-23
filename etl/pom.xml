@@ -10,8 +10,8 @@
     <version>1.0</version>
     <dependencies>
         <dependency>
-            <groupId>chookin.cashcow</groupId>
-            <artifactId>etl-commons</artifactId>
+            <groupId>cmri.cashcow</groupId>
+            <artifactId>cmri-etl-commons</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

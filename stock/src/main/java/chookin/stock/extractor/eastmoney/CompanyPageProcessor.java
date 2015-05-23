@@ -23,10 +23,11 @@ public class CompanyPageProcessor implements PageProcessor {
         return String.format("http://f10.eastmoney.com/f10_v2/CoreConception.aspx?code=%s%s",stock.getExchange(), stock.getCode());
     }
 
-    public static Request getRequest(StockEntity stock){
+    public static Request getRequest(StockEntity stock, CompanyInfoEntity entity){
         return new Request()
                 .setPageProcessor(new CompanyPageProcessor())
-                .setUrl(getUrl(stock));
+                .setUrl(getUrl(stock))
+                .putExtra("company", entity);
     }
     @Override
     public void process(ResultItems page) {

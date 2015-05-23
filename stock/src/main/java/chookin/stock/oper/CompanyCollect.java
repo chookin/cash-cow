@@ -13,6 +13,7 @@ import cmri.utils.configuration.ConfigManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -36,7 +37,7 @@ public class CompanyCollect extends BaseOper{
     }
     private void doWork(){
         Map<String, StockEntity> stocks = StockMapHandler.getStocksMap();
-
+        Map<String, CompanyInfoEntity> savedCompanies = getSavedCompanies();
         Spider spider = new Spider(OperName.CollectCompany)
                 .setDownloader( JsoupDownloader.getInstance())
                 .addPipeline(pipeline)
@@ -48,17 +49,24 @@ public class CompanyCollect extends BaseOper{
 
         for(Map.Entry<String, StockEntity> entry : stocks.entrySet()){
             StockEntity stock = entry.getValue();
-            CompanyInfoEntity company = repository.findOne(stock.getCode());
+            CompanyInfoEntity company = savedCompanies.get(stock.getCode());
             if(company == null){
                 company = new CompanyInfoEntity();
                 company.setStockCode(stock.getCode());
             }
-            spider.addRequest(chookin.stock.extractor.qq.CompanyPageProcessor.getRequest(stock)
-            ).addRequest(chookin.stock.extractor.sina.CompanyPageProcessor.getRequest(stock)
-            ).addRequest(chookin.stock.extractor.eastmoney.CompanyPageProcessor.getRequest(stock)
+            spider.addRequest(chookin.stock.extractor.qq.CompanyPageProcessor.getRequest(company)
+            ).addRequest(chookin.stock.extractor.sina.CompanyPageProcessor.getRequest(company)
+            ).addRequest(chookin.stock.extractor.eastmoney.CompanyPageProcessor.getRequest(stock, company)
             );
         }
         spider.run();
+    }
+
+    private Map<String, CompanyInfoEntity> getSavedCompanies(){
+        Iterable<CompanyInfoEntity> companies = repository.findAll();
+        Map<String, CompanyInfoEntity> map = new HashMap<>();
+        for(CompanyInfoEntity entity: companies) map.put(entity.getStockCode(), entity);
+        return map;
     }
 
     public static void main(String[] args){

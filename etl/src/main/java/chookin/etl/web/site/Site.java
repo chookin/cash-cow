@@ -1,6 +1,7 @@
 package chookin.etl.web.site;
 
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import chookin.etl.common.Link;
 import chookin.etl.common.LinkHelper;
 import chookin.etl.common.ResourceHelper;
+import cmri.etl.common.UrlHelper;
 import org.jsoup.helper.Validate;
 
 
@@ -19,9 +21,9 @@ public class Site {
 		Validate.notNull(startAbsUrl);
 		this.startUrl = startAbsUrl;
 		if (domain == null || domain.isEmpty()) {
-			this.domain = LinkHelper.getDomain(startAbsUrl);
+			this.domain = UrlHelper.getBaseDomain((startAbsUrl);
 		} else {
-			this.domain = LinkHelper.getDomain(domain);
+			this.domain = UrlHelper.getBaseDomain(domain);
 		}
 	}
 
@@ -56,8 +58,8 @@ public class Site {
 		if (linkedUrl.contains("?")) {
 			return linkedUrl;
 		}
-		curPageUrl = LinkHelper.getUrlWithoutProtocolAndStart3W(curPageUrl).toLowerCase();
-		linkedUrl = LinkHelper.getUrlWithoutProtocolAndStart3W(linkedUrl).toLowerCase();
+		curPageUrl = UrlHelper.eraseProtocolAndStart3W(curPageUrl).toLowerCase();
+		linkedUrl = UrlHelper.eraseProtocolAndStart3W(linkedUrl).toLowerCase();
 
 		if (LinkHelper.getExtension(curPageUrl).isEmpty()) {
 			curPageUrl = curPageUrl + ".html";
@@ -108,7 +110,7 @@ public class Site {
 	 */
 	public boolean isMyUrl(String url) {
 		String myUrl = url.toLowerCase();
-		myUrl = LinkHelper.getUrlWithoutProtocolAndStart3W(myUrl);
+		myUrl = UrlHelper.eraseProtocolAndStart3W(myUrl);
 		return myUrl.startsWith(this.domain);
 	}
 

@@ -5,10 +5,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 import chookin.etl.common.ResourceHelper;
+import cmri.etl.common.UrlHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.HttpStatusException;
 import org.jsoup.helper.Validate;
@@ -17,7 +19,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import chookin.etl.common.LocalDir;
-import chookin.etl.common.LinkHelper;
 
 public class LocalFileSaver extends Saver {
 	public LocalFileSaver(SiteCrawler site, LocalDir dir) {
@@ -84,7 +85,7 @@ public class LocalFileSaver extends Saver {
 		// }
 		// "#" inner page jump, ignore it
 		regex = String.format("(?i)%s|(^\\.\\./)|(^\\./)|(^(%s){0}[^#])",
-				regex, LinkHelper.getProtocolRegex());// The (?i) is placed at
+				regex, UrlHelper.getProtocolRegex());// The (?i) is placed at
 														// the
 														// beginning of the
 		// pattern to enable case-insensitivity.
@@ -200,15 +201,11 @@ public class LocalFileSaver extends Saver {
 	 * 
 	 * @param resourceUrl
 	 *            absolute URL where the resource locates at.
-	 * @param dir
-	 *            the base directory
-	 * @param overwrite
-	 *            whether rewrite when exists a same name resource
 	 * @return return null when error in fetching remote resource
 	 * @throws IOException
 	 */
 	private File saveResource(String resourceUrl) throws IOException {
-		String domain = LinkHelper.getDomain(resourceUrl);
+		String domain = UrlHelper.getBaseDomain(resourceUrl);
 		int indexLastSlash = resourceUrl.lastIndexOf("/");
 		if (indexLastSlash == -1) {
 			throw new IllegalArgumentException(String.format(
@@ -258,10 +255,10 @@ public class LocalFileSaver extends Saver {
 		} else {
 			if (LinkHelper.getExtension(url).isEmpty()) {
 				return String.format("%s/%s.html", dir.getPath(),
-						LinkHelper.getUrlWithoutProtocolAndStart3W(url));
+						UrlHelper.eraseProtocolAndStart3W(url));
 			} else {
 				return String.format("%s/%s", dir.getPath(),
-						LinkHelper.getUrlWithoutProtocolAndStart3W(url));
+						UrlHelper.eraseProtocolAndStart3W(url));
 			}
 		}
 	}

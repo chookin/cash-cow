@@ -1,7 +1,6 @@
 package chookin.stock.extractor.sina;
 
 import chookin.stock.orm.domain.CompanyInfoEntity;
-import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
@@ -21,14 +20,15 @@ public class CompanyPageProcessor implements PageProcessor {
     /**
      * http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/600030.phtml
      */
-    public static String getUrl(StockEntity stock){
-        return String.format("http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/%s.phtml", stock.getCode());
+    public static String getUrl(CompanyInfoEntity entity){
+        return String.format("http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/%s.phtml", entity.getStockCode());
     }
 
-    public static Request getRequest(StockEntity stock){
+    public static Request getRequest(CompanyInfoEntity entity){
         return new Request()
                 .setPageProcessor(new CompanyPageProcessor())
-                .setUrl(getUrl(stock));
+                .setUrl(getUrl(entity))
+                .putExtra("company", entity);
     }
     @Override
     public void process(ResultItems page) {
@@ -43,6 +43,8 @@ public class CompanyPageProcessor implements PageProcessor {
             if(text.contains("公司名称")){
                 String name = iter.next().text();
                 if(name.isEmpty()){
+                    page.skip(true); // 如果公司名称为空，则跳过处理
+                    return;
                 }else{
                     company.setCompanyName(name);
                 }
@@ -52,8 +54,10 @@ public class CompanyPageProcessor implements PageProcessor {
                 company.setExchangeCenter(iter.next().text());
             }else if(text.contains("上市日期")){
                 String strDate = iter.next().text();
-                Date date = DateHelper.parseDate(strDate);
-                company.setListingDate(date);
+                if (!strDate.equals("--")) {
+                    Date date = DateHelper.parseDate(strDate);
+                    company.setListingDate(date);
+                }
             }else if(text.contains("发行价格")){
                 String strValue = iter.next().text();
                 if(strValue.length() > 0)
@@ -62,8 +66,10 @@ public class CompanyPageProcessor implements PageProcessor {
                 company.setLeadUnderWriter(iter.next().text());
             }else if(text.contains("成立日期")){
                 String strDate = iter.next().text();
-                Date date = DateHelper.parseDate(strDate);
-                company.setRegistrationDate(date);
+                if(!strDate.isEmpty()) {
+                    Date date = DateHelper.parseDate(strDate);
+                    company.setRegistrationDate(date);
+                }
             }else if(text.contains("注册资本")){
                 String strCapital = iter.next().text();
                 double capital = 0;
