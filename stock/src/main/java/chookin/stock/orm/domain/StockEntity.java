@@ -74,6 +74,6 @@ public class StockEntity {
 
     @Override
     public String toString() {
-        return String.format("Stock{id: %s, name: %s, exchange: %s}",this.code, this.name, this.exchange);
+        return String.format("Stock{code: %s, name: %s, exchange: %s}",this.code, this.name, this.exchange);
     }
 }

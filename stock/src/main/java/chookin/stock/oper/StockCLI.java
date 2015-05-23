@@ -1,5 +1,6 @@
 package chookin.stock.oper;
 
+import chookin.stock.utils.SpringHelper;
 import cmri.etl.common.NetworkHelper;
 import cmri.utils.configuration.ConfigManager;
 import org.apache.log4j.Logger;
@@ -29,7 +30,7 @@ public class StockCLI {
         return this;
     }
 
-    boolean action() throws IOException {
+    boolean action() {
         return this.collectOper.action()
                 ;
     }
@@ -37,14 +38,9 @@ public class StockCLI {
     public static void main(String[] args) {
         ConfigManager.setFile("stock.xml");
         NetworkHelper.setDefaultProxy();
-        try {
-            ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-            StockCLI service = (StockCLI) context.getBean("main");
-            service.setArgs(args)
-                    .action();
-        } catch (Throwable t) {
-            LOG.error(null, t);
-        }
+        StockCLI service = (StockCLI) SpringHelper.getAppContext().getBean("main");
+        service.setArgs(args)
+                .action();
         LOG.info("ZStock stopped.");
     }
 

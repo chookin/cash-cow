@@ -144,4 +144,18 @@ public class TradeEntity {
         result = 31 * result + (sell != null ? sell.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "TradeEntity{" +
+                "code='" + stockCode + '\'' +
+                ", time=" + time +
+                ", price=" + price +
+                ", priceChange=" + priceChange +
+                ", changeRatio=" + changeRatio +
+                ", tradeHand=" + tradeHand +
+                ", tradeValue=" + tradeValue +
+                ", sell=" + sell +
+                '}';
+    }
 }

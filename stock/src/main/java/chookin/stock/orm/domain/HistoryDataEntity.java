@@ -139,6 +139,6 @@ public class HistoryDataEntity{
 
     @Override
     public String toString() {
-        return String.format("HistoryData{id: %s, day: %s, openPrice: %.2f, closePrice: %.2f, highPrice: %.2f, lowPrice: %.2f, tradeHand: %d, tradeValue: %d}", this.getStockCode(), this.getDay(), this.getOpenPrice(), this.getClosePrice(), this.getHighPrice(), this.getLowPrice(), this.getTradeHand(), this.getTradeValue());
+        return String.format("HistoryData{code: %s, day: %s, openPrice: %.2f, closePrice: %.2f, highPrice: %.2f, lowPrice: %.2f, tradeHand: %d, tradeValue: %d}", this.getStockCode(), this.getDay(), this.getOpenPrice(), this.getClosePrice(), this.getHighPrice(), this.getLowPrice(), this.getTradeHand(), this.getTradeValue());
     }
 }

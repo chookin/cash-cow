@@ -2,8 +2,8 @@ package chookin.stock.oper;
 
 import chookin.stock.extractor.gtimg.RealDataPageProcessor;
 import chookin.stock.extractor.pipeline.RealDataPipeline;
-import chookin.stock.orm.domain.StockEntity;
 import chookin.stock.handler.StockMapHandler;
+import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.downloader.JsoupDownloader;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
@@ -11,7 +11,6 @@ import cmri.utils.configuration.ConfigManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -23,7 +22,7 @@ public class RealDataCollect extends BaseOper {
     private RealDataPipeline pipeline;
 
     @Override
-    boolean action() throws IOException {
+    boolean action() {
         if (!processOption(OperName.CollectRealData)) {
             return false;
         }

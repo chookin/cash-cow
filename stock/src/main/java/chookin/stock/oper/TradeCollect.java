@@ -12,7 +12,6 @@ import cmri.utils.lang.DateHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Map;
 
@@ -25,7 +24,7 @@ public class TradeCollect extends BaseOper {
     private TradePipeline pipeline;
 
     @Override
-    boolean action() throws IOException {
+    boolean action() {
         if (!processOption(OperName.CollectHistDataDetail)) {
             return false;
         }

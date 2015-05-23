@@ -3,8 +3,6 @@ package chookin.stock.oper;
 import cmri.utils.lang.OptionParser;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-
 /**
  * Created by zhuyin on 1/25/15.
  */
@@ -34,5 +32,5 @@ public abstract class BaseOper {
         return true;
     }
 
-    abstract boolean action() throws IOException;
+    abstract boolean action();
 }

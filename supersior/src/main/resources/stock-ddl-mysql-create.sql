@@ -60,8 +60,8 @@ create table if not exists history_data(
   lowPrice double comment '最低价',
   tradeHand bigint comment '成交量(手)',
   tradeValue bigint comment '成交额(元)',
-  primary key (id),
-  unique (stockCode, day),
+  primary key (stockCode, day),
+  unique (id),
   foreign key (stockCode) references stock(code)
 ) comment '历史交易';
 create unique index i_history_data_stockCode_time on history_data (stockCode, day);
@@ -77,8 +77,8 @@ create table if not exists trade(
   tradeHand bigint comment '成交量(手)',
   tradeValue bigint comment '成交额(元)',
   sell bool comment '是否卖盘',
-  primary key (id),
-  unique (stockCode, time),
+  primary key (stockCode, time),
+  unique (id),
   foreign key (stockCode) references stock(stockCode)
 ) comment '历史成交明细';
 create index i_trade_stock_code on trade (stockCode);
@@ -91,11 +91,11 @@ create table if not exists company_info	(
   companyEnName varchar(256) comment '公司英文名称',
   exchangeCenter varchar(256) comment '上市市场',
   listingDate date comment '上市日期',
-  issurePrice double comment '发行价格',
+  issuePrice double comment '发行价格',
   leadUnderWriter varchar(256) comment '主承销商',
   registrationDate date comment '成立日期',
   registeredCapital double comment '注册资本',
-  insititutionType varchar(256) comment '机构类型',
+  institutionType varchar(256) comment '机构类型',
   organizationalForm varchar(256) comment '组织形式',
   phone varchar(256) comment '公司电话',
   fax varchar(256) comment '公司传真',

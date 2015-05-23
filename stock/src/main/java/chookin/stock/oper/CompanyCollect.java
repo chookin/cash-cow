@@ -1,10 +1,11 @@
 package chookin.stock.oper;
 
-import chookin.stock.extractor.pipeline.CompanyPileline;
+import chookin.stock.extractor.pipeline.CompanyInfoPileline;
+import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.CompanyInfoEntity;
 import chookin.stock.orm.domain.StockEntity;
-import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.repository.CompanyInfoRepository;
+import chookin.stock.utils.SpringHelper;
 import cmri.etl.downloader.JsoupDownloader;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
@@ -12,7 +13,6 @@ import cmri.utils.configuration.ConfigManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Map;
 
 /**
@@ -21,16 +21,20 @@ import java.util.Map;
 @Service
 public class CompanyCollect extends BaseOper{
     @Autowired
-    private CompanyPileline pipeline;
+    private CompanyInfoPileline pipeline;
 
     @Autowired
-    private CompanyInfoRepository companyInfoRepository;
+    private CompanyInfoRepository repository;
 
     @Override
-    boolean action() throws IOException {
+    boolean action() {
         if (!processOption(OperName.CollectCompany)) {
             return false;
         }
+        doWork();
+        return true;
+    }
+    private void doWork(){
         Map<String, StockEntity> stocks = StockMapHandler.getStocksMap();
 
         Spider spider = new Spider(OperName.CollectCompany)
@@ -44,7 +48,7 @@ public class CompanyCollect extends BaseOper{
 
         for(Map.Entry<String, StockEntity> entry : stocks.entrySet()){
             StockEntity stock = entry.getValue();
-            CompanyInfoEntity company = this.companyInfoRepository.findOne(stock.getCode());
+            CompanyInfoEntity company = repository.findOne(stock.getCode());
             if(company == null){
                 company = new CompanyInfoEntity();
                 company.setStockCode(stock.getCode());
@@ -55,6 +59,10 @@ public class CompanyCollect extends BaseOper{
             );
         }
         spider.run();
-        return true;
+    }
+
+    public static void main(String[] args){
+        CompanyCollect oper = (CompanyCollect) SpringHelper.getAppContext().getBean("companyCollect");
+        oper.doWork();
     }
 }

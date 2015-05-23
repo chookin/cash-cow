@@ -57,7 +57,7 @@ public class CompanyPageProcessor implements PageProcessor {
             }else if(text.contains("发行价格")){
                 String strValue = iter.next().text();
                 if(strValue.length() > 0)
-                    company.setIssurePrice(Double.parseDouble(strValue));
+                    company.setIssuePrice(Double.parseDouble(strValue));
             }else if(text.contains("主承销商")){
                 company.setLeadUnderWriter(iter.next().text());
             }else if(text.contains("成立日期")){
@@ -73,7 +73,7 @@ public class CompanyPageProcessor implements PageProcessor {
                 }
                 company.setRegisteredCapital(capital);
             }else if(text.contains("机构类型")){
-                company.setInsititutionType(iter.next().text());
+                company.setInstitutionType(iter.next().text());
             }else if(text.contains("组织形式")){
                 company.setOrganizationalForm(iter.next().text());
             }else if(text.contains("公司电话")){

@@ -26,7 +26,7 @@ public class HistDataCollect extends BaseOper {
     private HistDataPipeline pipeline;
 
     @Override
-    boolean action() throws IOException {
+    boolean action() {
         if (!processOption(OperName.CollectHistData)) {
             return false;
         }

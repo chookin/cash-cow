@@ -72,16 +72,16 @@ public class CompanyInfoEntity {
         this.listingDate = new Date(listingDate.getTime());
     }
 
-    private Double issurePrice;
+    private Double issuePrice;
 
     @Basic
     @Column
-    public Double getIssurePrice() {
-        return issurePrice;
+    public Double getIssuePrice() {
+        return issuePrice;
     }
 
-    public void setIssurePrice(Double issurePrice) {
-        this.issurePrice = issurePrice;
+    public void setIssuePrice(Double issuePrice) {
+        this.issuePrice = issuePrice;
     }
 
     private String leadUnderWriter;
@@ -122,16 +122,16 @@ public class CompanyInfoEntity {
         this.registeredCapital = registeredCapital;
     }
 
-    private String insititutionType;
+    private String institutionType;
 
     @Basic
     @Column
-    public String getInsititutionType() {
-        return insititutionType;
+    public String getInstitutionType() {
+        return institutionType;
     }
 
-    public void setInsititutionType(String insititutionType) {
-        this.insititutionType = insititutionType;
+    public void setInstitutionType(String institutionType) {
+        this.institutionType = institutionType;
     }
 
     private String organizationalForm;
@@ -343,9 +343,9 @@ public class CompanyInfoEntity {
         if (exchangeCenter != null ? !exchangeCenter.equals(that.exchangeCenter) : that.exchangeCenter != null)
             return false;
         if (fax != null ? !fax.equals(that.fax) : that.fax != null) return false;
-        if (insititutionType != null ? !insititutionType.equals(that.insititutionType) : that.insititutionType != null)
+        if (institutionType != null ? !institutionType.equals(that.institutionType) : that.institutionType != null)
             return false;
-        if (issurePrice != null ? !issurePrice.equals(that.issurePrice) : that.issurePrice != null) return false;
+        if (issuePrice != null ? !issuePrice.equals(that.issuePrice) : that.issuePrice != null) return false;
         if (leadUnderWriter != null ? !leadUnderWriter.equals(that.leadUnderWriter) : that.leadUnderWriter != null)
             return false;
         if (listingDate != null ? !listingDate.equals(that.listingDate) : that.listingDate != null) return false;
@@ -374,11 +374,11 @@ public class CompanyInfoEntity {
         result = 31 * result + (companyEnName != null ? companyEnName.hashCode() : 0);
         result = 31 * result + (exchangeCenter != null ? exchangeCenter.hashCode() : 0);
         result = 31 * result + (listingDate != null ? listingDate.hashCode() : 0);
-        result = 31 * result + (issurePrice != null ? issurePrice.hashCode() : 0);
+        result = 31 * result + (issuePrice != null ? issuePrice.hashCode() : 0);
         result = 31 * result + (leadUnderWriter != null ? leadUnderWriter.hashCode() : 0);
         result = 31 * result + (registrationDate != null ? registrationDate.hashCode() : 0);
         result = 31 * result + (registeredCapital != null ? registeredCapital.hashCode() : 0);
-        result = 31 * result + (insititutionType != null ? insititutionType.hashCode() : 0);
+        result = 31 * result + (institutionType != null ? institutionType.hashCode() : 0);
         result = 31 * result + (organizationalForm != null ? organizationalForm.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (fax != null ? fax.hashCode() : 0);
@@ -390,5 +390,44 @@ public class CompanyInfoEntity {
         result = 31 * result + (companyProfile != null ? companyProfile.hashCode() : 0);
         result = 31 * result + (businessScope != null ? businessScope.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "CompanyInfoEntity{" +
+                "code='" + stockCode + '\'' +
+                ", companyName='" + companyName + '\'' +
+                ", companyEnName='" + companyEnName + '\'' +
+                ", exchangeCenter='" + exchangeCenter + '\'' +
+                ", listingDate=" + listingDate +
+                ", issuePrice=" + issuePrice +
+                ", leadUnderWriter='" + leadUnderWriter + '\'' +
+                ", registrationDate=" + registrationDate +
+                ", registeredCapital=" + registeredCapital +
+                ", institutionType='" + institutionType + '\'' +
+                ", organizationalForm='" + organizationalForm + '\'' +
+                ", phone='" + phone + '\'' +
+                ", fax='" + fax + '\'' +
+                ", email='" + email + '\'' +
+                ", website='" + website + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                ", registeredAddress='" + registeredAddress + '\'' +
+                ", officeAddress='" + officeAddress + '\'' +
+                ", companyProfile='" + companyProfile + '\'' +
+                ", businessScope='" + businessScope + '\'' +
+                ", tags='" + tags + '\'' +
+                ", stockNum=" + stockNum +
+                ", tradable=" + tradable +
+                ", eps=" + eps +
+                ", netAsset=" + netAsset +
+                ", cashFlow=" + cashFlow +
+                ", fund=" + fund +
+                ", profit=" + profit +
+                ", equity=" + equity +
+                ", growth=" + growth +
+                ", gross=" + gross +
+                ", investSpot='" + investSpot + '\'' +
+                ", coreTheme='" + coreTheme + '\'' +
+                '}';
     }
 }

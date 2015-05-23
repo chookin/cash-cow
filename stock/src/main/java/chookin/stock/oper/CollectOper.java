@@ -30,7 +30,7 @@ class CollectOper extends BaseOper {
         return this;
     }
 
-    public boolean action() throws IOException {
+    public boolean action() {
         String[] args = getOptionParser().getArgs();
         return stockCollect.setArgs(args).action()
                 || companyCollect.setArgs(args).action()
