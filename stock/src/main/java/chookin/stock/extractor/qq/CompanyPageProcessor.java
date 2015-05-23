@@ -2,6 +2,7 @@ package chookin.stock.extractor.qq;
 
 import chookin.stock.orm.domain.CompanyInfoEntity;
 import chookin.stock.orm.domain.StockEntity;
+import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
 import org.jsoup.nodes.Document;
@@ -21,7 +22,13 @@ public class CompanyPageProcessor implements PageProcessor {
      * @return
      */
     public static String getUrl(StockEntity stock){
-        return String.format("http://stockhtm.finance.qq.com/sstock/ggcx/%s.shtml",stock.getStockCode());
+        return String.format("http://stockhtm.finance.qq.com/sstock/ggcx/%s.shtml",stock.getCode());
+    }
+
+    public static Request getRequest(StockEntity stock){
+        return new Request()
+                .setPageProcessor(new CompanyPageProcessor())
+                .setUrl(getUrl(stock));
     }
     @Override
     public void process(ResultItems page) {
@@ -31,6 +38,7 @@ public class CompanyPageProcessor implements PageProcessor {
     private void extractSpot(ResultItems page){
         Document doc = (Document) page.getResource();
         CompanyInfoEntity company = page.getRequest().getExtra("company", CompanyInfoEntity.class);
+
         Elements spotElements = doc.select("div#mod-tzld > table#table_tzld");
         spotElements = spotElements.select("th,td");
         StringBuilder strb = new StringBuilder();

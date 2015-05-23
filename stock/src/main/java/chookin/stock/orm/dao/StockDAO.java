@@ -26,7 +26,7 @@ public class StockDAO {
         Session session = HibernateUtil.getSession();
         try{
             Criteria criteria = session.createCriteria(StockEntity.class);
-            criteria.add(Restrictions.eq("stockName", stock_name));
+            criteria.add(Restrictions.eq("name", stock_name));
             return (StockEntity) criteria.uniqueResult();
         }finally {
             session.close();
@@ -41,7 +41,7 @@ public class StockDAO {
             List list = query.list();
             for(int i = 0 ; i < list.size(); i++){
                 StockEntity item = (StockEntity) list.get(i);
-                stocks.put(item.getStockCode(), item);
+                stocks.put(item.getCode(), item);
             }
         }finally {
             session.close();
@@ -64,10 +64,10 @@ public class StockDAO {
                 Map<String, StockEntity> stocksExist = new TreeMap<String, StockEntity>();
                 for(int i = 0 ; i < list.size(); i++){
                     StockEntity item = (StockEntity) list.get(i);
-                    stocksExist.put(item.getStockCode(), item);
+                    stocksExist.put(item.getCode(), item);
                 }
                 for(StockEntity item : stocks.values()){
-                    if(stocksExist.containsKey(item.getStockCode())){
+                    if(stocksExist.containsKey(item.getCode())){
                         continue;
                     }
                     session.save(item);

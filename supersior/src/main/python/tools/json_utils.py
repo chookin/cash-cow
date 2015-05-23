@@ -14,10 +14,11 @@ class JsonUtils():
         self.data = json.loads(file)
         return self
 
-    def to_csv(self, filename):
-        Table.generate_table(self.data).write_csv(filename)
+    def to_csv(self, filename, fields=None):
+        Table.generate_table(self.data, fields).write_csv(filename)
         return self
 
 
 if __name__ == '__main__':
-    JsonUtils().load("/tmp/brand.json").to_csv("/tmp/brand.csv")
+    fields = ["tag", "domain", "brands"]
+    JsonUtils().load("/tmp/tag-brands.json").to_csv("/tmp/tag-brands.csv", fields)

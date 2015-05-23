@@ -2,8 +2,8 @@
     <!--utils-->
     <property>
         <name>proxy.enable</name>
-        <value>false</value>
-        <description>whether using proxy, value is true | false</description>
+        <value>true</value>
+        <description>whether using proxy, value is 'true' or not</description>
     </property>
     <property>
         <name>proxy.host</name>
@@ -59,5 +59,36 @@
     <property>
         <name>webpage.download.directory</name>
         <value>/home/work/stock</value>
+    </property>
+    <property>
+        <name>mobile.userAgent</name>
+        <value>Mozilla/5.0 (Linux; Android 4.4.2; M812C Build/KVT49L) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.59 Mobile Safari/537.36
+        </value>
+    </property>
+    <property>
+        <name>web.userAgent</name>
+        <value>Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36</value>
+        <description>to view your browser's userAgent, please access http://whatsmyuseragent.com/</description>
+    </property>
+    <property>
+        <name>page.validPeriod</name>
+        <value>-1</value>
+        <description>unit is second. For a month is 3600*24*30=2592000. If 0, is not save and not read from local cache;
+            if negative, always read from local cache if exists
+        </description>
+    </property>
+    <property>
+        <name>download.concurrent.num</name>
+        <value>1</value>
+    </property>
+    <property>
+        <name>download.timeout</name>
+        <value>30000</value>
+        <description>socket timeout in milliseconds</description>
+    </property>
+    <property>
+        <name>download.sleepMilliseconds</name>
+        <value>200</value>
+        <description>sleep milliseconds when between two web page download</description>
     </property>
 </configuration>

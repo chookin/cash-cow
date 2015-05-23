@@ -2,6 +2,7 @@ package chookin.stock.extractor.eastmoney;
 
 import chookin.stock.orm.domain.Exchange;
 import chookin.stock.orm.domain.StockEntity;
+import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
 import org.jsoup.nodes.Document;
@@ -13,8 +14,16 @@ import java.util.TreeMap;
 
 /**
  * Created by zhuyin on 3/22/15.
+ * Retrieve stock infos from the web page
  */
 public class StockPageProcessor implements PageProcessor {
+
+    public static Request getRequest(Map<String, StockEntity> existedStocks){
+        return new Request("http://quote.eastmoney.com/stocklist.html")
+                .setPageProcessor(new StockPageProcessor())
+                .putExtra("existedStocks", existedStocks);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void process(ResultItems page) {
@@ -41,12 +50,13 @@ public class StockPageProcessor implements PageProcessor {
                 if(array.length == 2){
                     String stockCode = array[1];
                     if(!existedStocks.containsKey(stockCode)){
+                        // 如果已存储，就不再处理
                         StockEntity stock = new StockEntity();
                         String stockName = array[0];
                         stock.setExchange(exchange.toString());
-                        stock.setStockName(stockName);
-                        stock.setStockCode(stockCode);
-                        stocks.put(stock.getStockCode(), stock);
+                        stock.setName(stockName);
+                        stock.setCode(stockCode);
+                        stocks.put(stock.getCode(), stock);
                     }
                 }
             }

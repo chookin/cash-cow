@@ -14,21 +14,21 @@ public class HistoryDataEntityPK implements Serializable {
 
     @Column(name = "stock_id")
     @Id
-    public int getStockId() {
+    public int getStockCode() {
         return stockId;
     }
 
-    public void setStockId(int stockId) {
+    public void setStockCode(int stockId) {
         this.stockId = stockId;
     }
 
     @Column(name = "time")
     @Id
-    public Date getTime() {
+    public Date getDay() {
         return time;
     }
 
-    public void setTime(Date time) {
+    public void setDay(Date time) {
         this.time = time;
     }
 

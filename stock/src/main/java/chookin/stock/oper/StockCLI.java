@@ -1,5 +1,6 @@
 package chookin.stock.oper;
 
+import cmri.etl.common.NetworkHelper;
 import cmri.utils.configuration.ConfigManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ public class StockCLI {
 
     @Autowired
     private CollectOper collectOper;
+
     public StockCLI setArgs(String[] args){
         if(args.length == 0){
             args = ConfigManager.getProperty("cli.paras").split(" ");
@@ -26,14 +28,15 @@ public class StockCLI {
         this.collectOper.setArgs(args);
         return this;
     }
+
     boolean action() throws IOException {
         return this.collectOper.action()
                 ;
     }
 
-
     public static void main(String[] args) {
         ConfigManager.setFile("stock.xml");
+        NetworkHelper.setDefaultProxy();
         try {
             ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
             StockCLI service = (StockCLI) context.getBean("main");

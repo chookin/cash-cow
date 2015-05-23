@@ -13,7 +13,6 @@ public class CompanyInfoEntity {
     private String stockCode;
 
     @Id
-    @javax.persistence.Column(name = "stock_code")
     public String getStockCode() {
         return stockCode;
     }
@@ -25,7 +24,7 @@ public class CompanyInfoEntity {
     private String companyName;
 
     @Basic
-    @javax.persistence.Column(name = "company_name")
+    @Column
     public String getCompanyName() {
         return companyName;
     }
@@ -37,7 +36,7 @@ public class CompanyInfoEntity {
     private String companyEnName;
 
     @Basic
-    @javax.persistence.Column(name = "company_en_name")
+    @Column
     public String getCompanyEnName() {
         return companyEnName;
     }
@@ -49,7 +48,7 @@ public class CompanyInfoEntity {
     private String exchangeCenter;
 
     @Basic
-    @javax.persistence.Column(name = "exchange_center")
+    @Column
     public String getExchangeCenter() {
         return exchangeCenter;
     }
@@ -61,7 +60,7 @@ public class CompanyInfoEntity {
     private Date listingDate;
 
     @Basic
-    @javax.persistence.Column(name = "listing_date")
+    @Column
     public Date getListingDate() {
         return listingDate;
     }
@@ -76,7 +75,7 @@ public class CompanyInfoEntity {
     private Double issurePrice;
 
     @Basic
-    @javax.persistence.Column(name = "issure_price")
+    @Column
     public Double getIssurePrice() {
         return issurePrice;
     }
@@ -88,7 +87,7 @@ public class CompanyInfoEntity {
     private String leadUnderWriter;
 
     @Basic
-    @javax.persistence.Column(name = "lead_under_writer")
+    @Column
     public String getLeadUnderWriter() {
         return leadUnderWriter;
     }
@@ -100,7 +99,7 @@ public class CompanyInfoEntity {
     private Date registrationDate;
 
     @Basic
-    @javax.persistence.Column(name = "registration_date")
+    @Column
     public Date getRegistrationDate() {
         return registrationDate;
     }
@@ -114,7 +113,7 @@ public class CompanyInfoEntity {
     private Double registeredCapital;
 
     @Basic
-    @javax.persistence.Column(name = "registered_capital")
+    @Column
     public Double getRegisteredCapital() {
         return registeredCapital;
     }
@@ -126,7 +125,7 @@ public class CompanyInfoEntity {
     private String insititutionType;
 
     @Basic
-    @javax.persistence.Column(name = "insititution_type")
+    @Column
     public String getInsititutionType() {
         return insititutionType;
     }
@@ -138,7 +137,7 @@ public class CompanyInfoEntity {
     private String organizationalForm;
 
     @Basic
-    @javax.persistence.Column(name = "organizational_form")
+    @Column
     public String getOrganizationalForm() {
         return organizationalForm;
     }
@@ -150,7 +149,7 @@ public class CompanyInfoEntity {
     private String phone;
 
     @Basic
-    @javax.persistence.Column(name = "phone")
+    @Column
     public String getPhone() {
         return phone;
     }
@@ -162,7 +161,7 @@ public class CompanyInfoEntity {
     private String fax;
 
     @Basic
-    @javax.persistence.Column(name = "fax")
+    @Column
     public String getFax() {
         return fax;
     }
@@ -174,7 +173,7 @@ public class CompanyInfoEntity {
     private String email;
 
     @Basic
-    @javax.persistence.Column(name = "email")
+    @Column
     public String getEmail() {
         return email;
     }
@@ -186,7 +185,7 @@ public class CompanyInfoEntity {
     private String website;
 
     @Basic
-    @javax.persistence.Column(name = "website")
+    @Column
     public String getWebsite() {
         return website;
     }
@@ -198,7 +197,7 @@ public class CompanyInfoEntity {
     private String zipcode;
 
     @Basic
-    @javax.persistence.Column(name = "zipcode")
+    @Column
     public String getZipcode() {
         return zipcode;
     }
@@ -210,7 +209,7 @@ public class CompanyInfoEntity {
     private String registeredAddress;
 
     @Basic
-    @javax.persistence.Column(name = "registered_address")
+    @Column
     public String getRegisteredAddress() {
         return registeredAddress;
     }
@@ -222,7 +221,7 @@ public class CompanyInfoEntity {
     private String officeAddress;
 
     @Basic
-    @javax.persistence.Column(name = "office_address")
+    @Column
     public String getOfficeAddress() {
         return officeAddress;
     }
@@ -234,7 +233,7 @@ public class CompanyInfoEntity {
     private String companyProfile;
 
     @Basic
-    @javax.persistence.Column(name = "company_profile")
+    @Column
     public String getCompanyProfile() {
         return companyProfile;
     }
@@ -246,7 +245,7 @@ public class CompanyInfoEntity {
     private String businessScope;
 
     @Basic
-    @javax.persistence.Column(name = "business_scope")
+    @Column
     public String getBusinessScope() {
         return businessScope;
     }
@@ -257,67 +256,56 @@ public class CompanyInfoEntity {
 
     private String tags;
     @Basic
-    @Column(name = "tags")
     public String getTags(){return tags;}
     public void setTags(String tags){this.tags = tags;}
 
     private Double stockNum;
     @Basic
-    @Column(name = "stock_num")
     public Double getStockNum(){return stockNum;}
     public void setStockNum(Double stockNum){this.stockNum = stockNum;}
 
     private Double tradable;
     @Basic
-    @Column(name = "tradable")
     public Double getTradable(){return tradable;}
     public void setTradable(Double tradable){this.tradable = tradable;}
 
     private Double eps;
     @Basic
-    @Column(name = "eps")
     public Double getEps(){return eps;}
     public void setEps(Double eps){this.eps = eps;}
 
     private Double netAsset;
     @Basic
-    @Column(name = "net_asset")
     public Double getNetAsset(){return netAsset;}
     public void setNetAsset(Double netAsset){this.netAsset = netAsset;}
 
     private Double cashFlow;
     @Basic
-    @Column(name = "cash_flow")
     public Double getCashFlow(){return cashFlow;}
     public void setCashFlow(Double cashFlow){this.cashFlow = cashFlow;}
 
     private Double fund;
     @Basic
-    @Column(name = "fund")
     public Double getFund(){return fund;}
     public void setFund(Double fund){this.fund = fund;}
 
     private Double profit;
     @Basic
-    @Column(name = "profit")
     public Double getProfit(){return profit;}
     public void setProfit(Double profit){this.profit = profit;}
 
     private Double equity;
     @Basic
-    @Column(name = "equity")
     public Double getEquity(){return equity;}
     public void setEquity(Double equity){this.equity = equity;}
 
     private Double growth;
     @Basic
-    @Column
     public Double getGrowth(){return growth;}
     public void setGrowth(Double growth){this.growth = growth;}
 
     private Double gross;
     @Basic
-    @Column
     public Double getGross(){return gross;}
     public void setGross(Double gross){this.gross = gross;}
 
@@ -326,7 +314,6 @@ public class CompanyInfoEntity {
      */
     private String investSpot;
     @Basic
-    @Column(name = "invest_spot")
     public String getInvestSpot(){return investSpot;}
     public void setInvestSpot(String investSpot){this.investSpot = investSpot;}
 
@@ -335,7 +322,6 @@ public class CompanyInfoEntity {
     */
     private String coreTheme;
     @Basic
-    @Column(name = "core_theme")
     public String getCoreTheme(){return coreTheme;}
     public void setCoreTheme(String coreTheme){this.coreTheme = coreTheme;}
 

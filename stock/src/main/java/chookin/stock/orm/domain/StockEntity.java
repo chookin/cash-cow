@@ -9,45 +9,34 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "stock", schema = "", catalog = "stock")
 public class StockEntity {
-    private int stockId;
-    private String stockCode;
-    private String stockName;
+    private String code;
+    private String name;
     private String exchange;
-    private boolean discarded = false;
+    private boolean discard = false;
     private Timestamp updateTime= new Timestamp(System.currentTimeMillis());
-    @Basic
-    @Column(name = "stock_id", updatable = false)
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getStockId() {
-        return stockId;
-    }
-
-    public void setStockId(int stockId) {
-        this.stockId = stockId;
-    }
 
     @Id
-    @Column(name = "stock_code")
-    public String getStockCode() {
-        return stockCode;
+    @Column
+    public String getCode() {
+        return code;
     }
 
-    public void setStockCode(String stockCode) {
-        this.stockCode = stockCode;
-    }
-
-    @Basic
-    @Column(name = "stock_name")
-    public String getStockName() {
-        return stockName;
-    }
-
-    public void setStockName(String stockName) {
-        this.stockName = stockName;
+    public void setCode(String stockId) {
+        this.code = stockId;
     }
 
     @Basic
-    @Column(name = "exchange")
+    @Column
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String stockName) {
+        this.name = stockName;
+    }
+
+    @Basic
+    @Column
     public String getExchange() {
         return exchange;
     }
@@ -58,12 +47,12 @@ public class StockEntity {
 
     @Basic
     @Column
-    public boolean getDiscarded(){ return discarded;}
+    public boolean getDiscard(){ return discard;}
 
-    public void setDiscarded(boolean discarded){this.discarded = discarded;}
+    public void setDiscard(boolean discarded){this.discard = discarded;}
 
     @Basic
-    @Column(name = "update_time")
+    @Column
     public Timestamp getUpdateTime(){return updateTime;}
 
     public void setUpdateTime(Timestamp updateTime){this.updateTime = updateTime; }
@@ -73,18 +62,18 @@ public class StockEntity {
         if (o == null || getClass() != o.getClass()) return false;
 
         StockEntity that = (StockEntity) o;
-        if (stockCode != null ? !stockCode.equals(that.stockCode) : that.stockCode != null) return false;
+        if (code != null ? !code.equals(that.code) : that.code != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return (stockCode != null ? stockCode.hashCode() : 0);
+        return (code != null ? code.hashCode() : 0);
     }
 
     @Override
     public String toString() {
-        return String.format("Stock{code: %s, name: %s, exchange: %s}",this.stockCode, this.stockName, this.exchange);
+        return String.format("Stock{id: %s, name: %s, exchange: %s}",this.code, this.name, this.exchange);
     }
 }

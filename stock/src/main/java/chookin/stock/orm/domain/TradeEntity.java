@@ -21,7 +21,8 @@ public class TradeEntity {
     private Byte sell;
 
     @Basic
-    @Column(name = "id")
+    @Column(name = "id", updatable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public long getId() {
         return id;
     }

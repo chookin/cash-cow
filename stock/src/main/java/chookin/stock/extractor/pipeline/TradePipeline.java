@@ -1,6 +1,6 @@
 package chookin.stock.extractor.pipeline;
 
-import chookin.stock.orm.domain.HistoryDayDetailEntity;
+import chookin.stock.orm.domain.TradeEntity;
 import chookin.stock.orm.repository.TradeReposity;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
@@ -25,14 +25,14 @@ public class TradePipeline implements Pipeline {
     @Autowired
     private TradeReposity repository;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Set<HistoryDayDetailEntity> cache = new HashSet<>();
+    private final Set<TradeEntity> cache = new HashSet<>();
     private int cacheSize = 1000;
     @Override
     public void process(ResultItems resultItems) {
         if (resultItems.isSkip()) {
             return;
         }
-        HistoryDayDetailEntity entity = resultItems.getRequest().getExtra("trade", HistoryDayDetailEntity.class);
+        TradeEntity entity = resultItems.getRequest().getExtra("trade", TradeEntity.class);
         lock.writeLock().lock();
         try {
             cache.add(entity);
@@ -57,6 +57,6 @@ public class TradePipeline implements Pipeline {
     @Transactional
     private void saveCache(){
         this.repository.save(cache);
-        LOG.info("save "+ cache.size()+" stocks' history data");
+        LOG.info("save "+ cache.size()+" stocks' trade data");
     }
 }

@@ -3,30 +3,36 @@ package chookin.stock.oper;
 import cmri.utils.lang.OptionParser;
 import org.apache.log4j.Logger;
 
+import java.io.IOException;
+
 /**
  * Created by zhuyin on 1/25/15.
  */
-public class BaseOper {
+public abstract class BaseOper {
     private final static Logger LOG = Logger.getLogger(BaseOper.class);
     private OptionParser optionParser;
-    public BaseOper setArgs(String[] args){
+
+    public OptionParser getOptionParser() {
+        return this.optionParser;
+    }
+
+    public BaseOper setArgs(String[] args) {
         optionParser = new OptionParser(args);
         return this;
     }
 
-    String getOption(String option){
-        return optionParser.getOption(option);
-    }
-    boolean processOption(String option){
-        if(optionParser.getOption(option) == null) {
+    boolean processOption(String option) {
+        if (optionParser.getOption(option) == null) {
             return false;
         }
-        if(option.startsWith("--")){
+        if (option.startsWith("--")) {
             String paras = optionParser.getOption(option);
             LOG.info(String.format("process option '%s=%s'", option, paras));
-        }else {
+        } else {
             LOG.info(String.format("process option '%s'", option));
         }
         return true;
     }
+
+    abstract boolean action() throws IOException;
 }

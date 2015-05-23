@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -16,24 +17,26 @@ import java.util.concurrent.ConcurrentSkipListMap;
 @Service
 public class StockMapHandler {
     private final static Logger LOG = Logger.getLogger(StockMapHandler.class);
-    private static Map<String, StockEntity> stocksMap = new ConcurrentSkipListMap<>();
+    private Map<String, StockEntity> stocksMap = new ConcurrentSkipListMap<>();
     @Autowired
-    private static StockRepository stockRepository;
-    static {
-        init();
-    }
-    private static void init(){
+    private StockRepository stockRepository;
+
+    private static StockMapHandler handler;
+
+    @PostConstruct
+    private void init(){
+        handler = this;
         Iterable<StockEntity> stocks = stockRepository.findAll();
-        Map<String, StockEntity> map = new TreeMap<String, StockEntity>();
+        Map<String, StockEntity> map = new TreeMap<>();
         for(StockEntity item : stocks){
-            if(!item.getDiscarded()){
-                map.put(item.getStockCode(), item);
+            if(!item.getDiscard()){
+                map.put(item.getCode(), item);
             }
         }
         stocksMap.putAll(map);
         LOG.info(String.format("get %d stocks", stocksMap.size()));
     }
     public static Map<String, StockEntity> getStocksMap(){
-        return stocksMap;
+        return handler.stocksMap;
     }
 }
