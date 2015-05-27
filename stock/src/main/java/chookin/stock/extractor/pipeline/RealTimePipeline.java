@@ -1,10 +1,9 @@
 package chookin.stock.extractor.pipeline;
 
-import chookin.stock.orm.domain.CompanyInfoEntity;
-import chookin.stock.orm.repository.CompanyInfoRepository;
+import chookin.stock.orm.domain.RealTimeEntity;
+import chookin.stock.orm.repository.RealDataRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,23 +15,21 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Created by zhuyin on 3/21/15.
+ * Created by zhuyin on 3/22/15.
  */
 @Service
-public class CompanyInfoPileline implements Pipeline {
-    private static final Logger LOG = Logger.getLogger(CompanyInfoPileline.class);
-
+public class RealTimePipeline implements Pipeline {
     @Autowired
-    private CompanyInfoRepository repository;
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Set<CompanyInfoEntity> cache = new HashSet<>();
+    private RealDataRepository repository;
 
+    private final ReadWriteLock lock = new ReentrantReadWriteLock();
+    private Set<RealTimeEntity> cache = new HashSet<>();
     @Override
     public void process(ResultItems resultItems) {
         if (resultItems.isSkip()) {
             return;
         }
-        CompanyInfoEntity entity = resultItems.getRequest().getExtra("company", CompanyInfoEntity.class);
+        RealTimeEntity entity = resultItems.getRequest().getExtra("realData", RealTimeEntity.class);
         lock.writeLock().lock();
         try {
             cache.add(entity);
@@ -50,9 +47,9 @@ public class CompanyInfoPileline implements Pipeline {
             lock.readLock().unlock();
         }
     }
+
     @Transactional
     private void saveCache(){
         this.repository.save(cache);
-        LOG.info("save "+ cache.size() + " stocks' company info");
     }
 }

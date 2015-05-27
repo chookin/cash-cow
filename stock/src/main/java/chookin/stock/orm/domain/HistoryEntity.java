@@ -7,9 +7,9 @@ import java.sql.Date;
  * Created by chookin on 7/28/14.
  */
 @Entity
-@Table(name = "history_data", schema = "", catalog = "stock")
+@Table(name = "history", schema = "", catalog = "stock")
 @IdClass(HistoryDataEntityPK.class)
-public class HistoryDataEntity{
+public class HistoryEntity {
     private long id;
     private String stockCode;
     private Date day;
@@ -47,9 +47,7 @@ public class HistoryDataEntity{
     public void setDay(Date day) {
         this.day = day;
     }
-    public void setTime(java.util.Date day) {
-        this.day = new Date(day.getTime());
-    }
+
     @Basic
     public Double getOpenPrice() {
         return openPrice;
@@ -109,7 +107,7 @@ public class HistoryDataEntity{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        HistoryDataEntity that = (HistoryDataEntity) o;
+        HistoryEntity that = (HistoryEntity) o;
 
         if (id != that.id) return false;
         if (stockCode != that.stockCode) return false;

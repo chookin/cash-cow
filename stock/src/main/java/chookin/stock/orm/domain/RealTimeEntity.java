@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
  * Created by chookin on 7/28/14.
  */
 @Entity
-@Table(name = "real_data", schema = "", catalog = "stock")
-public class RealDataEntity {
+@Table(name = "real_time", schema = "", catalog = "stock")
+public class RealTimeEntity {
     private String stockCode;
     private Timestamp time;
     private Double open;
@@ -137,7 +137,7 @@ public class RealDataEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RealDataEntity that = (RealDataEntity) o;
+        RealTimeEntity that = (RealTimeEntity) o;
 
         if (changeRatio != null ? !changeRatio.equals(that.changeRatio) : that.changeRatio != null) return false;
         if (curPrice != null ? !curPrice.equals(that.curPrice) : that.curPrice != null) return false;

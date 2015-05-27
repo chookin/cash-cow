@@ -1,9 +1,10 @@
 package chookin.stock.extractor.pipeline;
 
-import chookin.stock.orm.domain.RealDataEntity;
-import chookin.stock.orm.repository.RealDataRepository;
+import chookin.stock.orm.domain.CompanyEntity;
+import chookin.stock.orm.repository.CompanyInfoRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,21 +16,23 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
- * Created by zhuyin on 3/22/15.
+ * Created by zhuyin on 3/21/15.
  */
 @Service
-public class RealDataPipeline implements Pipeline {
-    @Autowired
-    private RealDataRepository repository;
+public class CompanyPipeline implements Pipeline {
+    private static final Logger LOG = Logger.getLogger(CompanyPipeline.class);
 
+    @Autowired
+    private CompanyInfoRepository repository;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private Set<RealDataEntity> cache = new HashSet<>();
+    private final Set<CompanyEntity> cache = new HashSet<>();
+
     @Override
     public void process(ResultItems resultItems) {
         if (resultItems.isSkip()) {
             return;
         }
-        RealDataEntity entity = resultItems.getRequest().getExtra("realData", RealDataEntity.class);
+        CompanyEntity entity = resultItems.getRequest().getExtra("company", CompanyEntity.class);
         lock.writeLock().lock();
         try {
             cache.add(entity);
@@ -47,9 +50,9 @@ public class RealDataPipeline implements Pipeline {
             lock.readLock().unlock();
         }
     }
-
     @Transactional
     private void saveCache(){
         this.repository.save(cache);
+        LOG.info("save "+ cache.size() + " stocks' company info");
     }
 }

@@ -8,7 +8,7 @@ import java.sql.Date;
  */
 @Entity
 @javax.persistence.Table(name = "company_info", schema = "", catalog = "stock")
-public class CompanyInfoEntity {
+public class CompanyEntity {
 
     private String stockCode;
 
@@ -264,6 +264,9 @@ public class CompanyInfoEntity {
     public Double getStockNum(){return stockNum;}
     public void setStockNum(Double stockNum){this.stockNum = stockNum;}
 
+    /**
+     * tradable share, 流通股(亿)
+     */
     private Double tradable;
     @Basic
     public Double getTradable(){return tradable;}
@@ -330,7 +333,7 @@ public class CompanyInfoEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        CompanyInfoEntity that = (CompanyInfoEntity) o;
+        CompanyEntity that = (CompanyEntity) o;
 
         if (businessScope != null ? !businessScope.equals(that.businessScope) : that.businessScope != null)
             return false;
