@@ -1,6 +1,6 @@
 package chookin.stock.extractor.gtimg;
 
-import chookin.stock.orm.domain.RealDataEntity;
+import chookin.stock.orm.domain.RealTimeEntity;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
@@ -32,7 +32,7 @@ public class RealDataPageProcessor implements PageProcessor {
         int index = strData.indexOf("=");
         strData = strData.substring(index+1);
         String[] strArray = strData.split("\"");
-        RealDataEntity data = new RealDataEntity();
+        RealTimeEntity data = new RealTimeEntity();
         data.setStockCode(stock.getCode());
         if(strArray.length < 2){
             LOG.error(String.format("extract real data for stock %s, invalid data: %s", stock.getCode(), doc.text()));

@@ -7,7 +7,7 @@ import java.sql.Date;
  * Created by chookin on 7/28/14.
  */
 @Entity
-@javax.persistence.Table(name = "company_info", schema = "", catalog = "stock")
+@javax.persistence.Table(name = "company", schema = "", catalog = "stock")
 public class CompanyEntity {
 
     private String stockCode;

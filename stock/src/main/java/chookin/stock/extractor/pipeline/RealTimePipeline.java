@@ -1,7 +1,7 @@
 package chookin.stock.extractor.pipeline;
 
 import chookin.stock.orm.domain.RealTimeEntity;
-import chookin.stock.orm.repository.RealDataRepository;
+import chookin.stock.orm.repository.RealTimeRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 @Service
 public class RealTimePipeline implements Pipeline {
     @Autowired
-    private RealDataRepository repository;
+    private RealTimeRepository repository;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private Set<RealTimeEntity> cache = new HashSet<>();

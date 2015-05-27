@@ -1,6 +1,6 @@
 package chookin.stock.extractor.sina;
 
-import chookin.stock.orm.domain.CompanyInfoEntity;
+import chookin.stock.orm.domain.CompanyEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
@@ -20,11 +20,11 @@ public class CompanyPageProcessor implements PageProcessor {
     /**
      * http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/600030.phtml
      */
-    public static String getUrl(CompanyInfoEntity entity){
+    public static String getUrl(CompanyEntity entity){
         return String.format("http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/%s.phtml", entity.getStockCode());
     }
 
-    public static Request getRequest(CompanyInfoEntity entity){
+    public static Request getRequest(CompanyEntity entity){
         return new Request()
                 .setPageProcessor(new CompanyPageProcessor())
                 .setUrl(getUrl(entity))
@@ -33,7 +33,7 @@ public class CompanyPageProcessor implements PageProcessor {
     @Override
     public void process(ResultItems page) {
         Document doc = (Document) page.getResource();
-        CompanyInfoEntity company = page.getRequest().getExtra("company", CompanyInfoEntity.class);
+        CompanyEntity company = page.getRequest().getExtra("company", CompanyEntity.class);
 
         Elements elements = doc.select("table#comInfo1");
         elements = elements.select("td");

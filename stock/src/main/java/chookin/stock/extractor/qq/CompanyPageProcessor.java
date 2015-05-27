@@ -1,6 +1,6 @@
 package chookin.stock.extractor.qq;
 
-import chookin.stock.orm.domain.CompanyInfoEntity;
+import chookin.stock.orm.domain.CompanyEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
@@ -20,11 +20,11 @@ public class CompanyPageProcessor implements PageProcessor {
      * http://stockhtm.finance.qq.com/sstock/ggcx/600030.shtml
      * @return
      */
-    public static String getUrl(CompanyInfoEntity entity){
+    public static String getUrl(CompanyEntity entity){
         return String.format("http://stockhtm.finance.qq.com/sstock/ggcx/%s.shtml",entity.getStockCode());
     }
 
-    public static Request getRequest(CompanyInfoEntity entity){
+    public static Request getRequest(CompanyEntity entity){
         return new Request()
                 .setPageProcessor(new CompanyPageProcessor())
                 .setUrl(getUrl(entity))
@@ -37,7 +37,7 @@ public class CompanyPageProcessor implements PageProcessor {
     }
     private void extractSpot(ResultItems page){
         Document doc = (Document) page.getResource();
-        CompanyInfoEntity company = page.getRequest().getExtra("company", CompanyInfoEntity.class);
+        CompanyEntity company = page.getRequest().getExtra("company", CompanyEntity.class);
 
         Elements spotElements = doc.select("div#mod-tzld > table#table_tzld");
         spotElements = spotElements.select("th,td");
@@ -52,7 +52,7 @@ public class CompanyPageProcessor implements PageProcessor {
     }
     private void extractProfits(ResultItems page){
         Document doc = (Document) page.getResource();
-        CompanyInfoEntity company = page.getRequest().getExtra("company", CompanyInfoEntity.class);
+        CompanyEntity company = page.getRequest().getExtra("company", CompanyEntity.class);
 
         Elements elements = doc.select("div#mod-gsgk > table.data");
         elements = elements.select("td,th");//all matching elements td, th

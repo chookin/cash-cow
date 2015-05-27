@@ -20,7 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @Service
 public class TradePipeline implements Pipeline {
-    private static final Logger LOG = Logger.getLogger(HistDataPipeline.class);
+    private static final Logger LOG = Logger.getLogger(HistoryPipeline.class);
 
     @Autowired
     private TradeReposity repository;

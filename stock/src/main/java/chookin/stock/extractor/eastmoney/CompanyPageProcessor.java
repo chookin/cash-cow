@@ -1,10 +1,11 @@
 package chookin.stock.extractor.eastmoney;
 
-import chookin.stock.orm.domain.CompanyInfoEntity;
+import chookin.stock.orm.domain.CompanyEntity;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -23,7 +24,7 @@ public class CompanyPageProcessor implements PageProcessor {
         return String.format("http://f10.eastmoney.com/f10_v2/CoreConception.aspx?code=%s%s",stock.getExchange(), stock.getCode());
     }
 
-    public static Request getRequest(StockEntity stock, CompanyInfoEntity entity){
+    public static Request getRequest(StockEntity stock, CompanyEntity entity){
         return new Request()
                 .setPageProcessor(new CompanyPageProcessor())
                 .setUrl(getUrl(stock))
@@ -35,7 +36,7 @@ public class CompanyPageProcessor implements PageProcessor {
     }
     private void extractCoreTheme(ResultItems page){
         Document doc = (Document) page.getResource();
-        CompanyInfoEntity company = page.getRequest().getExtra("company", CompanyInfoEntity.class);
+        CompanyEntity company = page.getRequest().getExtra("company", CompanyEntity.class);
 
         Elements elements = doc.select("div.summary").select("p");
         StringBuilder coreTheme = new StringBuilder();
@@ -49,6 +50,7 @@ public class CompanyPageProcessor implements PageProcessor {
                 if(indexMarket != -1){
                     int start = indexMarket + 4 + 1;
                     String market = text.substring(start);
+                    market = StringUtils.removeEnd(market, "。");
                     company.setTags(market);
                 }
             }

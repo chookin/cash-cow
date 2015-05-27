@@ -61,6 +61,7 @@
     <orderEntry type="library" name="Maven: org.seleniumhq.selenium:selenium-leg-rc:2.45.0" level="project" />
     <orderEntry type="library" name="Maven: redis.clients:jedis:2.6.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-pool2:2.0" level="project" />
+    <orderEntry type="library" name="Maven: com.sun.jdmk:jmxtools:1.2.1" level="project" />
     <orderEntry type="library" name="Maven: chookin.cashcow:chookin-utils:1.0" level="project" />
     <orderEntry type="library" name="Maven: com.mycila:mycila-xmltool:4.0.ga" level="project" />
     <orderEntry type="library" name="Maven: net.sf.supercsv:super-csv:2.2.0" level="project" />

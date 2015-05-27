@@ -1,7 +1,7 @@
 package chookin.stock.oper;
 
 import chookin.stock.extractor.gtimg.RealDataPageProcessor;
-import chookin.stock.extractor.pipeline.RealDataPipeline;
+import chookin.stock.extractor.pipeline.RealTimePipeline;
 import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.downloader.JsoupDownloader;
@@ -19,7 +19,7 @@ import java.util.Map;
 @Service
 public class RealDataCollect extends BaseOper {
     @Autowired
-    private RealDataPipeline pipeline;
+    private RealTimePipeline pipeline;
 
     @Override
     boolean action() {

@@ -1,7 +1,7 @@
 package chookin.stock.extractor.pipeline;
 
 import chookin.stock.orm.domain.HistoryEntity;
-import chookin.stock.orm.repository.HistoryDataRepository;
+import chookin.stock.orm.repository.HistoryRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
 import org.apache.log4j.Logger;
@@ -24,7 +24,7 @@ public class HistoryPipeline implements Pipeline {
     private static final Logger LOG = Logger.getLogger(HistoryPipeline.class);
 
     @Autowired
-    private HistoryDataRepository repository;
+    private HistoryRepository repository;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Set<HistoryEntity> cache = new HashSet<>();
     private int cacheSize = 100;

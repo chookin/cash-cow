@@ -32,7 +32,7 @@ create table if not exists stock(
 create unique index i_stock_code on stock (code);
 
 -- http://qt.gtimg.cn/q=sz000858da
-create table if not exists real_data(
+create table if not exists real_time(
   stockCode char(6) not null comment '股票代码',
   time datetime comment '时间',
   open double comment '今开',
@@ -47,10 +47,10 @@ create table if not exists real_data(
   primary key (stockCode),
   foreign key (stockCode) references stock(code)
 ) comment '实时交易';
-create unique index i_real_data_stockCode on real_data (stockCode);
+create unique index i_real_data_stockCode on real_time (stockCode);
 
 -- http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/000028.phtml?year=2014&jidu=1
-create table if not exists history_data(
+create table if not exists history(
   id bigint not null auto_increment comment 'record id',
   stockCode char(6) not null comment '股票代码',
   day date comment '日期',
@@ -64,7 +64,7 @@ create table if not exists history_data(
   unique (id),
   foreign key (stockCode) references stock(code)
 ) comment '历史交易';
-create unique index i_history_data_stockCode_time on history_data (stockCode, day);
+create unique index i_history_data_stockCode_time on history (stockCode, day);
 
 -- http://vip.stock.finance.sina.com.cn/quotes_service/view/vMS_tradehistory.php?symbol=sz000028&date=2014-07-03
 create table if not exists trade(
@@ -85,7 +85,7 @@ create index i_trade_stock_code on trade (stockCode);
 create unique index i_trade_stockCode_time on trade (stockCode, time);
 
 --  http://vip.stock.finance.sina.com.cn/corp/go.php/vCI_CorpInfo/stockid/600030.phtml
-create table if not exists company_info	(
+create table if not exists company	(
   stockCode char(6) not null comment '股票代码',
   companyName varchar(256) comment '公司名称',
   companyEnName varchar(256) comment '公司英文名称',
@@ -106,7 +106,7 @@ create table if not exists company_info	(
   officeAddress varchar(256) comment '办公地址',
   companyProfile varchar(4096) comment '公司简介',
   businessScope varchar(2048) comment '经营范围',
-  tags varchar(128) comment '标签',
+  tags varchar(512) comment '标签',
 
   stockNum double comment '总股本(亿)',
   tradable double comment 'tradable share, 流通股(亿)',
@@ -126,7 +126,7 @@ create table if not exists company_info	(
   primary key (stockCode),
   foreign key (stockCode) references stock(stockCode)
 ) comment '公司简介';
-create index i_company_info_stockCode on company_info (stockCode);
+create index i_company_stockCode on company (stockCode);
 
 -- insert company_info(stockCode, company_name) values(123, '经营范围');
 -- 查询重复数据

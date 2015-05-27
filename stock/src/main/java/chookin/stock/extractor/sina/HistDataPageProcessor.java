@@ -1,6 +1,6 @@
 package chookin.stock.extractor.sina;
 
-import chookin.stock.orm.domain.HistoryDataEntity;
+import chookin.stock.orm.domain.HistoryEntity;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
@@ -11,8 +11,10 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by zhuyin on 5/20/15.
@@ -30,8 +32,10 @@ public class HistDataPageProcessor implements PageProcessor{
     @Override
     public void process(ResultItems page) {
         Document doc = (Document) page.getResource();
-        StockEntity stock = (StockEntity) page.getField("stock");
-        int year = (int) page.getField("year");
+        StockEntity stock = (StockEntity) page.getRequest().getExtra("stock");
+        List<HistoryEntity> histData = new ArrayList<>();
+
+        int year = (int) page.getRequest().getExtra("year");
         Elements elements = doc.select("table#FundHoldSharesTable");
         elements = elements.select("tr");
         for(Element element : elements){
@@ -42,21 +46,22 @@ public class HistDataPageProcessor implements PageProcessor{
                     break;
                 }
                 try{
-                    HistoryDataEntity entity = new HistoryDataEntity();
+                    HistoryEntity entity = new HistoryEntity();
                     entity.setStockCode(stock.getCode());
                     Date date = DateHelper.parseDate(row.text());
-                    entity.setTime(date);
+                    entity.setDay(new java.sql.Date(date.getTime()));
                     entity.setOpenPrice(Double.parseDouble(iter.next().text()));
                     entity.setHighPrice(Double.parseDouble(iter.next().text()));
                     entity.setClosePrice(Double.parseDouble(iter.next().text()));
                     entity.setLowPrice(Double.parseDouble(iter.next().text()));
                     entity.setTradeHand(Long.parseLong(iter.next().text()));
                     entity.setTradeValue(Long.parseLong(iter.next().text()));
-                    page.setField("histData", entity);
+                    histData.add(entity);
                 } catch (Throwable t) {
                     LOG.error(null, t);
                 }
             }
         }
+        page.setField("histData", histData);
     }
 }

@@ -10,8 +10,10 @@
             <property name="hibernate.max_fetch_depth" value="5"/>
             <!-- DB schema will be updated if needed -->
             <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <!--Fetch Size 是设定JDBC的Statement读取数据的时候每次从数据库中取出的记录条数-->
             <property name="hibernate.jdbc.fetch_size" value="1000"/>
-            <property name="hibernate.jdbc.batch_size" value="1000"/>
+            <!--设定一次最多可以提交多少sql语句的上限-->
+            <property name="hibernate.jdbc.batch_size" value="50"/>
             <property name="hibernate.format_sql" value="false"/>
             <property name="hibernate.show_sql" value="false"/>
             <property name="hibernate.ejb.cfgfile" value="/hibernate.cfg.xml"/>

@@ -8,7 +8,7 @@ import java.sql.Date;
  */
 @Entity
 @Table(name = "history", schema = "", catalog = "stock")
-@IdClass(HistoryDataEntityPK.class)
+@IdClass(HistoryEntityPK.class)
 public class HistoryEntity {
     private long id;
     private String stockCode;

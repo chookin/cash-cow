@@ -3,19 +3,22 @@ package chookin.stock.oper;
 import cmri.utils.lang.OptionParser;
 import org.apache.log4j.Logger;
 
+import java.util.Arrays;
+
 /**
  * Created by zhuyin on 1/25/15.
  */
 public abstract class BaseOper {
     private final static Logger LOG = Logger.getLogger(BaseOper.class);
-    private OptionParser optionParser;
+    private OptionParser optionParser = new OptionParser();
 
     public OptionParser getOptionParser() {
         return this.optionParser;
     }
 
     public BaseOper setArgs(String[] args) {
-        optionParser = new OptionParser(args);
+        optionParser.setArgs(args);
+        LOG.info("args: " + Arrays.toString(optionParser.getArgs()));
         return this;
     }
 

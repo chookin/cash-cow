@@ -2,7 +2,7 @@
     <!--utils-->
     <property>
         <name>proxy.enable</name>
-        <value>true1</value>
+        <value>true</value>
         <description>whether using proxy, value is 'true' or not</description>
     </property>
     <property>
@@ -57,6 +57,10 @@
         <description>view: http://whatsmyuseragent.com/</description>
     </property>
     <property>
+        <name>test.url</name>
+        <value>http://www.126.com</value>
+    </property>
+    <property>
         <name>page.download.directory</name>
         <value>${user.home}/stock</value>
     </property>
@@ -79,7 +83,7 @@
     </property>
     <property>
         <name>download.concurrent.num</name>
-        <value>10</value>
+        <value>30</value>
     </property>
     <property>
         <name>download.timeout</name>

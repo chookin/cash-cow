@@ -1,7 +1,7 @@
 package chookin.stock.extractor.pipeline;
 
 import chookin.stock.orm.domain.CompanyEntity;
-import chookin.stock.orm.repository.CompanyInfoRepository;
+import chookin.stock.orm.repository.CompanyRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
 import org.apache.log4j.Logger;
@@ -23,7 +23,7 @@ public class CompanyPipeline implements Pipeline {
     private static final Logger LOG = Logger.getLogger(CompanyPipeline.class);
 
     @Autowired
-    private CompanyInfoRepository repository;
+    private CompanyRepository repository;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final Set<CompanyEntity> cache = new HashSet<>();
 
