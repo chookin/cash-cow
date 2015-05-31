@@ -35,5 +35,8 @@ public abstract class BaseOper {
         return true;
     }
 
+    /**
+     * check oper name, only match, then do action.
+     */
     abstract boolean action();
 }

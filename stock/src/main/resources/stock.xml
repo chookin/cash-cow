@@ -1,7 +1,7 @@
 <configuration>
     <!--utils-->
     <property>
-        <name>proxy.enable</name>
+        <name>>proxy.enable</name>
         <value>true</value>
         <description>whether using proxy, value is 'true' or not</description>
     </property>
@@ -76,7 +76,8 @@
     </property>
     <property>
         <name>page.validPeriod</name>
-        <value>-1</value>
+        <value>0</value>
+        <!--<value>-1</value>-->
         <description>unit is second. For a month is 3600*24*30=2592000. If 0, is not save and not read from local cache;
             if negative, always read from local cache if exists
         </description>

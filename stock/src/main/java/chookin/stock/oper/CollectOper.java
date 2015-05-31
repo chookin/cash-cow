@@ -3,8 +3,6 @@ package chookin.stock.oper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-
 /**
  * Created by zhuyin on 1/25/15.
  */
@@ -30,7 +28,8 @@ class CollectOper extends BaseOper {
         return this;
     }
 
-    public boolean action() {
+    @Override
+    boolean action() {
         String[] args = getOptionParser().getArgs();
         return stockCollect.setArgs(args).action()
                 || companyCollect.setArgs(args).action()

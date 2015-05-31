@@ -36,14 +36,15 @@ public class HistDataCollect extends BaseOper {
         return true;
     }
 
-    private void doWork(){
+    void doWork(){
         Spider spider = new Spider(OperName.CollectHistData)
                 .setValidateSeconds(DateHelper.DAY_MILLISECONDS)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
                 .setSleepMillisecond(ConfigManager.getPropertyAsInteger("download.sleepMilliseconds"))
-                .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
                 .setTimeOut(ConfigManager.getPropertyAsInteger("download.timeout"))
+                .setValidateSeconds(ConfigManager.getPropertyAsInteger("page.validPeriod"))
+                .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
                 ;
         try {
             SpiderMonitor.instance().register(spider);
@@ -104,6 +105,7 @@ public class HistDataCollect extends BaseOper {
     public static void main(String[] args){
         try {
             HistDataCollect oper = (HistDataCollect) SpringHelper.getAppContext().getBean("histDataCollect");
+            oper.setArgs(args);
             oper.doWork();
         }finally {
             SpiderMonitor.instance().stop();
