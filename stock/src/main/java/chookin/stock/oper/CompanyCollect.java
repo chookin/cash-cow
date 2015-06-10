@@ -10,7 +10,6 @@ import cmri.etl.downloader.JsoupDownloader;
 import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
-import cmri.utils.configuration.ConfigManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,13 +41,9 @@ public class CompanyCollect extends BaseOper{
     }
     private void doWork(){
         Spider spider = new Spider(OperName.CollectCompany)
-                .setDownloader( JsoupDownloader.getInstance())
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
-                .setSleepMillisecond(ConfigManager.getPropertyAsInteger("download.sleepMilliseconds"))
-                .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
-                .setTimeOut(ConfigManager.getPropertyAsInteger("download.timeout"))
-                .setValidateSeconds(ConfigManager.getPropertyAsLong("page.validPeriod"));
+                ;
         try {
             SpiderMonitor.instance().register(spider);
         } catch (JMException e) {

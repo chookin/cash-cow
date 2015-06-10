@@ -17,10 +17,9 @@ import java.util.TreeMap;
  * Retrieve stock infos from the web page
  */
 public class StockPageProcessor implements PageProcessor {
-
+    static final StockPageProcessor processor = new StockPageProcessor();
     public static Request getRequest(Map<String, StockEntity> existedStocks){
-        return new Request("http://quote.eastmoney.com/stocklist.html")
-                .setPageProcessor(new StockPageProcessor())
+        return new Request("http://quote.eastmoney.com/stocklist.html", processor)
                 .putExtra("existedStocks", existedStocks);
     }
 

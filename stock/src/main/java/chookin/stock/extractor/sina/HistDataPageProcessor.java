@@ -21,13 +21,13 @@ import java.util.List;
  */
 public class HistDataPageProcessor implements PageProcessor{
     private static final Logger LOG = Logger.getLogger(HistDataPageProcessor.class);
-
+    static final HistDataPageProcessor processor = new HistDataPageProcessor();
     public static Request getRequest(StockEntity stock, int year, int quarter){
         String url = String.format("http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/%s.phtml?year=%d&jidu=%d", stock.getCode(), year, quarter);
-        return new Request(url)
+        return new Request(url, processor)
                 .putExtra("stock", stock)
                 .putExtra("year", year)
-                .setPageProcessor(new HistDataPageProcessor());
+                ;
     }
     @Override
     public void process(ResultItems page) {

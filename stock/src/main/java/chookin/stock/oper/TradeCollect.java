@@ -34,12 +34,9 @@ public class TradeCollect extends BaseOper {
         Calendar endDay = DateHelper.parseCalendar(end, "yyyy-MM-dd");
 
         Spider spider = new Spider(OperName.CollectHistDataDetail)
-                .setValidateSeconds(Long.MAX_VALUE)
+                .setValidateMilliseconds(Long.MAX_VALUE)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
-                .setSleepMillisecond(ConfigManager.getPropertyAsInteger("download.sleepMilliseconds"))
-                .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
-                .setTimeOut(ConfigManager.getPropertyAsInteger("download.timeout"))
                 ;
         Map<String, StockEntity> stocks = StockMapHandler.getStocksMap();
         for(Map.Entry<String, StockEntity> entry : stocks.entrySet()){

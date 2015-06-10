@@ -5,11 +5,9 @@ import chookin.stock.extractor.pipeline.StockPipelie;
 import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.StockEntity;
 import chookin.stock.utils.SpringHelper;
-import cmri.etl.downloader.JsoupDownloader;
 import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
-import cmri.utils.configuration.ConfigManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,13 +38,8 @@ public class StockCollect extends BaseOper {
         Map<String, StockEntity> stocks = StockMapHandler.getStocksMap();
 
         Spider spider = new Spider(OperName.CollectStock)
-                .setDownloader(JsoupDownloader.getInstance())
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
-                .setSleepMillisecond(ConfigManager.getPropertyAsInteger("download.sleepMilliseconds"))
-                .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
-                .setTimeOut(ConfigManager.getPropertyAsInteger("download.timeout"))
-                .setValidateSeconds(ConfigManager.getPropertyAsLong("page.validPeriod"))
                 .addRequest(StockPageProcessor.getRequest(stocks));
         try {
             SpiderMonitor.instance().register(spider);

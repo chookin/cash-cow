@@ -17,10 +17,9 @@ import java.text.SimpleDateFormat;
  */
 public class RealDataPageProcessor implements PageProcessor {
     private final static Logger LOG = Logger.getLogger(RealDataPageProcessor.class);
-
+    static RealDataPageProcessor processor = new RealDataPageProcessor();
     public static Request getRequest(StockEntity stock){
-        return new Request(String.format("http://qt.gtimg.cn/q=%s%s", stock.getExchange(), stock.getCode()))
-                .setPageProcessor(new RealDataPageProcessor());
+        return new Request(String.format("http://qt.gtimg.cn/q=%s%s", stock.getExchange(), stock.getCode()), processor);
     }
 
     @Override

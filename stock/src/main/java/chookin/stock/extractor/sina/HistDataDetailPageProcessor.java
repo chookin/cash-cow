@@ -13,12 +13,12 @@ import java.util.Date;
  * Created by zhuyin on 5/20/15.
  */
 public class HistDataDetailPageProcessor implements PageProcessor{
+    static final HistDataDetailPageProcessor PROCESSOR = new HistDataDetailPageProcessor();
 
     public static Request getRequest(StockEntity stock, Date date){
         // url such as http://market.finance.sina.com.cn/downxls.php?date=2015-01-27&symbol=sz000001
         String url = String.format("http://market.finance.sina.com.cn/downxls.php?date=%s&symbol=%s%s", DateHelper.toString(date), stock.getExchange(),stock.getCode());
-        return new Request(url)
-                .setPageProcessor(new HistDataDetailPageProcessor())
+        return new Request(url, PROCESSOR)
                 .putExtra("stock", stock)
                 .putExtra("date", date)
                 .setTarget(Request.TargetResource.File)

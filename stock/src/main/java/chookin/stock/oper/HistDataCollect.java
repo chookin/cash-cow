@@ -8,7 +8,6 @@ import chookin.stock.utils.SpringHelper;
 import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
-import cmri.utils.configuration.ConfigManager;
 import cmri.utils.lang.DateHelper;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,13 +37,9 @@ public class HistDataCollect extends BaseOper {
 
     void doWork(){
         Spider spider = new Spider(OperName.CollectHistData)
-                .setValidateSeconds(DateHelper.DAY_MILLISECONDS)
+                .setValidateMilliseconds(DateHelper.DAY_MILLISECONDS)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
-                .setSleepMillisecond(ConfigManager.getPropertyAsInteger("download.sleepMilliseconds"))
-                .setTimeOut(ConfigManager.getPropertyAsInteger("download.timeout"))
-                .setValidateSeconds(ConfigManager.getPropertyAsInteger("page.validPeriod"))
-                .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
                 ;
         try {
             SpiderMonitor.instance().register(spider);
