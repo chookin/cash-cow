@@ -11,7 +11,7 @@ public class RobTicket extends BaseOper {
     public boolean action() {
         long count = 0;
         while (true) {
-            new Spider().addRequest(DatePagePrcoessor.getSeedRequests())
+            new Spider().addRequest(DatePageProcessor.getSeedRequests())
                     .run();
             ++count;
             try {

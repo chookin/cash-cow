@@ -22,12 +22,12 @@ import java.util.*;
  }
 
  */
-public class DatePagePrcoessor implements PageProcessor {
-    static final Logger LOG = Logger.getLogger(DatePagePrcoessor.class);
-    static DatePagePrcoessor prcoessor = new DatePagePrcoessor();
+public class DatePageProcessor implements PageProcessor {
+    static final Logger LOG = Logger.getLogger(DatePageProcessor.class);
+    static DatePageProcessor processor = new DatePageProcessor();
 
     static Collection<Request> getSeedRequests(){
-        return Collections.singletonList(new Request("http://123.57.88.180:8008/apt/order.html?method=loadOrderDate", prcoessor)
+        return Collections.singletonList(new Request("http://123.57.88.180:8008/apt/order.html?method=loadOrderDate", processor)
                         .ignoreCache(true)
                         .setTarget(Request.TargetResource.Json)
         );
