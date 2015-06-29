@@ -35,6 +35,10 @@ public class DatePageProcessor implements PageProcessor {
     @Override
     public void process(ResultItems page) {
         String str = (String) page.getResource();
+        if(str.equals("null")){
+            LOG.info("fail to get page data");
+            return;
+        }
         JsonObject oJson = new JsonParser().parse(str).getAsJsonObject();
 
         String strNow = oJson.get("now").getAsString();
@@ -114,6 +118,7 @@ public class DatePageProcessor implements PageProcessor {
         if(!avaible(state)){
             return false;
         }
+
         JOptionPane.showMessageDialog(null, DateHelper.toString(date) + "可预约啦", "恭喜", JOptionPane.INFORMATION_MESSAGE);
         JOptionPane optionPane = new JOptionPane();
         JDialog dialog = optionPane.createDialog("恭喜");

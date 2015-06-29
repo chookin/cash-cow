@@ -15,7 +15,7 @@ public class RobTicket extends BaseOper {
                     .run();
             ++count;
             try {
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
