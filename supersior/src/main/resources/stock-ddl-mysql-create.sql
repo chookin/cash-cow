@@ -32,22 +32,22 @@ create table if not exists stock(
 create unique index i_stock_code on stock (code);
 
 -- http://qt.gtimg.cn/q=sz000858da
-create table if not exists real_time(
+create table if not exists realtime(
   stockCode char(6) not null comment '股票代码',
   time datetime comment '时间',
   open double comment '今开',
   yclose double comment '昨收',
-  priceChange double comment '涨跌',
-  changeRatio double comment '涨跌%',
+  #   priceChange double comment '涨跌',
+  #   changeRatio double comment '涨跌%',
   curPrice double comment '当前价格',
   highPrice double comment '最高',
   lowPrice double comment '最低',
-  marketValue double comment '流通市值',
-  totalValue double comment '总市值',
+  #   marketValue double comment '流通市值',
+  #   totalValue double comment '总市值',
   primary key (stockCode),
   foreign key (stockCode) references stock(code)
 ) comment '实时交易';
-create unique index i_real_data_stockCode on real_time (stockCode);
+create unique index i_real_data_stockCode on realtime (stockCode);
 
 -- http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/000028.phtml?year=2014&jidu=1
 create table if not exists history(
@@ -79,7 +79,7 @@ create table if not exists trade(
   sell bool comment '是否卖盘',
   primary key (stockCode, time),
   unique (id),
-  foreign key (stockCode) references stock(stockCode)
+  foreign key (stockCode) references stock(code)
 ) comment '历史成交明细';
 create index i_trade_stock_code on trade (stockCode);
 create unique index i_trade_stockCode_time on trade (stockCode, time);
@@ -124,9 +124,22 @@ create table if not exists company	(
   coreTheme text comment '核心题材',
 
   primary key (stockCode),
-  foreign key (stockCode) references stock(stockCode)
+  foreign key (stockCode) references stock(code)
 ) comment '公司简介';
 create index i_company_stockCode on company (stockCode);
+
+create table if not exists holdings(
+  id bigint not null auto_increment comment 'record id',
+  stockCode char(6) not null comment '股票代码',
+  time datetime comment '买入时间' DEFAULT CURRENT_TIMESTAMP,
+  price double comment '买入价',
+  hand bigint comment '买入量(手)' DEFAULT 0,
+  hial double comment '上限报警, higher limit alarming' DEFAULT 0.03,
+  loal double comment '下限报警, lower limit alarming' DEFAULT 0.03,
+  valid bool comment '是否有效' DEFAULT TRUE,
+  unique (id),
+  foreign key (stockCode) references stock(code)
+) comment '仓位';
 
 -- insert company_info(stockCode, company_name) values(123, '经营范围');
 -- 查询重复数据

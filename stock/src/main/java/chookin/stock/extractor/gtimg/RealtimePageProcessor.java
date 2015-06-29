@@ -13,7 +13,6 @@ import cmri.utils.lang.DateHelper;
 public class RealtimePageProcessor implements PageProcessor {
     static RealtimePageProcessor processor = new RealtimePageProcessor();
     public static Request getRequest(StockEntity stock){
-        // http://blog.csdn.net/ustbhacker/article/details/8365756
         return new Request(String.format("http://qt.gtimg.cn/q=%s%s", stock.getExchange(), stock.getCode()), processor)
                 .putExtra("stock", stock)
                 .setTarget(Request.TargetResource.Json)
@@ -76,12 +75,8 @@ public class RealtimePageProcessor implements PageProcessor {
         entity.setCurPrice(Double.valueOf(arr[3]));
         entity.setYclose(Double.valueOf(arr[4]));
         entity.setOpen(Double.valueOf(arr[5]));
-        entity.setPriceChange(Double.valueOf(arr[31]));
-        entity.setChangeRatio(Double.valueOf(arr[32]));
         entity.setHighPrice(Double.valueOf(arr[33]));
         entity.setLowPrice(Double.valueOf(arr[34]));
-        entity.setMarketValue(Double.valueOf(arr[44]));
-        entity.setTotalValue(Double.valueOf(arr[45]));
         getLogger().trace(entity);
         return entity;
     }

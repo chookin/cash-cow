@@ -1,6 +1,7 @@
 package chookin.stock.oper;
 
 import chookin.stock.extractor.gtimg.RealtimePageProcessor;
+import chookin.stock.extractor.sina.IndexPageProcessor;
 import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.pipeline.Pipeline;
@@ -52,9 +53,10 @@ public class RealtimeCollect extends BaseOper {
 
     void doWork(){
         Map<String, StockEntity> stocks = getStocks();
-        Spider spider = new Spider(OperName.CollectRealData);
+        Spider spider = new Spider(OperName.CollectRealData)
+                .addRequest(IndexPageProcessor.getRequest())
+                ;
         this.pipelines.forEach(spider::addPipeline);
-
         for(StockEntity stock : stocks.values()){
             spider.addRequest(RealtimePageProcessor.getRequest(stock));
         }

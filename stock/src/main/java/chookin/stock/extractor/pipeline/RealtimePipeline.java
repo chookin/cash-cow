@@ -30,6 +30,9 @@ public class RealtimePipeline implements Pipeline {
             return;
         }
         RealtimeEntity entity = (RealtimeEntity) resultItems.getField("realData");
+        if(entity == null){
+            return;
+        }
         lock.writeLock().lock();
         try {
             cache.add(entity);

@@ -3,6 +3,7 @@ package chookin.stock.oper;
 import chookin.stock.handler.HolidayHandler;
 import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.HoldingsEntity;
+import chookin.stock.orm.domain.IndexEntity;
 import chookin.stock.orm.domain.RealtimeEntity;
 import chookin.stock.orm.repository.HoldingsRepository;
 import chookin.stock.utils.SpringHelper;
@@ -21,6 +22,7 @@ import java.util.*;
  */
 @Service
 public class Monitor extends BaseOper implements Runnable{
+    private static final String sep = "\t";
     @Autowired
     private RealtimeCollect realtimeCollect;
     private int interval = 5000; // milliseconds
@@ -49,34 +51,53 @@ public class Monitor extends BaseOper implements Runnable{
         interval = Integer.parseInt(getOptionParser().getOption("--interval", String.valueOf(interval)));
         realtimeCollect.addPipeline((Pipeline) SpringHelper.getAppContext().getBean("realtimePipeline"));
         realtimeCollect.addPipeline(resultItems -> {
-            RealtimeEntity entity = (RealtimeEntity) resultItems.getField("realData");
-            if(entity == null){
+            IndexEntity index = (IndexEntity) resultItems.getField("index");
+            if(index != null){
+                getLogger().info(getOut(index));
                 return;
             }
-            HoldingsEntity holdings = holdingsMap.get(entity.getStockCode());
-            getLogger().info(getOut(holdings, entity));
+            RealtimeEntity realtime = (RealtimeEntity) resultItems.getField("realData");
+            if(realtime == null){
+                return;
+            }
+            HoldingsEntity holdings = holdingsMap.get(realtime.getStockCode());
+            getLogger().info(getOut(holdings, realtime));
         });
     }
 
-    private double getEarn(HoldingsEntity holdings, RealtimeEntity realtime){
-        return holdings.getHand() * 100 * (realtime.getCurPrice() - holdings.getPrice());
+    private Double getEarn(HoldingsEntity holdings, RealtimeEntity realtime){
+        if(holdings.getPrice() != null && realtime.getCurPrice() != null)
+            return holdings.getHand() * 100 * (realtime.getCurPrice() - holdings.getPrice());
+        return null;
     }
 
+    private Double getChangeRatio(RealtimeEntity realtime){
+        if(realtime.getYclose() != null && realtime.getCurPrice() != null)
+            return (realtime.getCurPrice() - realtime.getYclose()) / realtime.getYclose() * 100;
+        return null;
+    }
+
+    private String getOut(IndexEntity index){
+        return new StringBuilder(index.getCode()).append(sep)
+                .append(DateHelper.toString(index.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
+                .append(index.getPoint()).append(sep)
+                .append(index.getChangeRatio()).append(sep)
+                .append(index.getTradeHand()).append(sep)
+                .append(index.getTradeValue()).append(sep)
+                .toString();
+    }
     private String getOut(HoldingsEntity holdings, RealtimeEntity realtime){
-        String sep = "\t";
-        StringBuilder strb = new StringBuilder(realtime.getStockCode()).append(sep)
+        return new StringBuilder(realtime.getStockCode()).append(sep)
                 .append(DateHelper.toString(realtime.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
                 .append(realtime.getOpen()).append(sep)
                 .append(realtime.getYclose()).append(sep)
                 .append(realtime.getHighPrice()).append(sep)
                 .append(realtime.getLowPrice()).append(sep)
                 .append(realtime.getCurPrice()).append(sep)
-                .append(realtime.getChangeRatio()).append("%").append(sep)
+                .append(String.format("%.2f", getChangeRatio(realtime))).append("%").append(sep)
                 .append(holdings.getPrice()).append(sep)
                 .append(holdings.getHand()).append(sep)
-                .append(getEarn(holdings, realtime)).append(sep)
-                ;
-        return strb.toString();
+                .append(getEarn(holdings, realtime)).append(sep).toString();
     }
     @Override
     boolean action() {
