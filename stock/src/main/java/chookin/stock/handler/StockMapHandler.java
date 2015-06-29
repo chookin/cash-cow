@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -22,7 +22,7 @@ public class StockMapHandler {
     private final static Logger LOG = Logger.getLogger(StockMapHandler.class);
     @Autowired
     private StockRepository stockRepository;
-    private Map<String, StockEntity> stocksMap = new ConcurrentSkipListMap<>();
+    private Map<String, StockEntity> stocksMap = new TreeMap<>();
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     private static StockMapHandler handler;
@@ -74,5 +74,19 @@ public class StockMapHandler {
      */
     public static Map<String, StockEntity> getStocksMap(){
         return handler._getStocksMap();
+    }
+
+    public static Map<String, StockEntity> getStocksMap(Collection<String> stockCodes){
+        Map<String, StockEntity> all = handler._getStocksMap();
+        Map<String, StockEntity> rst = new HashMap<>();
+        for(String code: stockCodes){
+            StockEntity stock = all.get(code);
+            if(stock == null){
+                continue;
+            }
+            rst.put(code, stock);
+        }
+        return rst;
+
     }
 }

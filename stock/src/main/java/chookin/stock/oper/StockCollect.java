@@ -8,7 +8,6 @@ import chookin.stock.utils.SpringHelper;
 import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +19,6 @@ import java.util.Map;
  */
 @Service
 public class StockCollect extends BaseOper {
-    private static final Logger LOG = Logger.getLogger(StockCollect.class);
-
     @Autowired
     private StockPipelie pipeline;
 
@@ -44,7 +41,7 @@ public class StockCollect extends BaseOper {
         try {
             SpiderMonitor.instance().register(spider);
         } catch (JMException e) {
-            LOG.error(null, e);
+            getLogger().error(null, e);
         }
         spider.run();
     }

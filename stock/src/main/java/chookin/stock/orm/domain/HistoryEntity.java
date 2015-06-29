@@ -1,6 +1,7 @@
 package chookin.stock.orm.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
@@ -9,7 +10,7 @@ import java.sql.Date;
 @Entity
 @Table(name = "history", schema = "", catalog = "stock")
 @IdClass(HistoryEntityPK.class)
-public class HistoryEntity {
+public class HistoryEntity implements Serializable {
     private long id;
     private String stockCode;
     private Date day;

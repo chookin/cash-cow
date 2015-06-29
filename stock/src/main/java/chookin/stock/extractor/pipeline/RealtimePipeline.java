@@ -1,6 +1,6 @@
 package chookin.stock.extractor.pipeline;
 
-import chookin.stock.orm.domain.RealTimeEntity;
+import chookin.stock.orm.domain.RealtimeEntity;
 import chookin.stock.orm.repository.RealTimeRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
@@ -18,18 +18,18 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Created by zhuyin on 3/22/15.
  */
 @Service
-public class RealTimePipeline implements Pipeline {
+public class RealtimePipeline implements Pipeline {
     @Autowired
     private RealTimeRepository repository;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private Set<RealTimeEntity> cache = new HashSet<>();
+    private Set<RealtimeEntity> cache = new HashSet<>();
     @Override
     public void process(ResultItems resultItems) {
         if (resultItems.isSkip()) {
             return;
         }
-        RealTimeEntity entity = resultItems.getRequest().getExtra("realData", RealTimeEntity.class);
+        RealtimeEntity entity = (RealtimeEntity) resultItems.getField("realData");
         lock.writeLock().lock();
         try {
             cache.add(entity);

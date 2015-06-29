@@ -9,7 +9,6 @@ import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
 import cmri.utils.lang.DateHelper;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,9 +19,7 @@ import java.util.Map;
  * Created by zhuyin on 3/22/15.
  */
 @Service
-public class HistDataCollect extends BaseOper {
-    private static Logger LOG = Logger.getLogger(HistDataCollect.class);
-
+public class HistoryCollect extends BaseOper {
     @Autowired
     private HistoryPipeline pipeline;
 
@@ -44,7 +41,7 @@ public class HistDataCollect extends BaseOper {
         try {
             SpiderMonitor.instance().register(spider);
         } catch (JMException e) {
-            LOG.error(null, e);
+            getLogger().error(null, e);
         }
         addRequest(spider);
         spider.run();
@@ -98,12 +95,8 @@ public class HistDataCollect extends BaseOper {
     }
 
     public static void main(String[] args){
-        try {
-            HistDataCollect oper = (HistDataCollect) SpringHelper.getAppContext().getBean("histDataCollect");
-            oper.setArgs(args);
-            oper.doWork();
-        }finally {
-            SpiderMonitor.instance().stop();
-        }
+        HistoryCollect oper = (HistoryCollect) SpringHelper.getAppContext().getBean("historyCollect");
+        oper.setArgs(args);
+        oper.doWork();
     }
 }

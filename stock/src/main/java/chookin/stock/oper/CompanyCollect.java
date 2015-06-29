@@ -6,11 +6,9 @@ import chookin.stock.orm.domain.CompanyEntity;
 import chookin.stock.orm.domain.StockEntity;
 import chookin.stock.orm.repository.CompanyRepository;
 import chookin.stock.utils.SpringHelper;
-import cmri.etl.downloader.JsoupDownloader;
 import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +21,6 @@ import java.util.Map;
  */
 @Service
 public class CompanyCollect extends BaseOper{
-    private static final Logger LOG = Logger.getLogger(CompanyCollect.class);
-
     @Autowired
     private CompanyPipeline pipeline;
 
@@ -47,7 +43,7 @@ public class CompanyCollect extends BaseOper{
         try {
             SpiderMonitor.instance().register(spider);
         } catch (JMException e) {
-            LOG.error(null, e);
+            getLogger().error(null, e);
         }
         addRequest(spider);
         spider.run();
@@ -77,11 +73,7 @@ public class CompanyCollect extends BaseOper{
         }
     }
     public static void main(String[] args){
-        try {
-            CompanyCollect oper = (CompanyCollect) SpringHelper.getAppContext().getBean("companyCollect");
-            oper.doWork();
-        }finally {
-            SpiderMonitor.instance().stop();
-        }
+        CompanyCollect oper = (CompanyCollect) SpringHelper.getAppContext().getBean("companyCollect");
+        oper.doWork();
     }
 }

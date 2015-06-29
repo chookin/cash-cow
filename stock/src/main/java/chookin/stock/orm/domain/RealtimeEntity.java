@@ -1,6 +1,7 @@
 package chookin.stock.orm.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -8,8 +9,8 @@ import java.text.SimpleDateFormat;
  * Created by chookin on 7/28/14.
  */
 @Entity
-@Table(name = "real_time", schema = "", catalog = "stock")
-public class RealTimeEntity {
+@Table(name = "realtime", schema = "", catalog = "stock")
+public class RealtimeEntity implements Serializable {
     private String stockCode;
     private Timestamp time;
     private Double open;
@@ -23,17 +24,16 @@ public class RealTimeEntity {
     private Double totalValue;
 
     @Id
-    @Column(name = "stock_code")
     public String getStockCode() {
         return stockCode;
     }
 
-    public void setStockCode(String stockCode) {
+    public RealtimeEntity setStockCode(String stockCode) {
         this.stockCode = stockCode;
+        return this;
     }
 
     @Basic
-    @Column(name = "time")
     public Timestamp getTime() {
         return time;
     }
@@ -42,8 +42,11 @@ public class RealTimeEntity {
         this.time = time;
     }
 
+    public void setTime(long time) {
+        this.time = new Timestamp(time);
+    }
+
     @Basic
-    @Column(name = "open")
     public Double getOpen() {
         return open;
     }
@@ -53,7 +56,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "yclose")
     public Double getYclose() {
         return yclose;
     }
@@ -63,7 +65,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "price_change")
     public Double getPriceChange() {
         return priceChange;
     }
@@ -73,7 +74,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "change_ratio")
     public Double getChangeRatio() {
         return changeRatio;
     }
@@ -83,7 +83,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "cur_price")
     public Double getCurPrice() {
         return curPrice;
     }
@@ -93,7 +92,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "high_price")
     public Double getHighPrice() {
         return highPrice;
     }
@@ -103,7 +101,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "low_price")
     public Double getLowPrice() {
         return lowPrice;
     }
@@ -113,7 +110,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "market_value")
     public Double getMarketValue() {
         return marketValue;
     }
@@ -123,7 +119,6 @@ public class RealTimeEntity {
     }
 
     @Basic
-    @Column(name = "total_value")
     public Double getTotalValue() {
         return totalValue;
     }
@@ -137,7 +132,7 @@ public class RealTimeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        RealTimeEntity that = (RealTimeEntity) o;
+        RealtimeEntity that = (RealtimeEntity) o;
 
         if (changeRatio != null ? !changeRatio.equals(that.changeRatio) : that.changeRatio != null) return false;
         if (curPrice != null ? !curPrice.equals(that.curPrice) : that.curPrice != null) return false;
@@ -174,6 +169,6 @@ public class RealTimeEntity {
     public String toString() {
         SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String strDate=sdf.format(this.getTime());
-        return String.format("RealData{id: %s, time: %s, yClose: %.2f, open: %.2f, curPrice: %.2f, highPrice: %.2f, lowPrice: %.2f, change: %.2f, changeRatio: %.2f, marketValue: %.2f, totalValue: %.2f}", this.getStockCode(), strDate, this.getYclose(), this.getOpen(), this.getCurPrice(), this.getHighPrice(), this.getLowPrice(), this.getPriceChange(), this.getChangeRatio(), this.getMarketValue(), this.getTotalValue());
+        return String.format("RealData{code: %s, time: %s, yClose: %.2f, open: %.2f, curPrice: %.2f, highPrice: %.2f, lowPrice: %.2f, change: %.2f, changeRatio: %.2f, marketValue: %.2f, totalValue: %.2f}", this.getStockCode(), strDate, this.getYclose(), this.getOpen(), this.getCurPrice(), this.getHighPrice(), this.getLowPrice(), this.getPriceChange(), this.getChangeRatio(), this.getMarketValue(), this.getTotalValue());
     }
 }

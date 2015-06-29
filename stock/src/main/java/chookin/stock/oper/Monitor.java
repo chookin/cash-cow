@@ -1,0 +1,142 @@
+package chookin.stock.oper;
+
+import chookin.stock.handler.HolidayHandler;
+import chookin.stock.handler.StockMapHandler;
+import chookin.stock.orm.domain.HoldingsEntity;
+import chookin.stock.orm.domain.RealtimeEntity;
+import chookin.stock.orm.repository.HoldingsRepository;
+import chookin.stock.utils.SpringHelper;
+import cmri.etl.pipeline.Pipeline;
+import cmri.utils.concurrent.ThreadHelper;
+import cmri.utils.concurrent.ThreadHelper.Status;
+import cmri.utils.lang.DateHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalTime;
+import java.util.*;
+
+/**
+ * Created by zhuyin on 6/13/15.
+ */
+@Service
+public class Monitor extends BaseOper implements Runnable{
+    @Autowired
+    private RealtimeCollect realtimeCollect;
+    private int interval = 5000; // milliseconds
+    private Status stat = Status.Init;
+    public void start(){
+        Thread thread = new Thread(this);
+        thread.setDaemon(false);
+        thread.start();
+    }
+    public void stop(){
+        this.stat = Status.Stopped;
+    }
+    private void checkIfRunning() {
+        if (stat == Status.Running) {
+            throw new IllegalStateException("Spider is already running!");
+        }
+    }
+    private void init(){
+        HoldingsRepository repository = (HoldingsRepository) SpringHelper.getAppContext().getBean("holdingsRepository");
+        List<HoldingsEntity> holdingsCollection = repository.findByValid(true);
+        Map<String, HoldingsEntity> holdingsMap = new HashMap<>();
+        for(HoldingsEntity entity: holdingsCollection){
+            holdingsMap.put(entity.getStockCode(), entity);
+        }
+        realtimeCollect.setStocks(StockMapHandler.getStocksMap(holdingsMap.keySet()).values());
+        interval = Integer.parseInt(getOptionParser().getOption("--interval", String.valueOf(interval)));
+        realtimeCollect.addPipeline((Pipeline) SpringHelper.getAppContext().getBean("realtimePipeline"));
+        realtimeCollect.addPipeline(resultItems -> {
+            RealtimeEntity entity = (RealtimeEntity) resultItems.getField("realData");
+            if(entity == null){
+                return;
+            }
+            HoldingsEntity holdings = holdingsMap.get(entity.getStockCode());
+            getLogger().info(getOut(holdings, entity));
+        });
+    }
+
+    private double getEarn(HoldingsEntity holdings, RealtimeEntity realtime){
+        return holdings.getHand() * 100 * (realtime.getCurPrice() - holdings.getPrice());
+    }
+
+    private String getOut(HoldingsEntity holdings, RealtimeEntity realtime){
+        String sep = "\t";
+        StringBuilder strb = new StringBuilder(realtime.getStockCode()).append(sep)
+                .append(DateHelper.toString(realtime.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
+                .append(realtime.getOpen()).append(sep)
+                .append(realtime.getYclose()).append(sep)
+                .append(realtime.getHighPrice()).append(sep)
+                .append(realtime.getLowPrice()).append(sep)
+                .append(realtime.getCurPrice()).append(sep)
+                .append(realtime.getChangeRatio()).append("%").append(sep)
+                .append(holdings.getPrice()).append(sep)
+                .append(holdings.getHand()).append(sep)
+                .append(getEarn(holdings, realtime)).append(sep)
+                ;
+        return strb.toString();
+    }
+    @Override
+    boolean action() {
+        start();
+        return true;
+    }
+
+    @Override
+    public void run() {
+        try {
+            long count = 0;
+            onStart();
+            while (!Thread.currentThread().isInterrupted() && stat == Status.Running) {
+                ThreadHelper.sleep(interval);
+                Calendar now = Calendar.getInstance();
+                now.setTime(new Date());
+                if(HolidayHandler.isHoliday(now)){
+                    continue;
+                }
+                if(isRecess(LocalTime.now())){
+                    if(count > 0){ //如果是首次，则获取
+                        continue;
+                    }
+                }
+                realtimeCollect.doWork();
+                if(++count == Long.MAX_VALUE){
+                    count = 1;
+                }
+            }
+        } catch (Throwable e) {
+            getLogger().error(null, e);
+        }finally {
+            onStop();
+        }
+    }
+
+    private boolean isRecess(LocalTime time){
+        if(time.isBefore(LocalTime.of(9, 30))){
+            return true;
+        }
+        if(time.isAfter(LocalTime.of(12, 30)) && time.isBefore(LocalTime.of(13, 0))){
+            return true;
+        }
+        if(time.isAfter(LocalTime.of(15, 0))){
+            return true;
+        }
+        return false;
+    }
+    private void onStart(){
+        checkIfRunning();
+        init();
+        stat = Status.Running;
+    }
+
+    private void onStop() {
+        stat = Status.Stopped;
+    }
+
+    public static void main(String[] args){
+        Monitor monitor = (Monitor) SpringHelper.getAppContext().getBean("monitor");
+        monitor.setArgs(args).action();
+    }
+}

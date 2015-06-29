@@ -15,27 +15,18 @@ class CollectOper extends BaseOper {
     private CompanyCollect companyCollect;
 
     @Autowired
-    private HistDataCollect histDataCollect;
+    private HistoryCollect historyCollect;
 
     @Autowired
     private TradeCollect tradeCollect;
-
-    @Autowired
-    private RealDataCollect realDataCollect;
-
-    public CollectOper setArgs(String[] args) {
-        super.setArgs(args);
-        return this;
-    }
 
     @Override
     boolean action() {
         String[] args = getOptionParser().getArgs();
         return stockCollect.setArgs(args).action()
                 || companyCollect.setArgs(args).action()
-                || histDataCollect.setArgs(args).action()
+                || historyCollect.setArgs(args).action()
                 || tradeCollect.setArgs(args).action()
-                || realDataCollect.setArgs(args).action()
                 ;
     }
 }

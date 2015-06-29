@@ -1,6 +1,7 @@
 package chookin.stock.orm.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
@@ -8,7 +9,7 @@ import java.sql.Date;
  */
 @Entity
 @javax.persistence.Table(name = "company", schema = "", catalog = "stock")
-public class CompanyEntity {
+public class CompanyEntity implements Serializable {
 
     private String stockCode;
 

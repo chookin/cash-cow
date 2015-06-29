@@ -1,7 +1,7 @@
 <configuration>
     <!--utils-->
     <property>
-        <name>>proxy.enable</name>
+        <name>proxy.enable</name>
         <value>true</value>
         <description>whether using proxy, value is 'true' or not</description>
     </property>
@@ -20,11 +20,6 @@
     <property>
         <name>proxy.password</name>
         <value>""</value>
-    </property>
-    <property>
-        <name>proxy.pool</name>
-        <value>61.232.6.164:8081#北京, 183.207.228.9:89#移动, 222.88.236.236:82#河南南阳, 58.240.65.57:3128#江苏南京, 183.207.232.193:8080#移动, 59.151.103.15:80#北京</value>
-        <description>http://www.xici.net.co/nt/, choose that in land and with high speed. Blacklist, 183.207.232.194:8080#移动</description>
     </property>
     <property>
         <name>mongo.host</name>
@@ -48,14 +43,6 @@
         <value>stock</value>
     </property>
 
-    <!--etl-commons-->
-    <property>
-        <name>userAgent</name>
-        <value>Mozilla/5.0 (Linux; Android 4.4.2; M812C Build/KVT49L) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.59 Mobile Safari/537.36</value>
-        <!--<value>Mozilla/5.0 (iPhone; U; CPU iPhone OS 3_0 like Mac OS X; en-us) AppleWebKit/528.18 (KHTML, like Gecko) Version/4.0 Mobile/7A341 Safari/528.16</value>-->
-        <!--<value>Mozilla/5.0 (Windows; U; Windows NT 6.1; en-US)</value>-->
-        <description>view: http://whatsmyuseragent.com/</description>
-    </property>
     <property>
         <name>test.url</name>
         <value>http://www.126.com</value>
@@ -76,7 +63,7 @@
     </property>
     <property>
         <name>page.validPeriod</name>
-        <value>0</value>
+        <value>-1</value>
         <!--<value>-1</value>-->
         <description>unit is second. For a month is 3600*24*30=2592000. If 0, is not save and not read from local cache;
             if negative, always read from local cache if exists
@@ -84,7 +71,7 @@
     </property>
     <property>
         <name>download.concurrent.num</name>
-        <value>30</value>
+        <value>1</value>
     </property>
     <property>
         <name>download.timeout</name>
@@ -95,5 +82,9 @@
         <name>download.sleepMilliseconds</name>
         <value>200</value>
         <description>sleep milliseconds when between two web page download</description>
+    </property>
+    <property>
+        <name>results.directory</name>
+        <value>${user.home}/share/project/tagbase/results</value>
     </property>
 </configuration>

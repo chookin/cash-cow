@@ -1,6 +1,7 @@
 package chookin.stock.orm.domain;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -9,7 +10,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "trade", schema = "", catalog = "stock")
 @IdClass(TradeEntityPK.class)
-public class TradeEntity {
+public class TradeEntity implements Serializable {
     private long id;
     private String stockCode;
     private Timestamp time;
