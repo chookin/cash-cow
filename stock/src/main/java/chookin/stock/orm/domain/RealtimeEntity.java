@@ -1,9 +1,13 @@
 package chookin.stock.orm.domain;
 
+import cmri.utils.lang.Pair;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by chookin on 7/28/14.
@@ -18,6 +22,10 @@ public class RealtimeEntity implements Serializable {
     private Double curPrice;
     private Double highPrice;
     private Double lowPrice;
+    @Transient
+    private List<Pair<Double, Long>> buys = new ArrayList<>(5);
+    @Transient
+    private List<Pair<Double, Long>> sells = new ArrayList<>(5);
 
     @Id
     public String getStockCode() {
@@ -29,7 +37,6 @@ public class RealtimeEntity implements Serializable {
         return this;
     }
 
-    @Basic
     public Timestamp getTime() {
         return time;
     }
@@ -42,7 +49,6 @@ public class RealtimeEntity implements Serializable {
         this.time = new Timestamp(time);
     }
 
-    @Basic
     public Double getOpen() {
         return open;
     }
@@ -51,7 +57,6 @@ public class RealtimeEntity implements Serializable {
         this.open = open;
     }
 
-    @Basic
     public Double getYclose() {
         return yclose;
     }
@@ -60,7 +65,6 @@ public class RealtimeEntity implements Serializable {
         this.yclose = yclose;
     }
 
-    @Basic
     public Double getCurPrice() {
         return curPrice;
     }
@@ -69,7 +73,6 @@ public class RealtimeEntity implements Serializable {
         this.curPrice = curPrice;
     }
 
-    @Basic
     public Double getHighPrice() {
         return highPrice;
     }
@@ -78,13 +81,44 @@ public class RealtimeEntity implements Serializable {
         this.highPrice = highPrice;
     }
 
-    @Basic
     public Double getLowPrice() {
         return lowPrice;
     }
 
     public void setLowPrice(Double lowPrice) {
         this.lowPrice = lowPrice;
+    }
+
+    public RealtimeEntity addBuy(int index, Pair<Double, Long> trade){
+        buys.add(index, trade);
+        return this;
+    }
+
+    public RealtimeEntity addSell(int index, Pair<Double, Long> trade){
+        sells.add(index, trade);
+        return this;
+    }
+
+    public RealtimeEntity addBuy(int index, String tradeHand, String tradeValue){
+        Long myHand = Long.valueOf(tradeHand);
+        Double myValue = Double.valueOf(tradeValue);
+        return addBuy(index, new Pair<>(myValue, myHand));
+    }
+
+    public RealtimeEntity addSell(int index, String tradeHand, String tradeValue){
+        Long myHand = Long.valueOf(tradeHand);
+        Double myValue = Double.valueOf(tradeValue);
+        return addSell(index, new Pair<>(myValue, myHand));
+    }
+
+    @Transient
+    public List<Pair<Double, Long>> getBuys(){
+        return buys;
+    }
+
+    @Transient
+    public List<Pair<Double, Long>> getSells(){
+        return sells;
     }
 
     @Override

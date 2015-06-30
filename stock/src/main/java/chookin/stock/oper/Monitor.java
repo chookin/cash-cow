@@ -25,7 +25,7 @@ public class Monitor extends BaseOper implements Runnable{
     private static final String sep = "\t";
     @Autowired
     private RealtimeCollect realtimeCollect;
-    private int interval = 5000; // milliseconds
+    private int interval = 2000; // milliseconds
     private Status stat = Status.Init;
     public void start(){
         Thread thread = new Thread(this);
@@ -97,7 +97,10 @@ public class Monitor extends BaseOper implements Runnable{
                 .append(String.format("%.2f", getChangeRatio(realtime))).append("%").append(sep)
                 .append(holdings.getPrice()).append(sep)
                 .append(holdings.getHand()).append(sep)
-                .append(getEarn(holdings, realtime)).append(sep).toString();
+                .append(String.format("%.2f", getEarn(holdings, realtime))).append("\n")
+                .append(realtime.getBuys()).append("\n")
+                .append(realtime.getSells())
+                .toString();
     }
     @Override
     boolean action() {
@@ -111,7 +114,12 @@ public class Monitor extends BaseOper implements Runnable{
             long count = 0;
             onStart();
             while (!Thread.currentThread().isInterrupted() && stat == Status.Running) {
-                ThreadHelper.sleep(interval);
+                if(count > 0){
+                    ThreadHelper.sleep(interval);
+                }
+                if(++count == Long.MAX_VALUE){
+                    count = 1;
+                }
                 Calendar now = Calendar.getInstance();
                 now.setTime(new Date());
                 if(HolidayHandler.isHoliday(now)){
@@ -123,9 +131,6 @@ public class Monitor extends BaseOper implements Runnable{
                     }
                 }
                 realtimeCollect.doWork();
-                if(++count == Long.MAX_VALUE){
-                    count = 1;
-                }
             }
         } catch (Throwable e) {
             getLogger().error(null, e);
@@ -138,7 +143,7 @@ public class Monitor extends BaseOper implements Runnable{
         if(time.isBefore(LocalTime.of(9, 30))){
             return true;
         }
-        if(time.isAfter(LocalTime.of(12, 30)) && time.isBefore(LocalTime.of(13, 0))){
+        if(time.isAfter(LocalTime.of(11, 30)) && time.isBefore(LocalTime.of(13, 0))){
             return true;
         }
         if(time.isAfter(LocalTime.of(15, 0))){

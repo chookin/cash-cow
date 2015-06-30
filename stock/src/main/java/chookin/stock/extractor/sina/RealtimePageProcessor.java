@@ -11,9 +11,9 @@ import cmri.utils.lang.DateHelper;
  * Created by zhuyin on 6/29/15.
  */
 public class RealtimePageProcessor implements PageProcessor {
-    static RealtimePageProcessor processor = new RealtimePageProcessor();
+    static RealtimePageProcessor instance = new RealtimePageProcessor();
     public static Request getRequest(StockEntity stock){
-        return new Request(String.format("http://hq.sinajs.cn/list=%s%s", stock.getExchange(), stock.getCode()), processor)
+        return new Request(String.format("http://hq.sinajs.cn/list=%s%s", stock.getExchange(), stock.getCode()), instance)
                 .putExtra("stock", stock)
                 .setTarget(Request.TargetResource.Json)
                 .ignoreCache(true);
@@ -55,22 +55,26 @@ public class RealtimePageProcessor implements PageProcessor {
      (22, 23), (24, 25), (26,27), (28, 29)分别为“卖二”至“卖四的情况”
      30：”2008-01-11″，日期；
      31：”15:05:32″，时间；
-
      * @param str page content
      * @return parsed result
      */
     private RealtimeEntity parse(String str, StockEntity stock){
-        String[] arr = str.split("~");
-        if(arr.length < 49){
+        String text = str.substring(str.indexOf("\"") + 1, str.lastIndexOf("\""));
+        String[] arr = text.split(",");
+        if(arr.length < 32){
             return null;
         }
         RealtimeEntity entity = new RealtimeEntity().setStockCode(stock.getCode());
-        entity.setTime(DateHelper.parseDate(arr[30]+arr[31], "yyyy-MM-ddHH:mm:ss").getTime());
-        entity.setCurPrice(Double.valueOf(arr[3]));
-        entity.setYclose(Double.valueOf(arr[2]));
+        entity.setTime(DateHelper.parseDate(arr[30] + arr[31], "yyyy-MM-ddHH:mm:ss").getTime());
         entity.setOpen(Double.valueOf(arr[1]));
+        entity.setYclose(Double.valueOf(arr[2]));
+        entity.setCurPrice(Double.valueOf(arr[3]));
         entity.setHighPrice(Double.valueOf(arr[4]));
         entity.setLowPrice(Double.valueOf(arr[5]));
+        for(int i = 0; i<5; ++i){
+            entity.addBuy(i, arr[10 + i * 2], arr[11 + i * 2]);
+            entity.addSell(i, arr[20 + i * 2], arr[21 + i * 2]);
+        }
         getLogger().trace(entity);
         return entity;
     }
