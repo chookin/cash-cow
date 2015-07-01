@@ -17,6 +17,12 @@ public class RealtimePageProcessor implements PageProcessor {
         return new Request(String.format("http://qt.gtimg.cn/q=%s%s", stock.getExchange(), stock.getCode()), processor)
                 .putExtra("stock", stock)
                 .setTarget(Request.TargetResource.Json)
+                .putExtra("header", "Pragma: no-cache")
+                .putExtra("header", "Accept-Encoding: gzip, deflate, sdch")
+                .putExtra("header", "Accept-Language: zh-CN,zh;q=0.8,en;q=0.6,es;q=0.4")
+                .putExtra("header", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
+                .putExtra("header", "Cache-Control: no-cache")
+                .putExtra("header", "Connection: keep-alive")
                 .ignoreCache(true);
     }
 

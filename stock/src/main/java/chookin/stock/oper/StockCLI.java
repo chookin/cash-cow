@@ -36,7 +36,7 @@ public class StockCLI {
     }
 
     public static void main(String[] args) {
-        ConfigManager.setFile("stock.xml");
+        ConfigManager.addFile("stock.xml");
         NetworkHelper.setDefaultProxy();
         StockCLI service = (StockCLI) SpringHelper.getAppContext().getBean("main");
         service.setArgs(args)

@@ -1,48 +1,4 @@
 <configuration>
-    <!--utils-->
-    <property>
-        <name>proxy.enable</name>
-        <value>true1</value>
-        <description>whether using proxy, value is 'true' or not</description>
-    </property>
-    <property>
-        <name>proxy.host</name>
-        <value>proxy.cmcc</value>
-    </property>
-    <property>
-        <name>proxy.port</name>
-        <value>8080</value>
-    </property>
-    <property>
-        <name>proxy.user</name>
-        <value>""</value>
-    </property>
-    <property>
-        <name>proxy.password</name>
-        <value>""</value>
-    </property>
-    <property>
-        <name>mongo.host</name>
-        <value>localhost</value>
-        <!--<value>218.207.242.145</value>-->
-    </property>
-    <property>
-        <name>mongo.port</name>
-        <value>27017</value>
-    </property>
-    <property>
-        <name>mongo.user</name>
-        <value></value>
-    </property>
-    <property>
-        <name>mongo.password</name>
-        <value></value>
-    </property>
-    <property>
-        <name>mongo.database</name>
-        <value>stock</value>
-    </property>
-
     <property>
         <name>test.url</name>
         <value>http://www.126.com</value>

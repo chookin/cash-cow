@@ -21,7 +21,7 @@ public abstract class BaseOper {
     static {
         // configure log4j to log to custom file at runtime. In the java program directly by setting a system property (BEFORE you
         LOG = Logger.getLogger(BaseOper.class);
-        ConfigManager.setFile("stock.xml");
+        ConfigManager.addFile("stock.xml");
         NetworkHelper.setDefaultProxy();
     }
 

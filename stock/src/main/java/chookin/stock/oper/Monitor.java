@@ -27,14 +27,17 @@ public class Monitor extends BaseOper implements Runnable{
     private RealtimeCollect realtimeCollect;
     private int interval = 2000; // milliseconds
     private Status stat = Status.Init;
+
     public void start(){
         Thread thread = new Thread(this);
         thread.setDaemon(false);
         thread.start();
     }
+
     public void stop(){
         this.stat = Status.Stopped;
     }
+
     private void checkIfRunning() {
         if (stat == Status.Running) {
             throw new IllegalStateException("Spider is already running!");
@@ -81,12 +84,17 @@ public class Monitor extends BaseOper implements Runnable{
         return new StringBuilder(index.getCode()).append(sep)
                 .append(DateHelper.toString(index.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
                 .append(index.getPoint()).append(sep)
-                .append(index.getChangeRatio()).append(sep)
+                .append(index.getChangeRatio()).append("%").append(sep)
                 .append(index.getTradeHand()).append(sep)
                 .append(index.getTradeValue()).append(sep)
                 .toString();
     }
     private String getOut(HoldingsEntity holdings, RealtimeEntity realtime){
+        Double earn = getEarn(holdings, realtime);
+        if(earn == null){
+            return null;
+        }
+        Double earnRatio = earn / (holdings.getPrice() * holdings.getHand() * 100);
         return new StringBuilder(realtime.getStockCode()).append(sep)
                 .append(DateHelper.toString(realtime.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
                 .append(realtime.getOpen()).append(sep)
@@ -97,7 +105,8 @@ public class Monitor extends BaseOper implements Runnable{
                 .append(String.format("%.2f", getChangeRatio(realtime))).append("%").append(sep)
                 .append(holdings.getPrice()).append(sep)
                 .append(holdings.getHand()).append(sep)
-                .append(String.format("%.2f", getEarn(holdings, realtime))).append("\n")
+                .append(String.format("%.2f", earn)).append(sep)
+                .append(String.format("%.2f", earnRatio * 100)).append("%").append("\n")
                 .append(realtime.getBuys()).append("\n")
                 .append(realtime.getSells())
                 .toString();
@@ -117,9 +126,6 @@ public class Monitor extends BaseOper implements Runnable{
                 if(count > 0){
                     ThreadHelper.sleep(interval);
                 }
-                if(++count == Long.MAX_VALUE){
-                    count = 1;
-                }
                 Calendar now = Calendar.getInstance();
                 now.setTime(new Date());
                 if(HolidayHandler.isHoliday(now)){
@@ -131,6 +137,9 @@ public class Monitor extends BaseOper implements Runnable{
                     }
                 }
                 realtimeCollect.doWork();
+                if(++count == Long.MAX_VALUE){
+                    count = 1;
+                }
             }
         } catch (Throwable e) {
             getLogger().error(null, e);
