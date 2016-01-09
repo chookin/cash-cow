@@ -2,7 +2,7 @@ package chookin.stock.handler;
 
 import chookin.stock.orm.domain.HolidayEntity;
 import chookin.stock.orm.repository.HolidayRepository;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,6 +62,6 @@ public class HolidayHandler {
         }
     }
     public static boolean isHoliday(Calendar day) {
-        return DateHelper.isWeekend(day) || handler.getHolidays().contains(day.getTimeInMillis());
+        return TimeHelper.isWeekend(day) || handler.getHolidays().contains(day.getTimeInMillis());
     }
 }

@@ -1,7 +1,7 @@
 package chookin.stock.extractor.sina;
 
 import chookin.stock.orm.domain.HistoryDayDetailEntity;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 import cmri.utils.lang.StringHelper;
 import org.apache.commons.io.FileUtils;
 
@@ -30,7 +30,7 @@ public class HistDataDetailResource {
         String absFileName = new File(fileName).getAbsolutePath();
         String stockCode = StringHelper.parseRegex(absFileName, "sz([\\d]+).dat", 1);
         String strdate = StringHelper.parseRegex(absFileName, "(\\d{4}-\\d{2}-\\d{2})", 1);
-        Date date = DateHelper.parseDate(strdate);
+        Date date = TimeHelper.parseDate(strdate);
 
         List<String> lines = FileUtils.readLines(new File(fileName), "gbk");
         int count = -1;

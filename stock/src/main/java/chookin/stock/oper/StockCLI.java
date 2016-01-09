@@ -1,15 +1,11 @@
 package chookin.stock.oper;
 
 import chookin.stock.utils.SpringHelper;
-import cmri.etl.common.NetworkHelper;
+import cmri.utils.web.NetworkHelper;
 import cmri.utils.configuration.ConfigManager;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.IOException;
 
 
 /**
@@ -24,7 +20,7 @@ public class StockCLI {
 
     public StockCLI setArgs(String[] args){
         if(args.length == 0){
-            args = ConfigManager.getProperty("cli.paras").split(" ");
+            args = ConfigManager.get("cli.paras").split(" ");
         }
         this.collectOper.setArgs(args);
         return this;

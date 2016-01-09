@@ -12,17 +12,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
-      <library name="PHP">
-        <CLASSES>
-          <root url="file://$USER_HOME$/project/ub-lab/targetV3/SSLib" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="file://$USER_HOME$/project/ub-lab/targetV3/SSLib" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: chookin.cashcow:etl:1.0" level="project" />
     <orderEntry type="library" name="Maven: chookin.cashcow:utils:1.0" level="project" />
   </component>

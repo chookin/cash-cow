@@ -99,14 +99,14 @@ public class RealtimeEntity implements Serializable {
         return this;
     }
 
-    public RealtimeEntity addBuy(int index, String tradeHand, String tradeValue){
-        Long myHand = Long.valueOf(tradeHand);
+    public RealtimeEntity addBuy(int index, String tradeNum, String tradeValue){
+        Long myHand = Long.valueOf(tradeNum) / 100;
         Double myValue = Double.valueOf(tradeValue);
         return addBuy(index, new Pair<>(myValue, myHand));
     }
 
-    public RealtimeEntity addSell(int index, String tradeHand, String tradeValue){
-        Long myHand = Long.valueOf(tradeHand);
+    public RealtimeEntity addSell(int index, String tradeNum, String tradeValue){
+        Long myHand = Long.valueOf(tradeNum) / 100;
         Double myValue = Double.valueOf(tradeValue);
         return addSell(index, new Pair<>(myValue, myHand));
     }

@@ -7,8 +7,9 @@ import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.spider.Spider;
-import cmri.utils.configuration.ConfigManager;
-import cmri.utils.lang.DateHelper;
+import cmri.etl.spider.SpiderAdapter;
+import cmri.utils.lang.BaseOper;
+import cmri.utils.lang.TimeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,17 +25,17 @@ public class TradeCollect extends BaseOper {
     private TradePipeline pipeline;
 
     @Override
-    boolean action() {
-        if (!processOption(OperName.CollectHistDataDetail)) {
+    public boolean action() {
+        if (!getOptions().process(OperName.CollectHistDataDetail)) {
             return false;
         }
-        String start = getOptionParser().getOption("start");
-        String end =getOptionParser().getOption("end");
-        Calendar startDay = DateHelper.parseCalendar(start, "yyyy-MM-dd");
-        Calendar endDay = DateHelper.parseCalendar(end, "yyyy-MM-dd");
+        String start = getOptions().get("start");
+        String end = getOptions().get("end");
+        Calendar startDay = TimeHelper.parseCalendar(start, "yyyy-MM-dd");
+        Calendar endDay = TimeHelper.parseCalendar(end, "yyyy-MM-dd");
 
-        Spider spider = new Spider(OperName.CollectHistDataDetail)
-                .setValidateMilliseconds(Long.MAX_VALUE)
+        Spider spider = new SpiderAdapter(OperName.CollectHistDataDetail)
+                .sleepMilliseconds(Integer.MAX_VALUE)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
                 ;

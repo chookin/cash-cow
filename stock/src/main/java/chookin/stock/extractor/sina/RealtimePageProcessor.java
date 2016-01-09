@@ -5,7 +5,7 @@ import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 
 /**
  * Created by zhuyin on 6/29/15.
@@ -65,7 +65,7 @@ public class RealtimePageProcessor implements PageProcessor {
             return null;
         }
         RealtimeEntity entity = new RealtimeEntity().setStockCode(stock.getCode());
-        entity.setTime(DateHelper.parseDate(arr[30] + arr[31], "yyyy-MM-ddHH:mm:ss").getTime());
+        entity.setTime(TimeHelper.parseDate(arr[30] + arr[31], "yyyy-MM-ddHH:mm:ss").getTime());
         entity.setOpen(Double.valueOf(arr[1]));
         entity.setYclose(Double.valueOf(arr[2]));
         entity.setCurPrice(Double.valueOf(arr[3]));

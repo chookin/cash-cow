@@ -3,7 +3,7 @@ package tax.chaoyang;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 import com.google.gson.*;
 import org.apache.log4j.Logger;
 
@@ -50,7 +50,7 @@ public class DatePageProcessor implements PageProcessor {
         JsonArray afternoon = oJson.get("afternoon").getAsJsonArray();
         avail.putAll(parse(afternoon));
 
-        LOG.info("Now: " + DateHelper.toString(now, "yyyy-MM-dd H:m:s"));
+        LOG.info("Now: " + TimeHelper.toString(now, "yyyy-MM-dd H:m:s"));
         LOG.info(toString(avail));
 
         alert(avail);
@@ -73,7 +73,7 @@ public class DatePageProcessor implements PageProcessor {
                     LOG.error(arr);
                     continue;
                 }
-                Date date = DateHelper.parseDate(val[0]);
+                Date date = TimeHelper.parseDate(val[0]);
                 int myAvail = Integer.valueOf(val[1]);
                 rst.put(date, myAvail);
             }
@@ -84,7 +84,7 @@ public class DatePageProcessor implements PageProcessor {
     String toString(Map<Date, Integer> avail){
         StringBuilder str = new StringBuilder();
         for(Map.Entry<Date, Integer> entry: avail.entrySet()){
-            str.append(DateHelper.toString(entry.getKey())).append(" ").append(getState(entry.getValue())).append("\n");
+            str.append(TimeHelper.toString(entry.getKey(), "yyyy-MM-dd")).append(" ").append(getState(entry.getValue())).append("\n");
         }
         return str.toString();
     }
@@ -119,7 +119,7 @@ public class DatePageProcessor implements PageProcessor {
             return false;
         }
 
-        JOptionPane.showMessageDialog(null, DateHelper.toString(date) + "可预约啦", "恭喜", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, TimeHelper.toString(date, "yyyy-MM-dd") + "可预约啦", "恭喜", JOptionPane.INFORMATION_MESSAGE);
         JOptionPane optionPane = new JOptionPane();
         JDialog dialog = optionPane.createDialog("恭喜");
         dialog.setSize(696, 158);

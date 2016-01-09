@@ -4,7 +4,7 @@ import chookin.stock.orm.domain.CompanyEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -55,7 +55,7 @@ public class CompanyPageProcessor implements PageProcessor {
             }else if(text.contains("上市日期")){
                 String strDate = iter.next().text();
                 if (!strDate.equals("--")) {
-                    Date date = DateHelper.parseDate(strDate);
+                    Date date = TimeHelper.parseDate(strDate);
                     company.setListingDate(date);
                 }
             }else if(text.contains("发行价格")){
@@ -67,7 +67,7 @@ public class CompanyPageProcessor implements PageProcessor {
             }else if(text.contains("成立日期")){
                 String strDate = iter.next().text();
                 if(!strDate.isEmpty()) {
-                    Date date = DateHelper.parseDate(strDate);
+                    Date date = TimeHelper.parseDate(strDate);
                     company.setRegistrationDate(date);
                 }
             }else if(text.contains("注册资本")){

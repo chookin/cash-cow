@@ -5,7 +5,7 @@ import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -48,7 +48,7 @@ public class HistDataPageProcessor implements PageProcessor{
                 try{
                     HistoryEntity entity = new HistoryEntity();
                     entity.setStockCode(stock.getCode());
-                    Date date = DateHelper.parseDate(row.text());
+                    Date date = TimeHelper.parseDate(row.text());
                     entity.setDay(new java.sql.Date(date.getTime()));
                     entity.setOpenPrice(Double.parseDouble(iter.next().text()));
                     entity.setHighPrice(Double.parseDouble(iter.next().text()));

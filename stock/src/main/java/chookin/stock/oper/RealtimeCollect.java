@@ -56,7 +56,8 @@ public class RealtimeCollect extends BaseOper {
                 ;
         this.pipelines.forEach(spider::addPipeline);
         for(StockEntity stock : stocks.values()){
-//            spider.addRequest(chookin.stock.extractor.gtimg.RealtimePageProcessor.getRequest(stock));
+            // contrast to qq's gtimg, sina is more real-time.
+            // spider.addRequest(chookin.stock.extractor.gtimg.RealtimePageProcessor.getRequest(stock));
             spider.addRequest(chookin.stock.extractor.sina.RealtimePageProcessor.getRequest(stock));
         }
         spider.run();

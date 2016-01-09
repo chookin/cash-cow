@@ -10,7 +10,7 @@ import chookin.stock.utils.SpringHelper;
 import cmri.etl.pipeline.Pipeline;
 import cmri.utils.concurrent.ThreadHelper;
 import cmri.utils.concurrent.ThreadHelper.Status;
-import cmri.utils.lang.DateHelper;
+import cmri.utils.lang.TimeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class Monitor extends BaseOper implements Runnable{
     private static final String sep = "\t";
     @Autowired
     private RealtimeCollect realtimeCollect;
-    private int interval = 2000; // milliseconds
+    private int interval = 1000; // milliseconds
     private Status stat = Status.Init;
 
     public void start(){
@@ -43,6 +43,7 @@ public class Monitor extends BaseOper implements Runnable{
             throw new IllegalStateException("Spider is already running!");
         }
     }
+
     private void init(){
         HoldingsRepository repository = (HoldingsRepository) SpringHelper.getAppContext().getBean("holdingsRepository");
         List<HoldingsEntity> holdingsCollection = repository.findByValid(true);
@@ -82,7 +83,7 @@ public class Monitor extends BaseOper implements Runnable{
 
     private String getOut(IndexEntity index){
         return new StringBuilder(index.getCode()).append(sep)
-                .append(DateHelper.toString(index.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
+                .append(TimeHelper.toString(index.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
                 .append(index.getPoint()).append(sep)
                 .append(index.getChangeRatio()).append("%").append(sep)
                 .append(index.getTradeHand()).append(sep)
@@ -96,7 +97,7 @@ public class Monitor extends BaseOper implements Runnable{
         }
         Double earnRatio = earn / (holdings.getPrice() * holdings.getHand() * 100);
         return new StringBuilder(realtime.getStockCode()).append(sep)
-                .append(DateHelper.toString(realtime.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
+                .append(TimeHelper.toString(realtime.getTime(), "yyyy-MM-dd HH:mm:ss")).append(sep)
                 .append(realtime.getOpen()).append(sep)
                 .append(realtime.getYclose()).append(sep)
                 .append(realtime.getHighPrice()).append(sep)

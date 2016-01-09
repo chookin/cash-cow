@@ -1,24 +1,20 @@
 package tax.chaoyang;
 
-import cmri.etl.spider.Spider;
-import service.BaseOper;
+import cmri.etl.spider.SpiderAdapter;
+import cmri.utils.concurrent.ThreadHelper;
 
 /**
  * Created by zhuyin on 6/10/15.
  */
-public class RobTicket extends BaseOper {
+public class RobTicket extends cmri.utils.lang.BaseOper {
     @Override
     public boolean action() {
         long count = 0;
         while (true) {
-            new Spider().addRequest(DatePageProcessor.getSeedRequests())
+            new SpiderAdapter().addRequest(DatePageProcessor.getSeedRequests())
                     .run();
             ++count;
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            ThreadHelper.sleep(5000);
             if(count > 100000000){
                 break;
             }

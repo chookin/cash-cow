@@ -20,8 +20,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Created by zhuyin on 3/22/15.
  */
 @Service
-public class StockPipelie implements Pipeline {
-    private static final Logger LOG = Logger.getLogger(StockPipelie.class);
+public class StockPipeline implements Pipeline {
+    private static final Logger LOG = Logger.getLogger(StockPipeline.class);
 
     @Autowired
     private StockRepository repository;

@@ -1,17 +1,16 @@
 package chookin.stock.oper;
 
 import chookin.stock.extractor.eastmoney.StockPageProcessor;
-import chookin.stock.extractor.pipeline.StockPipelie;
+import chookin.stock.extractor.pipeline.StockPipeline;
 import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.StockEntity;
 import chookin.stock.utils.SpringHelper;
-import cmri.etl.monitor.SpiderMonitor;
 import cmri.etl.pipeline.FilePipeline;
-import cmri.etl.spider.Spider;
+import cmri.etl.spider.SpiderAdapter;
+import cmri.utils.lang.BaseOper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.management.JMException;
 import java.util.Map;
 
 /**
@@ -20,11 +19,11 @@ import java.util.Map;
 @Service
 public class StockCollect extends BaseOper {
     @Autowired
-    private StockPipelie pipeline;
+    private StockPipeline pipeline;
 
     @Override
-    boolean action() {
-        if (!processOption(OperName.CollectStock)) {
+    public boolean action() {
+        if (!getOptions().process(OperName.CollectStock)) {
             return false;
         }
         doWork();
@@ -34,16 +33,11 @@ public class StockCollect extends BaseOper {
     private void doWork(){
         Map<String, StockEntity> stocks = StockMapHandler.getStocksMap();
 
-        Spider spider = new Spider(OperName.CollectStock)
+        new SpiderAdapter(OperName.CollectStock)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
-                .addRequest(StockPageProcessor.getRequest(stocks));
-        try {
-            SpiderMonitor.instance().register(spider);
-        } catch (JMException e) {
-            getLogger().error(null, e);
-        }
-        spider.run();
+                .addRequest(StockPageProcessor.getRequest(stocks))
+                .run();
     }
 
     public static void main(String[] args){
