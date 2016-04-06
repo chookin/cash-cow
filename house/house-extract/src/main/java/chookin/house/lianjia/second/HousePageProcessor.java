@@ -6,8 +6,8 @@ import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.downloader.CasperJsDownloader;
 import cmri.etl.processor.PageProcessor;
-import cmri.utils.lang.DateHelper;
 import cmri.utils.lang.StringHelper;
+import cmri.utils.lang.TimeHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jsoup.nodes.Document;
@@ -26,11 +26,10 @@ public class HousePageProcessor implements PageProcessor {
 
     public static Set<Request> getSeedRequests(){
         Set<Request> requests = new HashSet<>();
-        requests.add(new Request("http://bj.lianjia.com/ershoufang/")
-                        .setPageProcessor(processor)
+        requests.add(new Request("http://bj.lianjia.com/ershoufang/", processor)
                         .setDownloader(CasperJsDownloader.getInstance())
                         .putExtra("category", "2hand")
-                        .putExtra("validateMilliSeconds", DateHelper.DAY_MILLISECONDS)
+                        .putExtra("validateMilliSeconds", TimeHelper.DAY_MILLISECONDS)
         );
         return requests;
     }
@@ -94,8 +93,7 @@ public class HousePageProcessor implements PageProcessor {
                 house.set("haskey", item.text());
             }
             LOG.trace(house);
-            page.addTargetRequest(new Request(url)
-                            .setPageProcessor(HouseDetailPageProcessor.getInstance())
+            page.addTargetRequest(new Request(url, HouseDetailPageProcessor.getInstance())
                             .setPriority(8)
                             .putExtra("house", house)
             );
@@ -104,10 +102,9 @@ public class HousePageProcessor implements PageProcessor {
             int pageNum = getPageNum(doc);
             for (int i = 2; i < pageNum; ++i) {
                 String url = String.format("http://bj.lianjia.com/ershoufang/pg%d", i);
-                page.addTargetRequest(new Request(url)
+                page.addTargetRequest(new Request(url, processor)
                                 .setPriority(7)
-                                .setPageProcessor(processor)
-                                .putExtra("validateMilliSeconds", DateHelper.DAY_MILLISECONDS)
+                                .putExtra("validateMilliSeconds", TimeHelper.DAY_MILLISECONDS)
                 );
             }
         }

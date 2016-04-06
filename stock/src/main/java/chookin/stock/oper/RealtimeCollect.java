@@ -4,6 +4,8 @@ import chookin.stock.handler.StockMapHandler;
 import chookin.stock.orm.domain.StockEntity;
 import cmri.etl.pipeline.Pipeline;
 import cmri.etl.spider.Spider;
+import cmri.etl.spider.SpiderAdapter;
+import cmri.utils.lang.BaseOper;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -41,8 +43,8 @@ public class RealtimeCollect extends BaseOper {
     }
 
     @Override
-    boolean action() {
-        if (!processOption(OperName.CollectRealData)) {
+    public boolean action() {
+        if (!getOptions().process(OperName.CollectRealData)) {
             return false;
         }
         doWork();
@@ -51,7 +53,7 @@ public class RealtimeCollect extends BaseOper {
 
     void doWork(){
         Map<String, StockEntity> stocks = getStocks();
-        Spider spider = new Spider(OperName.CollectRealData)
+        Spider spider = new SpiderAdapter(OperName.CollectRealData)
                 .addRequest(chookin.stock.extractor.sina.IndexPageProcessor.getRequest())
                 ;
         this.pipelines.forEach(spider::addPipeline);

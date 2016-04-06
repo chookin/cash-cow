@@ -23,7 +23,6 @@ public class ConfigProcess extends BaseOper {
     }
 
     boolean dumpConfigFile() throws IOException {
-        ConfigManager.dump();
         return true;
     }
 }

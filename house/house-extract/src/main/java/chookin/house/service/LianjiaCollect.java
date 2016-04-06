@@ -2,9 +2,9 @@ package chookin.house.service;
 
 import chookin.house.SiteName;
 import chookin.house.lianjia.second.HousePageProcessor;
-import chookin.house.service.base.BaseOper;
 import chookin.house.service.base.HouseCollect;
 import cmri.etl.common.Request;
+import cmri.utils.lang.BaseOper;
 
 import java.util.Set;
 
@@ -13,7 +13,7 @@ import java.util.Set;
  */
 public class LianjiaCollect extends BaseOper implements HouseCollect {
     public LianjiaCollect(String[] args) {
-        super(args);
+        super.setArgs(args);
     }
 
     @Override

@@ -9,7 +9,7 @@ import chookin.stock.orm.repository.HoldingsRepository;
 import chookin.stock.utils.SpringHelper;
 import cmri.etl.pipeline.Pipeline;
 import cmri.utils.concurrent.ThreadHelper;
-import cmri.utils.concurrent.ThreadHelper.Status;
+import cmri.utils.lang.BaseOper;
 import cmri.utils.lang.TimeHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +26,13 @@ public class Monitor extends BaseOper implements Runnable{
     @Autowired
     private RealtimeCollect realtimeCollect;
     private int interval = 1000; // milliseconds
+    enum Status {
+        New,
+        Init,
+        Running,
+        Stop,
+        Stopped
+    }
     private Status stat = Status.Init;
 
     public void start(){
@@ -52,7 +59,7 @@ public class Monitor extends BaseOper implements Runnable{
             holdingsMap.put(entity.getStockCode(), entity);
         }
         realtimeCollect.setStocks(StockMapHandler.getStocksMap(holdingsMap.keySet()).values());
-        interval = Integer.parseInt(getOptionParser().getOption("--interval", String.valueOf(interval)));
+        interval = Integer.parseInt(getOptions().get("--interval", String.valueOf(interval)));
         realtimeCollect.addPipeline((Pipeline) SpringHelper.getAppContext().getBean("realtimePipeline"));
         realtimeCollect.addPipeline(resultItems -> {
             IndexEntity index = (IndexEntity) resultItems.getField("index");
@@ -113,7 +120,7 @@ public class Monitor extends BaseOper implements Runnable{
                 .toString();
     }
     @Override
-    boolean action() {
+    public boolean action() {
         start();
         return true;
     }

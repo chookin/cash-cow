@@ -24,8 +24,7 @@ public class HousePageProcessor implements PageProcessor {
 
     public static Set<Request> getSeedRequests(){
         Set<Request> requests = new HashSet<>();
-        requests.add(new Request("http://bj.ganji.com/fang1/m1/")
-                        .setPageProcessor(processor)
+        requests.add(new Request("http://bj.ganji.com/fang1/m1/", processor)
                         .putExtra("category", "rent")
                         .putExtra("rentType", "whole")
         );
@@ -71,8 +70,7 @@ public class HousePageProcessor implements PageProcessor {
                 house.set("price", Integer.valueOf(item.text())); // 租金
 
             LOG.trace(house);
-            page.addTargetRequest(new Request(url)
-                            .setPageProcessor(HouseDetailPageProcessor.getInstance())
+            page.addTargetRequest(new Request(url, HouseDetailPageProcessor.getInstance())
                             .setPriority(8)
                             .putExtra("house", house)
             );
@@ -80,8 +78,7 @@ public class HousePageProcessor implements PageProcessor {
 
         String next = getNextPage(doc);
         if(next != null){
-            page.addTargetRequest(new Request(next)
-                            .setPageProcessor(processor)
+            page.addTargetRequest(new Request(next, processor)
                             .setPriority(7)
                             .putExtra("category", category)
                             .putExtra("rentType", "whole")

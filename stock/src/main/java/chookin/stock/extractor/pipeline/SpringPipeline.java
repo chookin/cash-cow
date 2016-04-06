@@ -1,5 +1,6 @@
 package chookin.stock.extractor.pipeline;
 
+import cmri.etl.common.MapItem;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
 import org.springframework.data.repository.CrudRepository;
@@ -28,10 +29,10 @@ public abstract class SpringPipeline<T, ID extends Serializable> implements Pipe
         if (resultItems.isSkip()) {
             return;
         }
-        Collection<Object> entities = resultItems.getItems();
+        Collection<MapItem> entities = resultItems.getItems();
         lock.writeLock().lock();
         try {
-            for(Object obj: entities){
+            for(MapItem obj: entities){
                 T entity = (T) obj;
                 // TODO
                 cache.add(entity);

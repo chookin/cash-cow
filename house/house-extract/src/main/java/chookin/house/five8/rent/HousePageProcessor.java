@@ -18,8 +18,7 @@ public class HousePageProcessor implements PageProcessor {
 
     public static Set<Request> getSeedRequests(){
         Set<Request> requests = new HashSet<>();
-        requests.add(new Request("http://bj.58.com/chuzu/")
-                        .setPageProcessor(processor)
+        requests.add(new Request("http://bj.58.com/chuzu/", processor)
                         .putExtra("category", "rent")
         );
         return requests;

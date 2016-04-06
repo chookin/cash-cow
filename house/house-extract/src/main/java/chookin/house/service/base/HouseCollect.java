@@ -7,7 +7,9 @@ import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.scheduler.PriorityScheduler;
 import cmri.etl.scheduler.Scheduler;
 import cmri.etl.spider.Spider;
+import cmri.etl.spider.SpiderAdapter;
 import cmri.utils.configuration.ConfigManager;
+import cmri.utils.lang.MapAdapter;
 
 import java.util.Set;
 
@@ -18,15 +20,10 @@ public interface HouseCollect {
     default boolean collectHouses() {
         HouseDAO dao = HouseDAO.getInstance();
         try {
-            new Spider(getSiteName(), getScheduler())
+            new SpiderAdapter(getSiteName(), new MapAdapter<>("scheduler", "cmri.etl.scheduler.PriorityScheduler").get())
                     .addRequest(getSeedRequests())
                     .addPipeline(new HousePipeline())
                     .addPipeline(new FilePipeline())
-                    .setSleepMillisecond(ConfigManager.getPropertyAsInteger("download.sleepMilliseconds"))
-                    .thread(ConfigManager.getPropertyAsInteger("download.concurrent.num"))
-                    .setTimeOut(ConfigManager.getPropertyAsInteger("download.timeout"))
-                    .setValidateSeconds(ConfigManager.getPropertyAsLong("page.validPeriod"))
-                    .setUserAgent(getUserAgent())
                     .run();
             return true;
         } finally {
@@ -37,12 +34,4 @@ public interface HouseCollect {
     String getSiteName();
 
     Set<Request> getSeedRequests();
-
-    default Scheduler getScheduler(){
-        return new PriorityScheduler();
-    }
-
-    default String getUserAgent(){
-        return ConfigManager.getProperty("web.userAgent");
-    }
 }

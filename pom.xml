@@ -6,7 +6,11 @@
 
     <groupId>cash.cow</groupId>
     <artifactId>cash-cow</artifactId>
+    <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>food</module>
+    </modules>
 
 
 </project>

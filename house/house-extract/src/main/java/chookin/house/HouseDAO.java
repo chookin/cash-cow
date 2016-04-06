@@ -1,6 +1,6 @@
 package chookin.house;
 
-import cmri.utils.db.MongoDAO;
+import cmri.utils.dao.MongoDAO;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -16,21 +16,19 @@ public class HouseDAO extends MongoDAO<House> {
     public static HouseDAO getInstance(){
         return dao;
     }
-    private HouseDAO(){}
-    @Override
-    public DBCollection getCollection() {
-        return getDB().getCollection("house");
+    private HouseDAO(){
+        super("house");
     }
 
     @Override
-    protected String get_id(House entity) {
+    protected String getId(House entity) {
         return entity.getCode();
     }
 
     @Override
     protected BasicDBObject getBasicDBObject(House entity) {
         BasicDBObject doc = new BasicDBObject();
-        doc.put("_id", get_id(entity));
+        doc.put("_id", getId(entity));
         doc.put("name", entity.getName());
         doc.put("site", entity.getSite());
         doc.put("code", entity.getCode());
