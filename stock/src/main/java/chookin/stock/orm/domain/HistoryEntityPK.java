@@ -36,7 +36,7 @@ public class HistoryEntityPK implements Serializable {
 
         HistoryEntityPK that = (HistoryEntityPK) o;
 
-        if (stockCode != that.stockCode) return false;
+        if (stockCode != null ? !stockCode.equals(that.stockCode) : that.stockCode != null) return false;
         if (day != null ? !day.equals(that.day) : that.day != null) return false;
 
         return true;

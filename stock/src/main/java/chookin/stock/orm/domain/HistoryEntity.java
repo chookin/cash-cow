@@ -111,7 +111,7 @@ public class HistoryEntity implements Serializable {
         HistoryEntity that = (HistoryEntity) o;
 
         if (id != that.id) return false;
-        if (stockCode != that.stockCode) return false;
+        if (stockCode != null ? !stockCode.equals(that.stockCode) : that.stockCode != null) return false;
         if (closePrice != null ? !closePrice.equals(that.closePrice) : that.closePrice != null) return false;
         if (highPrice != null ? !highPrice.equals(that.highPrice) : that.highPrice != null) return false;
         if (lowPrice != null ? !lowPrice.equals(that.lowPrice) : that.lowPrice != null) return false;
