@@ -34,7 +34,6 @@ public class HistoryCollect extends BaseOper {
 
     void doWork(){
         Spider spider = new SpiderAdapter(OperName.CollectHistData)
-                .validateMilliseconds(TimeHelper.DAY_MILLISECONDS)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
                 ;

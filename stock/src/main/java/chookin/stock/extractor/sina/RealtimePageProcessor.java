@@ -16,7 +16,7 @@ public class RealtimePageProcessor implements PageProcessor {
         return new Request(String.format("http://hq.sinajs.cn/list=%s%s", stock.getExchange(), stock.getCode()), instance)
                 .putExtra("stock", stock)
                 .setTarget(Request.TargetResource.Json)
-                .ignoreCache(true);
+                .setValidPeriod(0L);
     }
 
     @Override

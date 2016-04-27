@@ -35,7 +35,7 @@ public class TradeCollect extends BaseOper {
         Calendar endDay = TimeHelper.parseCalendar(end, "yyyy-MM-dd");
 
         Spider spider = new SpiderAdapter(OperName.CollectHistDataDetail)
-                .sleepMilliseconds(Integer.MAX_VALUE)
+                .setSleepMillis(Integer.MAX_VALUE)
                 .addPipeline(pipeline)
                 .addPipeline(new FilePipeline())
                 ;

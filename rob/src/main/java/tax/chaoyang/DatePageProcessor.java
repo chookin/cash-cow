@@ -28,7 +28,7 @@ public class DatePageProcessor implements PageProcessor {
 
     static Collection<Request> getSeedRequests(){
         return Collections.singletonList(new Request("http://123.57.88.180:8008/apt/order.html?method=loadOrderDate", processor)
-                        .ignoreCache(true)
+                        .setValidPeriod(0L)
                         .setTarget(Request.TargetResource.Json)
         );
     }

@@ -24,15 +24,16 @@ public class HousePageProcessor implements PageProcessor {
     private static final Log LOG = LogFactory.getLog(HousePageProcessor.class);
     static PageProcessor processor = new HousePageProcessor();
 
-    public static Set<Request> getSeedRequests(){
+    public static Set<Request> getSeedRequests() {
         Set<Request> requests = new HashSet<>();
         requests.add(new Request("http://bj.lianjia.com/ershoufang/", processor)
-                        .setDownloader(CasperJsDownloader.getInstance())
-                        .putExtra("category", "2hand")
-                        .putExtra("validateMilliSeconds", TimeHelper.DAY_MILLISECONDS)
+                .setDownloader(CasperJsDownloader.getInstance())
+                .setValidPeriod(TimeHelper.DAY_MILLISECONDS)
+                .putExtra("category", "2hand")
         );
         return requests;
     }
+
     @Override
     public void process(ResultItems page) {
         Document doc = (Document) page.getResource();
@@ -57,7 +58,7 @@ public class HousePageProcessor implements PageProcessor {
             house.set("orientation", item.text()); //朝向
 
             String year = StringHelper.parseRegex(element.text(), "([\\d]{4})年", 1);
-            if(year != null)
+            if (year != null)
                 house.set("year", Integer.valueOf(year));
 
             item = element.select(".meters").first();
@@ -73,38 +74,38 @@ public class HousePageProcessor implements PageProcessor {
             house.set("viewNum", parseInt(item.text()));//客户看房数
 
             item = element.select(".fang05-ex").first();
-            if(item != null){
+            if (item != null) {
                 house.set("school", item.text());
             }
             item = element.select(".fang-subway-ex").first();
-            if(item != null){
+            if (item != null) {
                 house.set("subway", item.text());
             }
             item = element.select(".taxfree-ex").first();
-            if(item != null){
+            if (item != null) {
                 house.set("tax", item.text());
             }
             item = element.select(".unique-ex").first();
-            if(item != null){
+            if (item != null) {
                 house.set("unique", item.text());
             }
             item = element.select(".haskey-ex").first();
-            if(item != null){
+            if (item != null) {
                 house.set("haskey", item.text());
             }
             LOG.trace(house);
             page.addTargetRequest(new Request(url, HouseDetailPageProcessor.getInstance())
-                            .setPriority(8)
-                            .putExtra("house", house)
+                    .setPriority(8)
+                    .putExtra("house", house)
             );
         }
-        if(!page.getRequest().getUrl().contains("/pg")) {// only for the first page
+        if (!page.getRequest().getUrl().contains("/pg")) {// only for the first page
             int pageNum = getPageNum(doc);
             for (int i = 2; i < pageNum; ++i) {
                 String url = String.format("http://bj.lianjia.com/ershoufang/pg%d", i);
                 page.addTargetRequest(new Request(url, processor)
-                                .setPriority(7)
-                                .putExtra("validateMilliSeconds", TimeHelper.DAY_MILLISECONDS)
+                        .setValidPeriod(TimeHelper.DAY_MILLISECONDS)
+                        .setPriority(7)
                 );
             }
         }
@@ -112,15 +113,15 @@ public class HousePageProcessor implements PageProcessor {
 
     private int getPageNum(Document doc) {
         Elements elements = doc.select(".house-lst-page-box");
-        if(elements != null){
+        if (elements != null) {
             String num = StringHelper.parseRegex(elements.outerHtml(), "totalPage[\\D]+([\\d]+)", 1);
-            if(num != null)
+            if (num != null)
                 return Integer.parseInt(num);
         }
         throw new RuntimeException("Failed to parse page num");
     }
 
-    private static Integer parseInt(String str){
+    private static Integer parseInt(String str) {
         str = StringHelper.parseRegex(str, "([\\d]+)", 1);
         return Integer.valueOf(str);
     }

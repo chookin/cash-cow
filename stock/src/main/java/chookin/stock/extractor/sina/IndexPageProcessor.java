@@ -15,7 +15,7 @@ public class IndexPageProcessor implements PageProcessor {
     public static Request getRequest(){
         return new Request("http://hq.sinajs.cn/list=s_sh000001", instance)
                 .setTarget(Request.TargetResource.Json)
-                .ignoreCache(true);
+                .setValidPeriod(0L);
     }
 
     @Override
