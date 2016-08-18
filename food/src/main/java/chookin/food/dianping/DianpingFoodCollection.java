@@ -3,15 +3,15 @@ package chookin.food.dianping;
 import cmri.etl.common.MapEntity;
 import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
-import cmri.etl.job.JobAdapter;
+import cmri.etl.job.Job;
+import cmri.etl.job.SpiderJob;
 import cmri.etl.pipeline.FilePipeline;
 import cmri.etl.pipeline.MongoPipeline;
 import cmri.etl.processor.PageProcessor;
+import cmri.etl.spider.Spider;
 import cmri.etl.spider.SpiderAdapter;
 import cmri.utils.lang.BaseOper;
 import cmri.utils.lang.StringHelper;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,50 +19,33 @@ import org.jsoup.select.Elements;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
 
 /**
  * Created by chookin on 16/3/6.
  */
-public class DianpingFoodCollection extends JobAdapter{
-    static final Log LOG = LogFactory.getLog(DianpingFoodCollection.class);
+public class DianpingFoodCollection extends SpiderJob {
     public static final String siteName = "dianping";
-
-    @Override
-    public void run() {
-        try {
-            onStart();
-            collectFood(optionsPack.options());
-            onSuccess();
-        } catch (Throwable t) {
-            onFail();
-            LOG.error(null, t);
-        }
-    }
-
-    public Collection<Request> getSeedRequests() {
-        return CategoriesPageProcessor.getSeedRequests();
-    }
-
-    void collectFood(Map<String, String> paras) {
-        new SpiderAdapter(siteName + " food collection", paras)
-                .addRequest(getSeedRequests())
-                .addPipeline(new FilePipeline(), new MongoPipeline(siteName))
-                .addListener(this.spidersListener()) // 让Job能自动知道该Spider的状态,即Spider的启动,停止,成功,失败等事件通过监听器通知到Job
-                .run();
-    }
 
     public static void main(String[] args) {
         new BaseOper() {
             @Override
             public boolean action() {
-                new DianpingFoodCollection().init(getOptions().options())
+                new DianpingFoodCollection()
                         .start();
                 return true;
             }
         }.setArgs(args).action();
     }
 
+    @Override
+    public Job prepare() {
+        Spider spider = new SpiderAdapter(siteName + " food collection", getOptions().options())
+                .addRequest(CategoriesPageProcessor.getSeedRequests())
+                .addPipeline(new FilePipeline(), new MongoPipeline(siteName))
+                ;
+        addSpider(spider);
+        return this;
+    }
 
     static class CategoriesPageProcessor implements PageProcessor {
         private static final CategoriesPageProcessor processor = new CategoriesPageProcessor();
@@ -84,7 +67,7 @@ public class DianpingFoodCollection extends JobAdapter{
                 for (Element e : eStyles) {
                     String style = e.text();
                     String url = e.absUrl("href");
-                    LOG.trace("find food style: " + style + " " + url);
+                    getLogger().trace("find food style: " + style + " " + url);
                     String code = StringHelper.parseRegex(url, "(\\d+)$", 1);
                     MapEntity item = new MapEntity();
                     item.put("_id", MapEntity.genId(siteName, code, style))
@@ -152,7 +135,7 @@ public class DianpingFoodCollection extends JobAdapter{
                 if (eAddr != null) {
                     item.put("address", eAddr.text());
                 }
-                LOG.trace(item);
+                getLogger().trace(item);
                 page.addItem(item);
                 page.addTargetRequest(ReviewsPageProcessor.getRequest(item));
             }
@@ -201,7 +184,7 @@ public class DianpingFoodCollection extends JobAdapter{
                         .put("code", item.get("code"))
                         .put("reviewerName", reviewerName)
                         .put("reviewId", reviewerId);
-                LOG.trace(review);
+                getLogger().trace(review);
                 page.addItem(review);
             }
         }

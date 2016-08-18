@@ -24,6 +24,7 @@ public class HousePipeline implements Pipeline {
     private Thread watchDaemon;
     private final ReadWriteLock daemonLock = new ReentrantReadWriteLock();
     private AtomicInteger count = new AtomicInteger(0);
+
     @Override
     @SuppressWarnings("unchecked")
     public void process(ResultItems resultItems) {
@@ -31,7 +32,7 @@ public class HousePipeline implements Pipeline {
             return;
         }
         House house = (House) resultItems.getField("house");
-        if(house == null){
+        if (house == null) {
             return;
         }
         lock.writeLock().lock();
@@ -45,7 +46,7 @@ public class HousePipeline implements Pipeline {
             lock.writeLock().unlock();
         }
 
-        if(watchDaemon == null){
+        if (watchDaemon == null) {
             startWatchDaemon();
         }
     }
@@ -55,11 +56,10 @@ public class HousePipeline implements Pipeline {
         HouseDAO dao = HouseDAO.getInstance();
         lock.writeLock().lock();
         try {
-            count.addAndGet(dao.save(cache));
+            count.addAndGet(dao.updateOrInsert(cache));
             LOG.info("save " + count.get() + " houses of " + sites);
         } finally {
             lock.writeLock().unlock();
-            dao.close();
         }
     }
 
@@ -80,34 +80,29 @@ public class HousePipeline implements Pipeline {
             };
             watchDaemon.setDaemon(true);
             watchDaemon.start();
-        }finally {
+        } finally {
             daemonLock.writeLock().unlock();
         }
     }
 
-    private void dumpCache(){
+    private void dumpCache() {
         lock.readLock().lock();
         try {
             if (cache.size() < 500)
                 return;
-        }finally {
+        } finally {
             lock.readLock().unlock();
         }
 
         List<House> houses;
         lock.writeLock().lock();
-        try{
+        try {
             houses = new ArrayList<>(cache);
             cache.clear();
-        }finally {
+        } finally {
             lock.writeLock().unlock();
         }
-        HouseDAO dao = HouseDAO.getInstance();
-        try{
-            count.addAndGet(dao.save(houses));
-            LOG.trace("dump "+houses.size()+" houses");
-        }finally {
-            dao.close();
-        }
+        count.addAndGet(HouseDAO.getInstance().updateOrInsert(houses));
+        LOG.trace("dump " + houses.size() + " houses");
     }
 }

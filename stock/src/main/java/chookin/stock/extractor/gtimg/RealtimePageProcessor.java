@@ -23,7 +23,7 @@ public class RealtimePageProcessor implements PageProcessor {
                 .addHeader("header", "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8")
                 .addHeader("header", "Cache-Control: no-cache")
                 .addHeader("header", "Connection: keep-alive")
-                .setValidPeriod(0L);
+                .setValidMillis(0L);
     }
 
     @Override

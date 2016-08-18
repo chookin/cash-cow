@@ -28,7 +28,7 @@ public class HousePageProcessor implements PageProcessor {
         Set<Request> requests = new HashSet<>();
         requests.add(new Request("http://bj.lianjia.com/ershoufang/", processor)
                 .setDownloader(CasperJsDownloader.getInstance())
-                .setValidPeriod(TimeHelper.DAY_MILLISECONDS)
+                .setValidMillis(TimeHelper.DAY_MILLISECONDS)
                 .putExtra("category", "2hand")
         );
         return requests;
@@ -104,7 +104,7 @@ public class HousePageProcessor implements PageProcessor {
             for (int i = 2; i < pageNum; ++i) {
                 String url = String.format("http://bj.lianjia.com/ershoufang/pg%d", i);
                 page.addTargetRequest(new Request(url, processor)
-                        .setValidPeriod(TimeHelper.DAY_MILLISECONDS)
+                        .setValidMillis(TimeHelper.DAY_MILLISECONDS)
                         .setPriority(7)
                 );
             }

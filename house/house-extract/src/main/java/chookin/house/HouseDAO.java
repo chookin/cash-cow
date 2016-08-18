@@ -2,7 +2,6 @@ package chookin.house;
 
 import cmri.utils.dao.MongoDAO;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 import java.util.Date;
@@ -41,7 +40,7 @@ public class HouseDAO extends MongoDAO<House> {
     }
 
     @Override
-    protected House parse(DBObject dbObject) {
+    public House parse(DBObject dbObject) {
         return new House()
                 .setName((String) dbObject.get("name"))
                 .setCode((String) dbObject.get("code"))

@@ -10,12 +10,7 @@
     <dependencies>
         <dependency>
             <groupId>cmri.cashcow</groupId>
-            <artifactId>cmri-etl-commons</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>cmri.cashcow</groupId>
-            <artifactId>cmri-utils</artifactId>
+            <artifactId>chubot-spider</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>
