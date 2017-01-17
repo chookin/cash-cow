@@ -11,11 +11,13 @@ import com.mongodb.QueryBuilder;
 import java.util.Collection;
 
 /**
+ * 抓取帮助类
+ * <p>
  * Created by chookin on 16/10/12.
  */
 public class EntityHelper {
     /**
-     * 用于增量抓取时判定是否继续抓取
+     * 增量抓取时判定是否继续抓取。从实体记录集合中随机选择若干个实体,并查询数据库中是否有这若干个实体的记录,若都有,则认为不需要继续抓取后续页面了
      *
      * @param entities 本次抓取时获取到的记录集合
      * @return true 如果继续抓取
@@ -37,12 +39,12 @@ public class EntityHelper {
     }
 
     /**
-     * 判断该数据记录是否已存储
+     * 判断该实体记录是否已存储
      *
-     * @param entity 数据记录
+     * @param entity 实体记录
      * @return 如果已存储, 返回true; 否则,返回false.
      */
-    public static boolean isEntityArchived(TargetObject target, MapItem entity) {
+    private static boolean isEntityArchived(TargetObject target, MapItem entity) {
         String collection = (String) entity.get("collection");
         MongoHandler dao = MongoHandler.instance();
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -54,10 +56,10 @@ public class EntityHelper {
     /**
      * 获取帖子主题的存储id
      *
-     * @param target 渠道,例如水木的二手电脑市场
-     * @param topicId     帖子的id
+     * @param target  渠道,例如水木的二手电脑市场
+     * @param topicId 帖子的id
      */
     public static String getRecordId(TargetObject target, String topicId) {
-     return String.format("%s_%s_%s", target.getSite(), target.getCategory(), topicId);
+        return String.format("%s_%s_%s", target.getSite(), target.getCategory(), topicId);
     }
 }

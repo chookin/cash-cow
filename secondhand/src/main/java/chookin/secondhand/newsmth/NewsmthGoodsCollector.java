@@ -21,16 +21,21 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 抓取水木二手市场
+ * <p>
  * Created by chookin on 16/10/11.
  */
 public class NewsmthGoodsCollector extends GoodsCollection {
-    public static final String SITE = "newsmth";
+    private static final String SITE = "newsmth";
 
     @Override
     public String site() {
         return SITE;
     }
 
+    /**
+     * 获取种子请求
+     */
     @Override
     public Collection<Request> getSeedRequests() {
         List<Request> requests = new ArrayList<>();
@@ -54,19 +59,22 @@ public class NewsmthGoodsCollector extends GoodsCollection {
         return requests;
     }
 
+    /**
+     * 文章列表页面的处理器,解析页面得到一个个帖子的主题名、发帖时间、作者、回复数、最新回复时间
+     */
     static class ListPageProcessor implements PageProcessor {
         private final static PageProcessor PROCESSOR = new ListPageProcessor();
 
-        public static Request getRequest(TargetObject object) {
+        static Request getRequest(TargetObject object) {
             return getRequest(object, 1);
         }
 
         /**
-         * 根据app名称生成Request
+         * 生成Request
          *
          * @param pageNum 页面位置,从1开始
          */
-        public static Request getRequest(TargetObject object, int pageNum) {
+        static Request getRequest(TargetObject object, int pageNum) {
             String url = String.format("%s?ajax&p=%d", object.getUrl(), pageNum);
             return new Request(url, PROCESSOR)
                     .putExtra("targetObject", object)
@@ -84,7 +92,7 @@ public class NewsmthGoodsCollector extends GoodsCollection {
             List<MapItem> entities = new ArrayList<>();
             Elements elements = document.select("#body > div.b-content > table > tbody > tr");
             for (Element element : elements) {
-                if(!element.select("tr.top > td.title_9 a").isEmpty()){
+                if (!element.select("tr.top > td.title_9 a").isEmpty()) {
                     continue;
                 }
                 Element topic = element.select("td.title_9 a").first();
@@ -120,12 +128,14 @@ public class NewsmthGoodsCollector extends GoodsCollection {
 
                 entities.add(entity);
             }
+            // 保存数据到Response中
             page.addItem(entities);
+            // 添加新的请求
             page.addTargetRequest(getNextPageRequest(targetObject, document, pageNum, entities));
         }
 
         /**
-         * 获取下一个页面
+         * 获取下一个页面的请求
          *
          * @param entities 选择一批entity测试是否存在,用以判定之后的页面数据已被采集
          */
@@ -141,6 +151,9 @@ public class NewsmthGoodsCollector extends GoodsCollection {
             return getRequest(object, curPageNum + 1);
         }
 
+        /**
+         * 获取文章列表页有多少页
+         */
         int getTotalPageNum(Document doc) {
             // 主题数
             String topicCountStr = doc.select("div.t-pre-bottom div.page ul.pagination li.page-pre i").text();

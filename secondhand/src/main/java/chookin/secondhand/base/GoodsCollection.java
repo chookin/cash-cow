@@ -11,13 +11,19 @@ import cmri.etl.spider.SpiderAdapter;
 import java.util.Collection;
 
 /**
- * 二手货数据抓取基类
+ * 二手货数据抓取
  * <p>
  * Created by chookin on 16/10/11.
  */
 public abstract class GoodsCollection extends SpiderJob {
+    /**
+     * 所抓取站点的名称
+     */
     public abstract String site();
 
+    /**
+     * 返回种子请求集合
+     */
     public abstract Collection<Request> getSeedRequests();
 
     @Override
