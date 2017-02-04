@@ -11,6 +11,7 @@
     <modules>
         <module>food</module>
         <module>secondhand</module>
+        <module>im</module>
     </modules>
 
 
