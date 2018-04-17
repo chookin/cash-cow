@@ -3,7 +3,8 @@ package chookin.house;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
 import cmri.utils.concurrent.ThreadHelper;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +18,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Created by zhuyin on 3/28/15.
  */
 public class HousePipeline implements Pipeline {
-    private static final Logger LOG = Logger.getLogger(HousePipeline.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HousePipeline.class);
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private Set<House> cache = new HashSet<>();
     private Set<String> sites = new HashSet<>();

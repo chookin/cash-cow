@@ -5,7 +5,8 @@ import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
 import cmri.utils.lang.TimeHelper;
 import com.google.gson.*;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.util.*;
@@ -23,7 +24,7 @@ import java.util.*;
 
  */
 public class DatePageProcessor implements PageProcessor {
-    static final Logger LOG = Logger.getLogger(DatePageProcessor.class);
+    static final Logger LOG = LoggerFactory.getLogger(DatePageProcessor.class);
     static DatePageProcessor processor = new DatePageProcessor();
 
     static Collection<Request> getSeedRequests(){
@@ -70,7 +71,7 @@ public class DatePageProcessor implements PageProcessor {
                 String str = subElement.getAsString();
                 String[] val = str.split(":");
                 if(val.length != 2){
-                    LOG.error(arr);
+                    LOG.error(arr.toString());
                     continue;
                 }
                 Date date = TimeHelper.parseDate(val[0]);

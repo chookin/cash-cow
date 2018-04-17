@@ -135,7 +135,7 @@ public class DianpingFoodCollection extends SpiderJob {
                 if (eAddr != null) {
                     item.put("address", eAddr.text());
                 }
-                getLogger().trace(item);
+                getLogger().trace(item.toJson());
                 page.addItem(item);
                 page.addTargetRequest(ReviewsPageProcessor.getRequest(item));
             }
@@ -184,7 +184,7 @@ public class DianpingFoodCollection extends SpiderJob {
                         .put("code", item.get("code"))
                         .put("reviewerName", reviewerName)
                         .put("reviewId", reviewerId);
-                getLogger().trace(review);
+                getLogger().trace(review.toJson());
                 page.addItem(review);
             }
         }

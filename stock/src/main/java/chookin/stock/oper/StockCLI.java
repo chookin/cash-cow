@@ -1,9 +1,10 @@
 package chookin.stock.oper;
 
 import chookin.stock.utils.SpringHelper;
-import cmri.utils.web.NetworkHelper;
 import cmri.utils.configuration.ConfigManager;
-import org.apache.log4j.Logger;
+import cmri.utils.web.NetworkHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration("main")
 public class StockCLI {
-    private final static Logger LOG = Logger.getLogger(StockCLI.class);
+    private final static Logger LOG = LoggerFactory.getLogger(StockCLI.class);
 
     @Autowired
     private CollectOper collectOper;

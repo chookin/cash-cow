@@ -34,7 +34,10 @@ switched to db goods
 
 
 // 看看京东e卡
-> db.topic.find({title:{$regex:"京东.*卡"}}).sort({createTime:-1})
+> db.topic.find({title:{$regex:"京东.*卡"}}).sort({createTime:-1}).limit(10)
+
+// 家乐福
+> db.topic.find({title:{$regex:"家乐福"}}).sort({createTime:-1})
 
 // 商通卡
 db.topic.find({title:{$regex:"商通卡"}}).sort({createTime:-1})

@@ -6,10 +6,11 @@ import cmri.etl.common.Request;
 import cmri.etl.common.ResultItems;
 import cmri.etl.processor.PageProcessor;
 import cmri.utils.lang.TimeHelper;
-import org.apache.log4j.Logger;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by zhuyin on 5/20/15.
  */
 public class HistDataPageProcessor implements PageProcessor{
-    private static final Logger LOG = Logger.getLogger(HistDataPageProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HistDataPageProcessor.class);
     static final HistDataPageProcessor processor = new HistDataPageProcessor();
     public static Request getRequest(StockEntity stock, int year, int quarter){
         String url = String.format("http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/%s.phtml?year=%d&jidu=%d", stock.getCode(), year, quarter);

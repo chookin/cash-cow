@@ -4,7 +4,8 @@ import chookin.stock.orm.domain.CompanyEntity;
 import chookin.stock.orm.repository.CompanyRepository;
 import cmri.etl.common.ResultItems;
 import cmri.etl.pipeline.Pipeline;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @Service
 public class CompanyPipeline implements Pipeline {
-    private static final Logger LOG = Logger.getLogger(CompanyPipeline.class);
+    private static final Logger LOG = LoggerFactory.getLogger(CompanyPipeline.class);
 
     @Autowired
     private CompanyRepository repository;
@@ -51,7 +52,7 @@ public class CompanyPipeline implements Pipeline {
         }
     }
     @Transactional
-    private void saveCache(){
+    void saveCache(){
         this.repository.save(cache);
         LOG.info("save "+ cache.size() + " stocks' company info");
     }

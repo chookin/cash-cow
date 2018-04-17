@@ -75,7 +75,7 @@ public class RealtimePageProcessor implements PageProcessor {
             entity.addBuy(i, arr[10 + i * 2], arr[11 + i * 2]);
             entity.addSell(i, arr[20 + i * 2], arr[21 + i * 2]);
         }
-        getLogger().trace(entity);
+        getLogger().trace(entity.toString());
         return entity;
     }
 }

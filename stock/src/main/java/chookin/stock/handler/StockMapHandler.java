@@ -2,7 +2,8 @@ package chookin.stock.handler;
 
 import chookin.stock.orm.domain.StockEntity;
 import chookin.stock.orm.repository.StockRepository;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  */
 @Service
 public class StockMapHandler {
-    private final static Logger LOG = Logger.getLogger(StockMapHandler.class);
+    private final static Logger LOG = LoggerFactory.getLogger(StockMapHandler.class);
     @Autowired
     private StockRepository stockRepository;
     private Map<String, StockEntity> stocksMap = new TreeMap<>();

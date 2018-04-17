@@ -1,8 +1,8 @@
 package chookin.house.service;
 
-import cmri.utils.configuration.ConfigManager;
 import cmri.utils.lang.BaseOper;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import java.io.IOException;
  * Created by zhuyin on 3/29/15.
  */
 public class ConfigProcess extends BaseOper {
-    private static Logger LOG= Logger.getLogger(ConfigProcess.class);
+    private static Logger LOG= LoggerFactory.getLogger(ConfigProcess.class);
 
     @Override
     public boolean action() {
