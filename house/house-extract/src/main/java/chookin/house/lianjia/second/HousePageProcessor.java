@@ -7,7 +7,6 @@ import cmri.etl.common.ResultItems;
 import cmri.etl.downloader.CasperJsDownloader;
 import cmri.etl.processor.PageProcessor;
 import cmri.utils.lang.StringHelper;
-import cmri.utils.lang.TimeHelper;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jsoup.nodes.Document;
@@ -28,7 +27,6 @@ public class HousePageProcessor implements PageProcessor {
         Set<Request> requests = new HashSet<>();
         requests.add(new Request("http://bj.lianjia.com/ershoufang/", processor)
                 .setDownloader(CasperJsDownloader.getInstance())
-                .setValidMillis(TimeHelper.DAY_MILLISECONDS)
                 .putExtra("category", "2hand")
         );
         return requests;
@@ -104,7 +102,6 @@ public class HousePageProcessor implements PageProcessor {
             for (int i = 2; i < pageNum; ++i) {
                 String url = String.format("http://bj.lianjia.com/ershoufang/pg%d", i);
                 page.addTargetRequest(new Request(url, processor)
-                        .setValidMillis(TimeHelper.DAY_MILLISECONDS)
                         .setPriority(7)
                 );
             }

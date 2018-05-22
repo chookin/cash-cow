@@ -26,7 +26,6 @@ public class HistDataPageProcessor implements PageProcessor{
     public static Request getRequest(StockEntity stock, int year, int quarter){
         String url = String.format("http://money.finance.sina.com.cn/corp/go.php/vMS_MarketHistory/stockid/%s.phtml?year=%d&jidu=%d", stock.getCode(), year, quarter);
         return new Request(url, processor)
-                .setValidMillis(TimeHelper.DAY_MILLISECONDS)
                 .putExtra("stock", stock)
                 .putExtra("year", year)
                 ;

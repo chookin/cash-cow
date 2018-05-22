@@ -79,7 +79,6 @@ public class NewsmthGoodsCollector extends GoodsCollection {
             return new Request(url, PROCESSOR)
                     .putExtra("targetObject", object)
                     .putExtra("pageNum", pageNum)
-                    .setValidMillis(TimeHelper.DAY_MILLISECONDS)
                     ;
         }
 
